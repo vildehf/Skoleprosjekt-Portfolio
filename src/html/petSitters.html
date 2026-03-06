@@ -4,7 +4,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -12,7 +11,6 @@
       rel="stylesheet"
     />
 
-    <!-- CSS -->
     <link rel="stylesheet" href="style/style.css" />
     <link rel="stylesheet" href="style/petSitter.css" />
 
@@ -23,7 +21,6 @@
   <body>
     <a class="skip-link" href="#main">Hopp til innhold</a>
 
-    <!-- HEADER (samme som dere har) -->
     <header>
       <div class="hamburger-backdrop" aria-hidden="true"></div>
 
@@ -63,5 +60,222 @@
         </button>
       </div>
     </header>
+
+    <main id="main">
+      <div class="container">
+        <section class="section center">
+          <h2>Finn hundepasser</h2>
+          <p>
+            Filtrer etter sted, dato og tilgjengelighet – og finn en passer du
+            liker.
+          </p>
+        </section>
+
+        <div class="search-layout">
+          <aside class="filters" aria-labelledby="filter-heading">
+            <article class="card">
+              <div class="card-body">
+                <h3 id="filter-heading">Filter</h3>
+
+                <form class="filter-form" action="#" method="get">
+                  <div class="field">
+                    <label for="place">Sted</label>
+                    <input
+                      id="place"
+                      name="place"
+                      type="text"
+                      placeholder="F.eks. Oslo"
+                    />
+                  </div>
+
+                  <div class="field">
+                    <p>Dato</p>
+                    <div class="date-row">
+                      <div>
+                        <label for="from">Dato fra</label>
+                        <input id="from" type="date" name="from" />
+                      </div>
+                      <div>
+                        <label for="to">Dato til</label>
+                        <input id="to" type="date" name="to" />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="field">
+                    <label for="availability">Tilgjengelighet</label>
+                    <select id="availability" name="availability">
+                      <option value="any" selected>Alle</option>
+                      <option value="available">Kun ledige</option>
+                      <option value="weekend">Helg</option>
+                      <option value="weekdays">Hverdager</option>
+                    </select>
+                  </div>
+
+                  <div class="field">
+                    <label for="service">Type pass</label>
+                    <select id="service" name="service">
+                      <option value="overnight" selected>Overnatting</option>
+                      <option value="daycare">Dagpass</option>
+                      <option value="walk">Tur</option>
+                    </select>
+                  </div>
+
+                  <div class="field">
+                    <label for="price">Pris per døgn (NOK)</label>
+                    <input
+                      id="price"
+                      name="price"
+                      type="range"
+                      min="100"
+                      max="1400"
+                      value="900"
+                    />
+                    <div class="range-meta" aria-hidden="true">
+                      <span>100</span>
+                      <span>1400</span>
+                    </div>
+                  </div>
+
+                  <div class="checks">
+                    <label class="check">
+                      <input type="checkbox" name="hasDog" />
+                      <span>Passer kan ha egen hund</span>
+                    </label>
+
+                    <label class="check">
+                      <input type="checkbox" name="hasKids" />
+                      <span>Passer kan ha barn</span>
+                    </label>
+
+                    <label class="check">
+                      <input type="checkbox" name="updates" checked />
+                      <span>Ønsker oppdateringer/bilder</span>
+                    </label>
+                  </div>
+
+                  <div class="filter-actions">
+                    <button class="btn btn-primary" type="submit">
+                      Bruk filtre
+                    </button>
+                    <button class="btn btn-ghost" type="reset">
+                      Nullstill
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </article>
+          </aside>
+
+          <section class="results" aria-labelledby="results-heading">
+            <div class="results-head">
+              <h3 id="results-heading">Resultater</h3>
+              <div class="sort">
+                <label for="sort" class="sr-only">Sorter</label>
+                <select id="sort" name="sort">
+                  <option value="recommended" selected>Anbefalt</option>
+                  <option value="priceLow">Pris: lav → høy</option>
+                  <option value="priceHigh">Pris: høy → lav</option>
+                  <option value="rating">Vurdering</option>
+                  <option value="reviews">Flest anmeldelser</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="sitter-list">
+              <article class="card sitter-row">
+                <div class="sitter-portrait">
+                  <img src="assets/dogsitter1.png" alt="Portrett av Oda" />
+                </div>
+
+                <div class="sitter-info">
+                  <h4 class="sitter-name">Oda</h4>
+                  <p class="sitter-meta">Oslo, 0561</p>
+
+                  <div class="sitter-badges">
+                    <span class="badge">Ledig</span>
+                    <span class="badge">Overnatting</span>
+                    <span class="badge">Oppdateringer</span>
+                  </div>
+
+                  <p class="sitter-desc">
+                    Rolig og trygg hundepasser. Bor nær parker og har erfaring
+                    med store hunder.
+                  </p>
+                </div>
+
+                <div class="sitter-side">
+                  <p class="sitter-price"><strong>450 kr</strong> / døgn</p>
+                  <p class="sitter-rating">
+                    ★ 4.9 <span class="muted">(19 anmeldelser)</span>
+                  </p>
+                  <a class="btn btn-primary" href="booking.html">Se profil</a>
+                </div>
+              </article>
+
+              <article class="card sitter-row">
+                <div class="sitter-portrait">
+                  <img src="assets/dogsitter3.png" alt="Portrett av Mari" />
+                </div>
+
+                <div class="sitter-info">
+                  <h4 class="sitter-name">Mari</h4>
+                  <p class="sitter-meta">Oslo, 0674</p>
+
+                  <div class="sitter-badges">
+                    <span class="badge">Få plasser</span>
+                    <span class="badge">Dagpass</span>
+                    <span class="badge">Erfaren</span>
+                  </div>
+
+                  <p class="sitter-desc">
+                    Aktiv passer som elsker lange turer. Passer både valper og
+                    voksne hunder.
+                  </p>
+                </div>
+
+                <div class="sitter-side">
+                  <p class="sitter-price"><strong>520 kr</strong> / døgn</p>
+                  <p class="sitter-rating">
+                    ★ 4.8 <span class="muted">(22 anmeldelser)</span>
+                  </p>
+                  <a class="btn btn-primary" href="booking.html">Se profil</a>
+                </div>
+              </article>
+
+              <article class="card sitter-row">
+                <div class="sitter-portrait">
+                  <img src="assets/dogsitter2.png" alt="Portrett av Elias" />
+                </div>
+
+                <div class="sitter-info">
+                  <h4 class="sitter-name">Elias</h4>
+                  <p class="sitter-meta">Bærum, 1340</p>
+
+                  <div class="sitter-badges">
+                    <span class="badge">Ledig</span>
+                    <span class="badge">Tur</span>
+                    <span class="badge">Hjemmekontor</span>
+                  </div>
+
+                  <p class="sitter-desc">
+                    Perfekt for hunder som trenger selskap på dagtid. Kort vei
+                    til skog og mark.
+                  </p>
+                </div>
+
+                <div class="sitter-side">
+                  <p class="sitter-price"><strong>390 kr</strong> / døgn</p>
+                  <p class="sitter-rating">
+                    ★ 5.0 <span class="muted">(7 anmeldelser)</span>
+                  </p>
+                  <a class="btn btn-primary" href="booking.html">Se profil</a>
+                </div>
+              </article>
+            </div>
+          </section>
+        </div>
+      </div>
+    </main>
   </body>
 </html>
