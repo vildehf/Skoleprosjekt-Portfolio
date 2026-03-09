@@ -1,13 +1,103 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="no">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>arbeidskrav2semester</title>
+    <meta name="description" content="Forside for booking av hundepass" />
+    <title>Potepass - forside</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Open+Sans:wght@400;500;600&family=Cherry+Bomb+One&display=swap"
+      rel="stylesheet"
+    />
+
+   
+    <link rel="stylesheet" href="style/header.css" />
+    <link rel="stylesheet" href="style/main.css" />
+    <link rel="stylesheet" href="style/footer.css" />
+    <link rel="stylesheet" href="style/index.css">
+
+    <link rel="shortcut icon" href="assets/paw.png" />
+    <title>Potepass</title>
   </head>
-  <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.ts"></script>
-  </body>
+<body>
+   
+    <header>
+      <div class="hamburger-backdrop" aria-hidden="true"></div>
+      <div class="container header-inner">
+        <a href="index.html" class="logo">
+          <img
+            src="assets/logo.png"
+            alt="Potepass – trygg hundepass"
+            class="logo-image"
+          />
+          <span class="logo-text">Potepass</span>
+        </a>
+
+        <nav id="primary-nav" class="nav" aria-label="Hovedmeny">
+          <ul class="nav-menu">
+            <li><a href="index.html" aria-current="page">Hjem</a></li>
+            <li><a href="petSitters.html">Finn hundepasser</a></li>
+            <li><a href="bookings.html">Mine bookinger</a></li>
+            <li><a href="profile.html">Profil</a></li>
+          </ul>
+        </nav>
+
+        <button
+          class="hamburger"
+          aria-controls="primary-nav"
+          aria-expanded="false"
+          aria-label="Åpne meny"
+        >
+          <span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+          </span>
+        </button>
+      </div>
+    </header>
+
+    <main id="main">
+  <div class="container">
+
+    <section class="hero" aria-labelledby="hero-title">
+      <h1 id="hero-title">Trygg og enkel hundepass</h1>
+      <p>
+        Potepass kobler hundeeiere med pålitelige hundepassere i ditt
+        nærområde. Finn noen du liker – og book igjen med et klikk.
+      </p>
+
+      <div class="hero-actions">
+        <button type="button">Registrer deg</button>
+        <button type="button">Logg inn</button>
+      </div>
+    </section>
+
+    <section class="about" aria-labelledby="about-title">
+      <h2 id="about-title">Trygg hundepass – på hundens premisser</h2>
+
+      <p>
+        Vi vet at hunden din er en del av familien. Derfor har vi laget en løsning
+        som gjør det enkelt å finne en omsorgsfull og pålitelig hundepasser i ditt
+        nærområde. Hos oss kan du lese om erfaring, se vurderinger og kommunisere
+        direkte før du booker.
+      </p>
+
+      <p>
+        Målet vårt er enkelt: Å gjøre det trygt og stressfritt å være borte –
+        enten det er for noen timer eller flere dager.
+      </p>
+
+      <p>
+        Når du booker gjennom Potepass, skal du kjenne på ro i magen.
+      </p>
+    </section>
+
+  </div>
+</main>
+    
+</body>
 </html>
