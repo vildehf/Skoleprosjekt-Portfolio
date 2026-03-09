@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="no">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Open+Sans:wght@400;500;600&family=Cherry+Bomb+One&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="style/style.css" />
+    <link rel="stylesheet" href="style/petSitter.css" />
+
+    <link rel="shortcut icon" href="assets/paw.png" />
+    <title>Finn hundepasser – Potepass</title>
+  </head>
+
+  <body>
+    <a class="skip-link" href="#main">Hopp til innhold</a>
+    <header>
+      <div class="hamburger-backdrop" aria-hidden="true"></div>
+
+      <div class="container header-inner">
+        <a href="index.html" class="logo">
+          <img
+            src="assets/logo.png"
+            alt="Potepass – trygg hundepass"
+            class="logo-image"
+          />
+          <span class="logo-text">Potepass</span>
+        </a>
+
+        <nav id="primary-nav" class="nav" aria-label="Hovedmeny">
+          <ul class="nav-menu">
+            <li><a href="/index.html">Hjem</a></li>
+            <li>
+              <a href="dogs.html" aria-current="page">Finn hundepasser</a>
+            </li>
+            <li><a href="bookings.html">Mine bookinger</a></li>
+            <li><a href="profile.html">Min profil</a></li>
+            <li><a href="contact.html">Kontakt oss</a></li>
+          </ul>
+        </nav>
+
+        <button
+          class="hamburger"
+          aria-controls="primary-nav"
+          aria-expanded="false"
+          aria-label="Åpne meny"
+        >
+          <span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+          </span>
+        </button>
+      </div>
+    </header>
+       <main>
+        
+<section class="container">
+        <h1>Fortell oss om ditt kjæledyr</h1>
+            <h2>Informasjon om kjæledyret ditt</h2>
+            <div id="pets-form">
+            <form id="pet-form" action="/" method="get"></form>
+       <div class="info-card">
+
+    <div class="form-row two-col">
+        <div>
+            <label for="pet-name">Navn</label>
+            <input id="pet-name" name="name" type="text">
+        </div>
+
+        <div>
+            <label for="pet-weight">Vekt (kg)</label>
+            <input id="pet-weight" name="weight" type="number">
+        </div>
+    </div>
+
+    <div class="form-row four-col">
+        <div>
+            <label for="pet-age-years">Alder (år)</label>
+            <input id="pet-age-years" type="number">
+        </div>
+
+        <div class="gender-group">
+            <label>Kjønn</label>
+            <div class="form-card btn-group">
+                <button type="button" class="form-btn">Han</button>
+                <button type="button" class="form-btn">Hun</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-row">
+        <div class="full-width">
+            <label for="pet-breed">Rase</label>
+            <input id="pet-breed" name="breed" type="text">
+        </div>
+    </div>
+
+            </div>
+            </div>
+              <div>
+                <h2>Tilleggsopplysninger om kjæledyret</h2>
+                
+                <h3>Microchippet?</h3>
+                <div class="form-card">
+                <button class="form-btn" id="microchipped-btn-yes" type="radio">Microchippet</button>
+                <button class="form-btn" id="microchipped-btn-no" type="radio">Ikke microchippet</button>
+                </div>
+                
+                <h3>Sterilisert/Kastrert?</h3>
+                <div class="form-card">
+                <button class="form-btn" id="neutered-btn-yes" class="form-btn" type="radio">Er sterilisert</button>
+                <button class="form-btn" id="neutered-btn-no" class="form-btn" type="neutered">Er ikke sterilisert</button>
+                </div>
+                <h3>Stueren?</h3>
+                <div class="form-card">
+                <button class="form-btn" id="cleanliness-btn-yes" type="radio">Stueren</button>
+                <button class="form-btn" id="cleanliness-btn-no" type="radio">Ikke stueren</button>
+                <button class="form-btn" id="cleanliness-btn-training" type="radio">Trener på å bli stueren</button>
+                </div>
+                <h3>Vennlig med barn?</h3>
+                <div class="form-card">
+                <button class="form-btn" id="childsafety-btn-yes" type="radio">Ja, vennlig med barn</button>
+                <button class="form-btn" id="childsafety-btn-no" type="radio">Nei, ikke vennlig med barn</button>
+                </div>
+                <h3>Vennlig med hunder?</h3>
+                <div class="form-card">
+                <button class="form-btn" id="dogfriendly-btn-yes" type="radio">Ja, vennlig med hunder</button>
+                <button class="form-btn" id="dogfriendly-btn-no" type="radio">Nei, ikke vennlig med hunder</button>
+                </div>
+                <h3>Vennlig med katter?</h3>
+                <div class="form-card">
+                <button class="form-btn" id="catfriendly-btn-yes" type="radio">Ja, vennlig med katter</button>
+                <button class="form-btn" id="catfriendly-btn-no" type="radio">Nei, ikke vennlig med katter</button>
+                </div>
+                <h3>Øvrig informasjon</h3>
+                  <label for="extra-info">Andre ting hundepasser burde vite?</label>
+                  <br>
+                  <textarea id=extra-info name="extra-info" type="text" rows="6" cols="60"></textarea>
+                  <div>
+                  <button class="form-btn" type="submit">Lagre øvrig informasjon</button>
+                  </div>
+                  </div>
+            </div>
+              <h2>Andre opplysninger</h2>
+                  <div class="form-card">
+                  <label for="doctor">Navn på vetrinær</label>
+                  <br>
+                  <input id="doctor" name="doctor" type="text">
+                  <br>
+                  <label for="phone-doctor">Telefonnummer til vetrinær</label>
+                  <br>
+                  <input id="phone-doctor" name="phone-doctor" type="text">
+                  </div>
+                <div>
+                  <br>
+                  <button class="form-btn" type="submit">Lagre opplysninger</button>
+                  </div>
+
+                  
+                  
+</div>
+</div>
+</section>
+    </main>
+  </body>
+</html>
