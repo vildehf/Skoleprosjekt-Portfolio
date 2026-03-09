@@ -14,6 +14,8 @@ Hver branch skal inneholdet navnet + det man jobber med
 Alltid to stk som skal review'e en kode før den pushes til main
 Koden skal ikke være mer enn 150 linjer når den skal pushes
 Alle skal sjekke om det er koder til review hver torsdag før eller etter torsdagsmøtet
+ETTER APPROVED REQUEST MÅ BRANCHEN MERGES TIL MASTER
+Kun personen som har laget branchen skal slette branch etter merged til master
  
 
 
