@@ -1,13 +1,47 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>arbeidskrav2semester</title>
-  </head>
-  <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.ts"></script>
-  </body>
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+   
+    <header>
+      <div class="hamburger-backdrop" aria-hidden="true"></div>
+      <div class="container header-inner">
+        <a href="index.html" class="logo">
+          <img
+            src="assets/logo.png"
+            alt="Potepass – trygg hundepass"
+            class="logo-image"
+          />
+          <span class="logo-text">Potepass</span>
+        </a>
+
+        <nav id="primary-nav" class="nav" aria-label="Hovedmeny">
+          <ul class="nav-menu">
+            <li><a href="index.html" aria-current="page">Hjem</a></li>
+            <li><a href="petSitters.html">Finn hundepasser</a></li>
+            <li><a href="bookings.html">Mine bookinger</a></li>
+            <li><a href="profile.html">Profil</a></li>
+          </ul>
+        </nav>
+
+        <button
+          class="hamburger"
+          aria-controls="primary-nav"
+          aria-expanded="false"
+          aria-label="Åpne meny"
+        >
+          <span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+          </span>
+        </button>
+      </div>
+    </header>
+    
+</body>
 </html>
