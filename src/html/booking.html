@@ -1,3 +1,4 @@
+<!-- Line Nerli Tveite -->
 <!doctype html>
 <html lang="no">
   <head>
@@ -59,5 +60,69 @@
         </button>
       </div>
     </header>
+    <!-- MAIN -->
+    <main class="container">
+      <h1>Booking</h1>
+
+      <section class="hero">
+        <!-- bilde + kalender -->
+
+        <img src="assets/hero.png" alt="Kvinne leker med hunder i parken" />
+
+        <div class="calendar-box">
+          <label>Fra:</label>
+          <input type="date" id="start-date" />
+
+          <label>Til:</label>
+          <input type="date" id="end-date" />
+        </div>
+      </section>
+
+      <section class="booking-form">
+        <!-- dato, hund, melding, knapp -->
+
+        <div class="date-box">
+          <p>Fra: 10.01.2026</p>
+          <p>Til: 12.01.2026</p>
+        </div>
+
+        <select class="dog-select">
+          <option>Velg hund</option>
+        </select>
+
+        <textarea
+          class="message"
+          placeholder="Melding..."
+          rows="6"
+          cols="60"
+        ></textarea>
+
+        <div class="button-wrapper"><button type="button">Book</button></div>
+      </section>
+
+      <!-- mine bookinger -->
+      <section class="bookings">
+        <h2>Mine bookinger</h2>
+
+        <div class="booking-card">
+          <div class="label">Periode</div>
+          <div class="value">10.01.2026 - 12.01.2026</div>
+          <div class="actions">
+            <button class="edit">Rediger</button>
+          </div>
+
+          <div class="label">Hund</div>
+          <div class="value">Max</div>
+          <div></div>
+
+          <div class="label">Hundepasser</div>
+          <div class="value">Kari</div>
+
+          <div class="actions">
+            <button class="cancel">Avbryt</button>
+          </div>
+        </div>
+      </section>
+    </main>
   </body>
 </html>
