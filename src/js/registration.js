@@ -1,4 +1,3 @@
-
 const buttonGroups = document.querySelectorAll(".form-card");
 
 buttonGroups.forEach(group => {
