@@ -11,10 +11,10 @@
       rel="stylesheet"
     />
 
-    <link rel="stylesheet" href="style/style.css" />
-    <link rel="stylesheet" href="style/petSitter.css" />
+    <link rel="stylesheet" href="/src/css/style.css" />
+    <link rel="stylesheet" href="/src/css/petSitter.css" />
 
-    <link rel="shortcut icon" href="assets/paw.png" />
+    <link rel="shortcut icon" href="../assets/logo.png" />
     <title>Finn hundepasser – Potepass</title>
   </head>
 
@@ -27,7 +27,7 @@
       <div class="container header-inner">
         <a href="index.html" class="logo">
           <img
-            src="assets/logo.png"
+            src="../assets/logo.png"
             alt="Potepass – trygg hundepass"
             class="logo-image"
           />
@@ -38,9 +38,9 @@
           <ul class="nav-menu">
             <li><a href="index.html">Hjem</a></li>
             <li>
-              <a href="dogs.html" aria-current="page">Finn hundepasser</a>
+              <a href="petSitters.html" aria-current="page">Finn hundepasser</a>
             </li>
-            <li><a href="bookings.html">Mine bookinger</a></li>
+            <li><a href="booking.html">Mine bookinger</a></li>
             <li><a href="profile.html">Min profil</a></li>
             <li><a href="contact.html">Kontakt oss</a></li>
           </ul>
@@ -167,25 +167,32 @@
             </article>
           </aside>
 
-          <section class="results" aria-labelledby="results-heading">
+          <section class="results">
             <div class="results-head">
-              <h3 id="results-heading">Resultater</h3>
+              <h3>Resultater</h3>
+
               <div class="sort">
-                <label for="sort" class="sr-only">Sorter</label>
-                <select id="sort" name="sort">
-                  <option value="recommended" selected>Anbefalt</option>
-                  <option value="priceLow">Pris: lav → høy</option>
-                  <option value="priceHigh">Pris: høy → lav</option>
-                  <option value="rating">Vurdering</option>
-                  <option value="reviews">Flest anmeldelser</option>
+                <label class="sr-only" for="sort">Sorter</label>
+
+                <select id="sort">
+                  <option>Anbefalt</option>
+                  <option>Pris: lav → høy</option>
+                  <option>Pris: høy → lav</option>
+                  <option>Vurdering</option>
                 </select>
               </div>
+            </div>
+
+            <div class="results-actions">
+              <button id="add-sitter-btn" class="btn btn-primary">
+                Legg til passer
+              </button>
             </div>
 
             <div class="sitter-list">
               <article class="card sitter-row">
                 <div class="sitter-portrait">
-                  <img src="assets/dogsitter1.png" alt="Portrett av Oda" />
+                  <img src="../assets/dogsitter1.png" alt="Portrett av Oda" />
                 </div>
 
                 <div class="sitter-info">
@@ -209,13 +216,18 @@
                   <p class="sitter-rating">
                     ★ 4.9 <span class="muted">(19 anmeldelser)</span>
                   </p>
-                  <a class="btn btn-primary" href="booking.html">Se profil</a>
+
+                  <div class="sitter-card-actions">
+                    <a class="btn btn-primary" href="booking.html">Se profil</a>
+                    <button class="btn btn-ghost" disabled>Rediger</button>
+                    <button class="btn btn-ghost" disabled>Slett</button>
+                  </div>
                 </div>
               </article>
 
               <article class="card sitter-row">
                 <div class="sitter-portrait">
-                  <img src="assets/dogsitter3.png" alt="Portrett av Mari" />
+                  <img src="../assets/dogsitter3.png" alt="Portrett av Mari" />
                 </div>
 
                 <div class="sitter-info">
@@ -239,13 +251,18 @@
                   <p class="sitter-rating">
                     ★ 4.8 <span class="muted">(22 anmeldelser)</span>
                   </p>
-                  <a class="btn btn-primary" href="booking.html">Se profil</a>
+
+                  <div class="sitter-card-actions">
+                    <a class="btn btn-primary" href="booking.html">Se profil</a>
+                    <button class="btn btn-ghost" disabled>Rediger</button>
+                    <button class="btn btn-ghost" disabled>Slett</button>
+                  </div>
                 </div>
               </article>
 
               <article class="card sitter-row">
                 <div class="sitter-portrait">
-                  <img src="assets/dogsitter2.png" alt="Portrett av Elias" />
+                  <img src="../assets/dogsitter2.png" alt="Portrett av Elias" />
                 </div>
 
                 <div class="sitter-info">
@@ -269,7 +286,12 @@
                   <p class="sitter-rating">
                     ★ 5.0 <span class="muted">(7 anmeldelser)</span>
                   </p>
-                  <a class="btn btn-primary" href="booking.html">Se profil</a>
+
+                  <div class="sitter-card-actions">
+                    <a class="btn btn-primary" href="booking.html">Se profil</a>
+                    <button class="btn btn-ghost" disabled>Rediger</button>
+                    <button class="btn btn-ghost" disabled>Slett</button>
+                  </div>
                 </div>
               </article>
             </div>
@@ -282,7 +304,7 @@
         <p class="footer-brand">&copy; 2026 Potepass</p>
 
         <div class="footer-dogs">
-          <img src="assets/puppies.png" alt="Illustrasjon av hunder" />
+          <img src="../assets/puppies.png" alt="Illustrasjon av hunder" />
         </div>
 
         <div class="social">
@@ -337,6 +359,6 @@
         </div>
       </div>
     </footer>
-    <script src="js/burger.js"></script>
+    <script src="../js/burger.js"></script>
   </body>
 </html>
