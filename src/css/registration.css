@@ -3,10 +3,6 @@ h1, h2, h3, h4{
     padding-top: 1rem;
 }
 
-.pet-form-section {
-    box-sizing: border-box;
-    padding: 2rem;
-}
 
 .form-btn {
     border-width: 1px;
@@ -84,6 +80,10 @@ h1, h2, h3, h4{
     padding: 0.7rem;
     border: 1px solid #d1d5db;
     border-radius: 8px;
+}
+
+.form-card input[type="radio"] {
+    display: none;
 }
 
 .form-card-vet input {
