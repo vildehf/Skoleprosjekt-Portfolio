@@ -24,7 +24,7 @@
       <div class="container header-inner">
         <a href="index.html" class="logo">
           <img
-            src="assets/logo.png"
+            src="../assets/logo.png"
             alt="Potepass – trygg hundepass"
             class="logo-image"
           />
@@ -63,7 +63,7 @@
     <main class="container">
       <h1>Booking</h1>
 
-      <section class="hero">
+      <div class="hero">
         <img src="../assets/hero.png" alt="Kvinne leker med hunder i parken" />
 
         <div class="calendar-box">
@@ -73,27 +73,28 @@
           <label>Til:</label>
           <input type="date" id="end-date" />
         </div>
-      </section>
+      </div>
 
-      <section class="booking-form">
-        <div class="date-box">
+      <section class="booking">
+        <h2>Ny booking</h2>
+        <div class="booking-form">
           <p>Fra: 10.01.2026</p>
           <p>Til: 12.01.2026</p>
-        </div>
 
-        <select class="dog-select">
-          <option>Velg hund</option>
-        </select>
+          <select class="dog-select">
+            <option>Velg hund</option>
+          </select>
 
-        <textarea
-          class="message"
-          placeholder="Melding..."
-          rows="6"
-          cols="60"
-        ></textarea>
+          <textarea
+            class="message"
+            placeholder="Melding..."
+            rows="6"
+            cols="60"
+          ></textarea>
 
-        <div class="button-wrapper">
-          <button class="btn btn-primary" type="button">Book</button>
+          <div class="button-wrapper">
+            <button class="btn btn-primary" type="button">Book</button>
+          </div>
         </div>
       </section>
 
