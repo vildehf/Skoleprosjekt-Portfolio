@@ -60,48 +60,56 @@
       </div>
     </header>
 
-    <main class="container">
+    <main id="main" class="container">
       <h1>Booking</h1>
-
-      <div class="hero">
-        <img src="../assets/hero.png" alt="Kvinne leker med hunder i parken" />
-
-        <div class="calendar-box">
-          <label>Fra:</label>
-          <input type="date" id="start-date" />
-
-          <label>Til:</label>
-          <input type="date" id="end-date" />
-        </div>
-      </div>
 
       <section class="booking">
         <h2>Ny booking</h2>
-        <div class="booking-form">
-          <p>Fra: 10.01.2026</p>
-          <p>Til: 12.01.2026</p>
 
-          <select class="dog-select">
+        <div class="hero">
+          <img
+            src="../assets/hero.png"
+            alt="Kvinne leker med hunder i parken"
+          />
+
+          <div class="calendar-box">
+            <label for="start-date">Fra:</label>
+            <input type="date" id="start-date" name="start-date" />
+
+            <label for="end-date">Til:</label>
+            <input type="date" id="end-date" name="end-date" />
+          </div>
+        </div>
+
+        <form class="booking-form">
+          <label for="dog">Velg hund</label>
+          <select name="dog" id="dog">
             <option>Velg hund</option>
           </select>
 
+          <label for="sitter">Velg hundepasser</label>
+          <select id="sitter" name="sitter">
+            <option>Velg hundepasser</option>
+          </select>
+
+          <label for="message">Melding</label>
           <textarea
-            class="message"
-            placeholder="Melding..."
-            rows="6"
-            cols="60"
+            id="message"
+            name="message"
+            placeholder="Skriv en melding..."
+            rows="5"
           ></textarea>
 
           <div class="button-wrapper">
-            <button class="btn btn-primary" type="button">Book</button>
+            <button class="btn btn-primary" type="submit">Book</button>
           </div>
-        </div>
+        </form>
       </section>
 
       <section class="bookings">
         <h2>Mine bookinger</h2>
 
-        <div class="booking-card">
+        <article class="booking-card">
           <div class="booking-info">
             <p><strong>Periode:</strong> 10.01.2026 – 12.01.2026</p>
             <p><strong>Hund:</strong> Max</p>
@@ -112,7 +120,7 @@
             <button class="btn btn-ghost">Rediger</button>
             <button class="btn btn-primary">Avbryt</button>
           </div>
-        </div>
+        </article>
       </section>
     </main>
     <footer class="site-footer">
@@ -175,6 +183,6 @@
         </div>
       </div>
     </footer>
-    <script src="js/burger.js"></script>
+    <script src="../js/burger.js"></script>
   </body>
 </html>
