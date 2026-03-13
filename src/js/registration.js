@@ -21,4 +21,5 @@ buttonGroups.forEach(group => {
   });
 });
 
+
 /* legge in må ha minst 3 bokstaver, alert om manglet tekst, alert om ikke huket av knapp, tomt felt, ikke bla ned til minus på alder, lagret opplysninger, sikker på å slette opplysnigner */
