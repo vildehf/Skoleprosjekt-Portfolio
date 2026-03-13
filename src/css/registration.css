@@ -93,10 +93,11 @@ h1, h2, h3, h4{
 }
 
 .form-card-vet input {
-    width: 60%;
+    width: 50px;
     padding: 1rem;
     border: 1px solid var(--border-color);
     border-radius: 8px;
+
 }
 
 .form-card-vet {
