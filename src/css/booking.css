@@ -140,3 +140,10 @@ textarea {
 .actions button {
   width: 100%;
 }
+
+.confirmation {
+  display: none;
+  margin-top: 10px;
+  color: green;
+  font-weight: 600;
+}
