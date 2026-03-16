@@ -29,23 +29,35 @@
   margin-top: 10px;
 }
 
-.field-label {
+.field {
+  display: grid;
+  gap: 6px;
+}
+
+.field label,
+.field-title {
   display: block;
   font-weight: 700;
-  margin-bottom: 6px;
   color: #2c3e50;
+  margin: 0;
 }
 
 .field input,
-.field select {
+.field select,
+.field textarea {
   width: 100%;
   border: 1px solid rgba(44, 62, 80, 0.14);
   border-radius: 14px;
-  padding: 12px 12px;
+  padding: 12px;
   font: inherit;
   background: #fff;
   color: #1f2937;
   box-shadow: 0 1px 0 rgba(0, 0, 0, 0.02);
+}
+
+.field textarea {
+  resize: vertical;
+  min-height: 120px;
 }
 
 .field input[type="date"] {
@@ -56,7 +68,8 @@
 }
 
 .field input:focus-visible,
-.field select:focus-visible {
+.field select:focus-visible,
+.field textarea:focus-visible {
   outline: 3px solid rgba(204, 213, 174, 0.7);
   outline-offset: 2px;
 }
@@ -106,6 +119,10 @@
   height: 18px;
 }
 
+.results {
+  min-width: 0;
+}
+
 .results-head {
   display: flex;
   justify-content: space-between;
@@ -117,6 +134,16 @@
 .results-head h3 {
   margin: 0;
   line-height: 1.2;
+}
+
+.results-head-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.results-actions {
+  margin-bottom: 16px;
 }
 
 .sort select {
@@ -149,10 +176,6 @@
   gap: 30px;
 }
 
-.results {
-  min-width: 0;
-}
-
 .sitter-row {
   display: grid;
   grid-template-columns: 96px minmax(0, 1fr) 160px;
@@ -170,13 +193,13 @@
   overflow: hidden;
 }
 
-.sitter-info {
-  min-width: 0;
-}
-
 .sitter-row:hover {
   box-shadow: var(--shadow-lg);
   transform: translateY(-2px);
+}
+
+.sitter-info {
+  min-width: 0;
 }
 
 .sitter-portrait {
@@ -251,6 +274,13 @@
   color: #2c3e50;
   opacity: 0.9;
   font-size: 14px;
+}
+
+.sitter-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
 }
 
 .muted {
@@ -334,9 +364,83 @@
   border: 0;
 }
 
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.5);
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  z-index: 999;
+}
+
+.modal.active {
+  display: flex;
+}
+
+.modal-content {
+  background: #fff;
+  width: min(760px, 100%);
+  max-height: 90vh;
+  overflow-y: auto;
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+}
+
+.modal-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.modal-top h2 {
+  margin: 0;
+  line-height: 1.2;
+}
+
+.modal-form {
+  display: grid;
+  gap: 18px;
+}
+
+.modal-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.field-full {
+  grid-column: 1 / -1;
+}
+
+.modal-checks {
+  margin-top: 0;
+}
+
+.empty-state {
+  padding: 24px;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: var(--shadow-md);
+  color: #2c3e50;
+}
+
 @media (max-width: 920px) {
   .search-layout {
     grid-template-columns: 1fr;
+  }
+
+  .results-head {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .results-head-actions {
+    justify-content: flex-start;
   }
 
   .sitter-row {
@@ -355,10 +459,16 @@
     gap: 12px;
     align-items: center;
     flex-wrap: wrap;
+    min-width: 0;
+  }
+
+  .sitter-card-actions {
+    justify-content: flex-start;
+    width: 100%;
   }
 
   .sitter-badges {
-    gap: 14px;
+    gap: 10px;
     flex-wrap: wrap;
   }
 
@@ -370,7 +480,52 @@
     padding: 6px 10px;
   }
 
-  .btn-primary {
-    margin-left: auto;
+  .modal-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .date-row {
+    grid-template-columns: 1fr;
+  }
+
+  .modal {
+    padding: 16px;
+  }
+
+  .modal-content {
+    padding: 18px;
+    border-radius: 18px;
+  }
+
+  .modal-top {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filter-actions {
+    flex-direction: column;
+  }
+
+  .filter-actions .btn {
+    width: 100%;
+  }
+
+  .results-actions .btn {
+    width: 100%;
+  }
+
+  .sitter-row {
+    grid-template-columns: 1fr;
+  }
+
+  .sitter-portrait {
+    width: 84px;
+    height: 84px;
+  }
+
+  .sitter-side {
+    grid-column: auto;
   }
 }
