@@ -3,7 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
+    <meta name="author" content="Vilde Hvitstein Fristad" />
+    <meta
+      name="description"
+      content="Finn trygge hundepassere i ditt nærområde med Potepass."
+    />
+    <title>Finn hundepasser - Potepass</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -12,24 +17,20 @@
     />
 
     <link rel="stylesheet" href="/src/css/style.css" />
-    <link rel="stylesheet" href="/src/css/petSitter.css" />
-
     <link rel="shortcut icon" href="../assets/logo.png" />
-    <title>Finn hundepasser – Potepass</title>
   </head>
-
   <body>
     <a class="skip-link" href="#main">Hopp til innhold</a>
-
     <header>
       <div class="hamburger-backdrop" aria-hidden="true"></div>
-
       <div class="container header-inner">
         <a href="index.html" class="logo">
           <img
             src="../assets/logo.png"
-            alt="Potepass – trygg hundepass"
+            alt="Potepass - trygg hundepass"
             class="logo-image"
+            width="48"
+            height="48"
           />
           <span class="logo-text">Potepass</span>
         </a>
@@ -40,9 +41,9 @@
             <li>
               <a href="petSitters.html" aria-current="page">Finn hundepasser</a>
             </li>
-            <li><a href="booking.html">Mine bookinger</a></li>
-            <li><a href="profile.html">Min profil</a></li>
-            <li><a href="contact.html">Kontakt oss</a></li>
+            <li><a href="/src/html/booking.html">Mine bookinger</a></li>
+            <li><a href="/src/html/">Min profil</a></li>
+            <li><a href="/src/html/contact.html">Kontakt oss</a></li>
           </ul>
         </nav>
 
@@ -66,7 +67,7 @@
         <section class="section center">
           <h1>Finn hundepasser</h1>
           <p>
-            Filtrer etter sted, dato og tilgjengelighet – og finn en passer du
+            Filtrer etter sted, dato og tilgjengelighet - og finn en passer du
             liker.
           </p>
         </section>
@@ -89,35 +90,37 @@
                   </div>
 
                   <div class="field">
-                    <p>Dato</p>
+                    <p class="field-title">Dato</p>
+
                     <div class="date-row">
                       <div>
                         <label for="from">Dato fra</label>
-                        <input id="from" type="date" name="from" />
+                        <input id="from" type="date" />
                       </div>
+
                       <div>
                         <label for="to">Dato til</label>
-                        <input id="to" type="date" name="to" />
+                        <input id="to" type="date" />
                       </div>
                     </div>
                   </div>
 
                   <div class="field">
                     <label for="availability">Tilgjengelighet</label>
-                    <select id="availability" name="availability">
-                      <option value="any" selected>Alle</option>
-                      <option value="available">Kun ledige</option>
-                      <option value="weekend">Helg</option>
-                      <option value="weekdays">Hverdager</option>
+                    <select id="availability">
+                      <option>Alle</option>
+                      <option>Kun ledige</option>
+                      <option>Helg</option>
+                      <option>Hverdager</option>
                     </select>
                   </div>
 
                   <div class="field">
                     <label for="service">Type pass</label>
-                    <select id="service" name="service">
-                      <option value="overnight" selected>Overnatting</option>
-                      <option value="daycare">Dagpass</option>
-                      <option value="walk">Tur</option>
+                    <select id="service">
+                      <option>Overnatting</option>
+                      <option>Dagpass</option>
+                      <option>Tur</option>
                     </select>
                   </div>
 
@@ -131,7 +134,7 @@
                       max="1400"
                       value="900"
                     />
-                    <div class="range-meta" aria-hidden="true">
+                    <div class="range-meta">
                       <span>100</span>
                       <span>1400</span>
                     </div>
@@ -139,25 +142,23 @@
 
                   <div class="checks">
                     <label class="check">
-                      <input type="checkbox" name="hasDog" />
+                      <input type="checkbox" />
                       <span>Passer kan ha egen hund</span>
                     </label>
 
                     <label class="check">
-                      <input type="checkbox" name="hasKids" />
+                      <input type="checkbox" />
                       <span>Passer kan ha barn</span>
                     </label>
 
                     <label class="check">
-                      <input type="checkbox" name="updates" checked />
+                      <input type="checkbox" />
                       <span>Ønsker oppdateringer/bilder</span>
                     </label>
                   </div>
 
                   <div class="filter-actions">
-                    <button class="btn btn-primary" type="submit">
-                      Bruk filtre
-                    </button>
+                    <button class="btn btn-primary">Bruk filtre</button>
                     <button class="btn btn-ghost" type="reset">
                       Nullstill
                     </button>
@@ -184,15 +185,21 @@
             </div>
 
             <div class="results-actions">
-              <button id="add-sitter-btn" class="btn btn-primary">
+              <button id="add-sitter-btn" class="btn btn-primary" type="button">
                 Legg til passer
               </button>
             </div>
 
-            <div class="sitter-list">
-              <article class="card sitter-row">
+            <div class="sitter-list" class="sitter-list">
+              <article class="card sitter-row" data-id="1">
                 <div class="sitter-portrait">
-                  <img src="../assets/dogsitter1.png" alt="Portrett av Oda" />
+                  <img
+                    src="../assets/dogsitter1.png"
+                    alt="Portrett av Oda"
+                    width="96"
+                    height="96"
+                    loading="lazy"
+                  />
                 </div>
 
                 <div class="sitter-info">
@@ -218,16 +225,32 @@
                   </p>
 
                   <div class="sitter-card-actions">
-                    <a class="btn btn-primary" href="booking.html">Se profil</a>
-                    <button class="btn btn-ghost" disabled>Rediger</button>
-                    <button class="btn btn-ghost" disabled>Slett</button>
+                    <a class="btn btn-primary" href="/src/html/booking.html"
+                      >Se profil</a
+                    >
+                    <button class="btn btn-ghost" type="button" data-id="1">
+                      Rediger
+                    </button>
+                    <button
+                      class="btn btn-ghost delete-btn"
+                      type="button"
+                      data-id="1"
+                    >
+                      Slett
+                    </button>
                   </div>
                 </div>
               </article>
 
-              <article class="card sitter-row">
+              <article class="card sitter-row" data-id="2">
                 <div class="sitter-portrait">
-                  <img src="../assets/dogsitter3.png" alt="Portrett av Mari" />
+                  <img
+                    src="../assets/dogsitter3.png"
+                    alt="Portrett av Mari"
+                    width="96"
+                    height="96"
+                    loading="lazy"
+                  />
                 </div>
 
                 <div class="sitter-info">
@@ -253,16 +276,36 @@
                   </p>
 
                   <div class="sitter-card-actions">
-                    <a class="btn btn-primary" href="booking.html">Se profil</a>
-                    <button class="btn btn-ghost" disabled>Rediger</button>
-                    <button class="btn btn-ghost" disabled>Slett</button>
+                    <a class="btn btn-primary" href="/src/html/booking.html"
+                      >Se profil</a
+                    >
+                    <button
+                      class="btn btn-ghost edit-btn"
+                      type="button"
+                      data-id="2"
+                    >
+                      Rediger
+                    </button>
+                    <button
+                      class="btn btn-ghost delete-btn"
+                      type="button"
+                      data-id="2"
+                    >
+                      Slett
+                    </button>
                   </div>
                 </div>
               </article>
 
-              <article class="card sitter-row">
+              <article class="card sitter-row" data-id="3">
                 <div class="sitter-portrait">
-                  <img src="../assets/dogsitter2.png" alt="Portrett av Elias" />
+                  <img
+                    src="../assets/dogsitter2.png"
+                    alt="Portrett av Elias"
+                    width="96"
+                    height="96"
+                    loading="lazy"
+                  />
                 </div>
 
                 <div class="sitter-info">
@@ -288,9 +331,23 @@
                   </p>
 
                   <div class="sitter-card-actions">
-                    <a class="btn btn-primary" href="booking.html">Se profil</a>
-                    <button class="btn btn-ghost" disabled>Rediger</button>
-                    <button class="btn btn-ghost" disabled>Slett</button>
+                    <a class="btn btn-primary" href="/src/html/booking.html"
+                      >Se profil</a
+                    >
+                    <button
+                      class="btn btn-ghost edit-btn"
+                      type="button"
+                      data-id="3"
+                    >
+                      Rediger
+                    </button>
+                    <button
+                      class="btn btn-ghost edit-btn"
+                      type="button"
+                      data-id="3"
+                    >
+                      Slett
+                    </button>
                   </div>
                 </div>
               </article>
@@ -299,12 +356,126 @@
         </div>
       </div>
     </main>
+
+    <div id="sitter-modal" class="modal" aria-hidden="true">
+      <div class="modal-content">
+        <div class="modal-top">
+          <button type="button" id="close-modal-btn" class="btn btn-ghost">
+            Lukk
+          </button>
+          <h2 id="modal-title">Legg til / rediger hundepasser</h2>
+        </div>
+
+        <form id="sitter-form" class="modal-form">
+          <input type="hidden" id="sitter-id" name="sitterId" />
+
+          <div class="modal-grid">
+            <div class="field">
+              <label for="name">Navn</label>
+              <input id="name" name="name" type="text" required />
+            </div>
+
+            <div class="field">
+              <label for="city">Sted</label>
+              <input id="city" name="city" type="text" required />
+            </div>
+
+            <div class="field">
+              <label for="postalCode">Postnummer</label>
+              <input id="postalCode" name="postalCode" type="text" required />
+            </div>
+
+            <div class="field">
+              <label for="pricePerDay">Pris per døgn</label>
+              <input
+                id="pricePerDay"
+                name="pricePerDay"
+                type="number"
+                min="0"
+                required
+              />
+            </div>
+
+            <div class="field">
+              <label for="rating">Vurdering</label>
+              <input
+                id="rating"
+                name="rating"
+                type="number"
+                min="0"
+                max="5"
+                step="0.1"
+              />
+            </div>
+
+            <div class="field">
+              <label for="reviewCount">Antall anmeldelser</label>
+              <input
+                id="reviewCount"
+                name="reviewCount"
+                type="number"
+                min="0"
+              />
+            </div>
+
+            <div class="field">
+              <label for="image">Bilde-URL / filsti</label>
+              <input id="image" name="image" type="text" />
+            </div>
+
+            <div class="field">
+              <label for="availabilityStatus">Tilgjengelighet</label>
+              <select id="availabilityStatus" name="availabilityStatus">
+                <option value="Ledig">Ledig</option>
+                <option value="Få plasser">Få plasser</option>
+                <option value="Ikke ledig">Ikke ledig</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="serviceType">Type pass</label>
+              <select id="serviceType" name="serviceType">
+                <option value="Overnatting">Overnatting</option>
+                <option value="Dagpass">Dagpass</option>
+                <option value="Tur">Tur</option>
+              </select>
+            </div>
+
+            <div class="field field-full">
+              <label for="description">Beskrivelse</label>
+              <textarea
+                id="description"
+                name="description"
+                rows="4"
+                required
+              ></textarea>
+            </div>
+          </div>
+
+          <div class="filter-actions">
+            <button type="button" id="cancel-btn" class="btn btn-ghost">
+              Avbryt
+            </button>
+            <button type="submit" id="save-sitter-btn" class="btn btn-primary">
+              Lagre
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
     <footer class="site-footer">
       <div class="container footer-row">
         <p class="footer-brand">&copy; 2026 Potepass</p>
 
         <div class="footer-dogs">
-          <img src="../assets/puppies.png" alt="Illustrasjon av hunder" />
+          <img
+            src="../assets/puppies.png"
+            alt="Illustrasjon av hunder"
+            width="200"
+            height="120"
+            loading="lazy"
+          />
         </div>
 
         <div class="social">
@@ -360,5 +531,6 @@
       </div>
     </footer>
     <script src="../js/burger.js"></script>
+    <script src="../js/petsitter.js"></script>
   </body>
 </html>
