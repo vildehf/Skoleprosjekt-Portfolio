@@ -1,0 +1,169 @@
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+}
+
+.grid-box-1 {
+  grid-column-start: 2;
+  grid-column-end: 4;
+  font-size: medium;
+}
+
+.grid-box-2 {
+  grid-column-start: 2;
+  grid-column-end: 5;
+  font-size: medium;
+}
+
+details {
+  border: 1px solid #2c3e50;
+  border-radius: 6px;
+  margin-bottom: 8px;
+  padding: 16px;
+}
+
+summary {
+  font-weight: 400;
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+summary h2 {
+  margin: 0;
+}
+
+summary::after {
+  content: "+";
+  font-size: 30px;
+  flex-shrink: 0;
+  margin-left: 12px;
+  transition: transform 0.3s ease;
+}
+
+details[open] summary::after {
+  transform: rotate(45deg);
+}
+
+details p {
+  overflow: hidden;
+  animation: fadeDown 0.3s ease;
+}
+
+@keyframes fadeDown {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.grid-box-img {
+  grid-column-start: 5;
+  grid-column-end: 5;
+  padding: 50px;
+  width: 600px;
+}
+
+.grid-box-img img {
+  border-radius: 10%;
+  box-shadow: #2a2a2a 15px 15px 15px 0px;
+}
+
+.grid-box-3 {
+  grid-column-start: 2;
+  grid-column-end: 4;
+  font-size: medium;
+}
+
+.grid-box-4 {
+  grid-column-start: 2;
+  grid-column-end: 4;
+  font-size: medium;
+}
+
+.contact-container {
+  background-color: rgb(221, 221, 221);
+  padding: 2.5rem;
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.contact-form select {
+  padding: 14px;
+  border-radius: 5px;
+  border: 2px solid #a2a2a2;
+}
+
+.contact-form input {
+  padding: 14px;
+  border-radius: 5px;
+  border: 2px solid #a2a2a2;
+}
+
+.contact-form textarea {
+  padding: 12px;
+  border-radius: 5px;
+  border: 2px solid #a2a2a2;
+  width: 100%;
+  resize: vertical;
+}
+
+.contact-form button {
+  padding: 12px;
+  border-radius: 5px;
+  border: none;
+  background-color: #2c3e50;
+  color: #ccd5ae;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+@media screen and (max-width: 768px) {
+  body {
+    overflow-x: hidden;
+    text-align: center;
+  }
+
+  .grid-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 1rem;
+  }
+
+  .grid-box-1 {
+    order: 1;
+  }
+  .grid-box-2 {
+    order: 2;
+  }
+  .grid-box-3 {
+    order: 3;
+  }
+  .grid-box-4 {
+    order: 4;
+  }
+  .grid-box-img {
+    order: 5;
+  }
+
+  .grid-box-1,
+  .grid-box-2,
+  .grid-box-3,
+  .grid-box-4 {
+    width: 100%;
+    grid-column: unset;
+    grid-row: unset;
+    font-size: 90%;
+  }
+}
