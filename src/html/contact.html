@@ -12,7 +12,7 @@
       href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Open+Sans:wght@400;500;600&family=Cherry+Bomb+One&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="../css/style.css" />
     <link rel="stylesheet" href="../css/contact.css" />
 
     <link rel="shortcut icon" href="../assets/paw.png" />
@@ -36,7 +36,7 @@
           <ul class="nav-menu">
             <li><a href="index.html" aria-current="page">Hjem</a></li>
             <li><a href="petSitters.html">Finn hundepasser</a></li>
-            <li><a href="bookings.html">Mine bookinger</a></li>
+            <li><a href="booking.html">Mine bookinger</a></li>
             <li><a href="profile.html">Profil</a></li>
           </ul>
         </nav>
@@ -55,6 +55,153 @@
         </button>
       </div>
     </header>
+    <main>
+      <div class="grid-container">
+        <div class="grid-box-1">
+          <h1>Er det noe du lurer på?</h1>
+          <p>Her er noen ofte stilte spørsmål</p>
+        </div>
+
+        <div class="grid-box-2">
+          <h2>FAQ</h2>
+          <div class="faq">
+            <details>
+              <summary>
+                <h2>Kan passere passe på flere hunder samtidig?</h2>
+              </summary>
+              <p>
+                Ja, passere kan passe på flere hunder samtidig, men det er
+                viktig at hundene er kompatible og at passeren har erfaring med
+                å håndtere flere dyr samtidig.
+              </p>
+            </details>
+
+            <details>
+              <summary>
+                <h2>Hvordan kan jeg registrere megselv som passer?</h2>
+              </summary>
+              <p>
+                For å registrere deg som passer, gå til siden for å lage en
+                konto og fyll ut de nødvendige opplysningene. Du vil også måtte
+                laste opp dokumenter for å bekrefte din identitet og
+                kvalifikasjoner.
+              </p>
+            </details>
+
+            <details>
+              <summary>
+                <h2>Hvor ligger dere?</h2>
+              </summary>
+              <p>Vi ligger i Sandefjord, Oslo, Drammen og Larvik</p>
+            </details>
+
+            <details>
+              <summary>
+                <h2>Hvordan går betalingen?</h2>
+              </summary>
+              <p>
+                Betallingen går med Vipps over siden våres, men andre
+                betalingsmåter kan også brukes.
+              </p>
+            </details>
+
+            <details>
+              <summary>
+                <h2>Hvordan kan jeg rapportere om det er misbruk?</h2>
+              </summary>
+              <p>
+                Om du opplever misbruk, kan du rapportere det gjennom vår
+                kundeservice, appen, epost eller ved å klikke "rapporter" ved
+                siden av brukerens profil.
+              </p>
+            </details>
+
+            <details>
+              <summary>
+                <h2>Kan jeg endre på bestilling?</h2>
+              </summary>
+              <p>
+                Ja, du kan endre på bestillingen din så lenge det er innenfor de
+                tillatte fristene.
+              </p>
+            </details>
+
+            <details>
+              <summary>
+                <h2>Hvordan kan jeg kontakte dere direkte?</h2>
+              </summary>
+              <p>
+                Du kan kontakte oss direkte via telefon eller e-post. Se
+                kontaktskjemaet nedenfor.
+              </p>
+            </details>
+
+            <details>
+              <summary>
+                <h2>Hvordan kan jeg slette kontoen min?</h2>
+              </summary>
+              <p>
+                Du kan slette kontoen din ved å gå til innstillinger,
+                Brukerinnstillinger, også velg "Slett konto".
+              </p>
+            </details>
+          </div>
+        </div>
+
+        <div class="grid-box-img">
+          <img src="../assets/max.png" alt="picture of dog Max" />
+        </div>
+
+        <div class="grid-box-3">
+          <h2>Har du flere spørsmål?</h2>
+          <p>Ta kontakt med oss direkte!</p>
+        </div>
+
+        <div class="grid-box-4">
+          <div class="contact-container">
+            <form action="" class="contact-form">
+              <label for="subject">Emne:</label>
+              <select id="subject" name="subject" required>
+                <option value="" disabled selected>Velg emne</option>
+                <option value="general">Generelt spørsmål</option>
+                <option value="booking">Om bestiling</option>
+                <option value="payment">Om betaling</option>
+                <option value="account">Om bruker</option>
+                <option value="other">Annet</option>
+              </select>
+
+              <label for="name">Navn:</label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                placeholder="Navn"
+                required
+              />
+
+              <label for="email">E-post:</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="E-post"
+                required
+              />
+
+              <label for="message">Melding:</label>
+              <textarea
+                id="message"
+                name="message"
+                placeholder="Melding..."
+                required
+              ></textarea>
+
+              <button type="submit">Send in</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </main>
     <footer class="site-footer">
       <div class="footer-dogs">
         <img src="../assets/puppies.png" alt="Illustrasjon av hunder" />
