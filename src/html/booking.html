@@ -3,6 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="author" content="Line Nerli Tveite" />
+    <meta
+      name="description"
+      content="Bestill hundepass enkelt med Potepass. Velg hund, hundepasser og dato, og administrer dine bookinger på ett sted."
+    />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -11,7 +16,7 @@
     />
 
     <link rel="stylesheet" href="../css/style.css" />
-    <link rel="shortcut icon" href="../assets/paw.png" />
+    <link rel="shortcut icon" href="../assets/logo.png" />
     <title>Potepass - Booking</title>
   </head>
 
@@ -21,7 +26,7 @@
       <div class="hamburger-backdrop" aria-hidden="true"></div>
 
       <div class="container header-inner">
-        <a href="index.html" class="logo">
+        <a href="/index.html" class="logo">
           <img
             src="../assets/logo.png"
             alt="Potepass – trygg hundepass"
@@ -34,13 +39,15 @@
           <ul class="nav-menu">
             <li><a href="/index.html">Hjem</a></li>
             <li>
-              <a href="dogs.html">Finn hundepasser</a>
+              <a href="/src/html/petSitters.html">Finn hundepasser</a>
             </li>
             <li>
-              <a href="booking.html" aria-current="page">Mine bookinger</a>
+              <a href="/src/html/booking.html" aria-current="page"
+                >Mine bookinger</a
+              >
             </li>
-            <li><a href="profile.html">Min profil</a></li>
-            <li><a href="contact.html">Kontakt oss</a></li>
+            <li><a href="/src/html/">Min profil</a></li>
+            <li><a href="/src/html/contact.html">Kontakt oss</a></li>
           </ul>
         </nav>
 
@@ -67,7 +74,7 @@
 
         <div class="hero">
           <img
-            src="../assets/hero.png"
+            src="/src/assets/hero.webp"
             alt="Kvinne leker med hunder i parken"
           />
 
@@ -83,7 +90,7 @@
         <form class="booking-form">
           <label for="dog">Velg hund</label>
           <select name="dog" id="dog">
-            <option>Velg hund</option>
+            <option value="">Velg hund</option>
           </select>
 
           <label for="sitter">Velg hundepasser</label>
@@ -130,7 +137,13 @@
         <p class="footer-brand">&copy; 2026 Potepass</p>
 
         <div class="footer-dogs">
-          <img src="../assets/puppies.png" alt="Illustrasjon av hunder" />
+          <img
+            src="../assets/puppies.png"
+            alt="Illustrasjon av hunder"
+            width="200"
+            height="120"
+            loading="lazy"
+          />
         </div>
 
         <div class="social">
