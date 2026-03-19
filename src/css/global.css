@@ -2,6 +2,16 @@
   --primary-bg-color: #2c3e50;
   --secondary-bg-color: #ccd5ae;
   --border-color: #d1d5db;
+
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 8px 20px rgba(0, 0, 0, 0.08);
+  --shadow-panel: 0 4px 14px rgba(0, 0, 0, 0.05);
+
+  --btn-radius: 999px;
+  --btn-height: 40px;
+  --btn-padding-x: 16px;
+  --btn-font-size: 14px;
 }
 
 *,
@@ -205,6 +215,61 @@ header {
 }
 .hamburger.active .bar:nth-child(3) {
   transform: translateY(-8px) rotate(-45deg);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--btn-height);
+  padding: 0 var(--btn-padding-x);
+  border: 1px solid transparent;
+  border-radius: var(--btn-radius);
+  font: inherit;
+  font-size: var(--btn-font-size);
+  font-weight: 700;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+.btn:focus-visible {
+  outline: 3px solid rgba(204, 213, 174, 0.7);
+  outline-offset: 2px;
+}
+
+.btn-primary {
+  background: #2c3e50;
+  color: #ccd5ae;
+  border-color: #2c3e50;
+}
+
+.btn-primary:hover {
+  background-color: #1f2e3a;
+  border-color: #1f2e3a;
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-ghost {
+  background: rgba(44, 62, 80, 0.08);
+  color: #2c3e50;
+  border-color: rgba(44, 62, 80, 0.12);
+}
+
+.btn-ghost:hover {
+  background: rgba(44, 62, 80, 0.12);
+  box-shadow: var(--shadow-sm);
 }
 
 @media (max-width: 768px) {
