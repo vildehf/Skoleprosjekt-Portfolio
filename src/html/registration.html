@@ -31,6 +31,7 @@
           </li>
           <li><a href="/src/html/booking.html">Mine bookinger</a></li>
           <li><a href="/src/html/profile.html">Min profil</a></li>
+          <li><a href="/src/html/registration.html">Mine kjæledyr</a></li>
           <li><a href="/src/html/contact.html">Kontakt oss</a></li>
         </ul>
       </nav>
@@ -50,31 +51,39 @@
             <h2>Informasjon om kjæledyret ditt</h2>
             <div id="pets-form">
             <form id="pet-form" action="/" method="get">
+            <form id="pet-form" action="/" method="get">
             <div class="info-card">
 
           <div class="form-row two-col">
           <div>
             <label for="pet-name">Navn</label>
-            <input id="pet-name" name="name" type="text">
+            <input id="pet-name" name="name" type="text" required minlength="3">
+            <p id="name-error" class="name-error"></p>
           </div>
+          
 
           <div>
             <label for="pet-weight">Vekt (kg)</label>
-            <input id="pet-weight" name="weight" type="number">
+            <input id="pet-weight" name="weight" type="number" min="1" required>
+            <p id="weight-error" class="weight-error"></p>
           </div>
           </div>
 
           <div class="form-row four-col">
             <div>
             <label for="pet-age-years">Alder (år)</label>
-            <input id="pet-age-years" type="number">
+            <input id="pet-age-years" type="number" min="1" required>
+            <p id="age-error" class="age-error"></p>
           </div>
 
           <div class="gender-group">
             <label>Kjønn</label>
             <div class="form-card btn-group">
-                <button type="button" class="form-btn">Han</button>
-                <button type="button" class="form-btn">Hun</button>
+                <input type="radio" name="gender" value="Han" id="gender-male">
+                <label for="gender-male" class="form-btn">Han</label>
+
+                <input type="radio" name="gender" value="Hun" id="gender-female">
+                <label for="gender-female" class="form-btn">Hun</label>
             </div>
             </div>
         </div>
@@ -86,8 +95,7 @@
           </div>
         </div>
 
-            </div>
-            </div>
+           
               <div>
                 <h3>Microchippet?</h3>
             <div class="form-card microchip-selector">
@@ -138,6 +146,7 @@
                 <input type="radio" id="catfriendly-no" name="catfriendly" value="no">
                 <label for="catfriendly-no" class="form-btn">Nei, ikke vennlig med katter</label>
               </div>
+              
 
               <h2>Andre opplysninger</h2>
                   <div class="form-card">
@@ -152,9 +161,9 @@
                 <div>
                   <br>
                   <button class="form-btn" type="submit">Lagre opplysninger</button>
-                  <button class="form-btn-delete" type="delete">Slett opplysninger</button>
+                  <button class="form-btn-delete" type="button">Slett opplysninger</button>
                   </div>
-                </form>
+                
     </section>
   </main>
   <footer class="site-footer">

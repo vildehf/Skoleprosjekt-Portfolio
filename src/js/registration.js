@@ -1,6 +1,7 @@
 
 let pets = [];
 
+
 document.querySelectorAll(".form-card").forEach(group => {
   const buttons = group.querySelectorAll(".form-btn");
 
@@ -44,11 +45,16 @@ const form = document.getElementById("pet-form");
 form.addEventListener("submit", function(e) {
   e.preventDefault();
 
+ 
 
   const name = document.getElementById("pet-name").value.trim();
   const weight = parseFloat(document.getElementById("pet-weight").value);
   const age = parseInt(document.getElementById("pet-age-years").value);
   const breed = document.getElementById("pet-breed").value.trim();
+  const doctor = document.getElementById("doctor").value.trim();
+  const phone = document.getElementById("phone-doctor").value.trim();
+
+ 
   const extraInfo = document.getElementById("extra-info").value.trim();
   const doctor = document.getElementById("doctor").value.trim();
   const phone = document.getElementById("phone-doctor").value.trim();
@@ -61,6 +67,55 @@ form.addEventListener("submit", function(e) {
   const childfriendly = document.querySelector('input[name="childfriendly"]:checked')?.value || "";
   const dogfriendly = document.querySelector('input[name="dogfriendly"]:checked')?.value || "";
   const catfriendly = document.querySelector('input[name="catfriendly"]:checked')?.value || "";
+
+const form = document.getElementById("pet-form");
+
+const nameInput = document.getElementById("pet-name");
+const weightInput = document.getElementById("pet-weight");
+const ageInput = document.getElementById("pet-age-years");
+
+const nameError = document.getElementById("name-error");
+const weightError = document.getElementById("weight-error");
+const ageError = document.getElementById("age-error");
+
+form.addEventListener("submit", function (e) {
+  e.preventDefault();
+
+  let valid = true;
+
+
+  if (!nameInput.checkValidity()) {
+    nameError.textContent = "Navnet må inneholde mer enn 2 bokstaver";
+    nameError.classList.add("show");
+    valid = false;
+  } else {
+    nameError.classList.remove("show");
+  }
+
+
+  if (!weightInput.checkValidity()) {
+    weightError.textContent = "Vekt må være over 0 kg";
+    weightError.classList.add("show");
+    valid = false;
+  } else {
+    weightError.classList.remove("show");
+  }
+
+
+  if (!ageInput.checkValidity()) {
+    ageError.textContent = "Alder kan ikke være negativ";
+    ageError.classList.add("show");
+    valid = false;
+  } else {
+    ageError.classList.remove("show");
+  }
+
+  if (!valid) return;
+
+
+  console.log("Alt OK!");
+});
+
 
   if (name.length < 3) {
     alert("Navnet må ha minst 3 bokstaver");
@@ -96,10 +151,12 @@ form.addEventListener("submit", function(e) {
     dogfriendly,
     catfriendly
   };
+  console.log(pets);
 
 
   pets.push(pet);
 
+ 
 
   renderPets();
 
