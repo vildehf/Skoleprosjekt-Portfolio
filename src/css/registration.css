@@ -4,6 +4,16 @@ h1, h2, h3, h4 {
   padding: 1rem 1rem 1rem 0;
 }
 
+.error {
+  display: none;
+  color: red;
+  font-size: 0.9rem;
+  margin-top: 4px;
+}
+
+.error.show {
+  display: block;
+}
 
 .form-layout {
   display: grid;

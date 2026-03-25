@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="author" content="Silje Elvik">
-  <meta name="description" content="Finn trygge hundepassere i ditt nærområde med Potepass." />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
@@ -31,7 +30,7 @@
             <a href="/src/html/petSitters.html">Finn hundepasser</a>
           </li>
           <li><a href="/src/html/booking.html">Mine bookinger</a></li>
-          <li><a href="/src/html/">Min profil</a></li>
+          <li><a href="/src/html/profile.html">Min profil</a></li>
           <li><a href="/src/html/contact.html">Kontakt oss</a></li>
         </ul>
       </nav>
@@ -48,58 +47,53 @@
 <main>
         <section class="container">
         <h1>Fortell oss om ditt kjæledyr</h1>
-        
             <h2>Informasjon om kjæledyret ditt</h2>
-            <div id="pets-sidebar" class="preview-panel">
-    <!-- Pets cards dukker opp her -->
-  </div>
-            <div id="pets-form form-layout form-panel">
+            <div id="pets-form">
             <form id="pet-form" action="/" method="get">
             <div class="info-card">
 
           <div class="form-row two-col">
           <div>
             <label for="pet-name">Navn</label>
-            <input id="pet-name" name="name" type="text">
-            <p id="pet-name-error"></p>
+            <input id="pet-name" name="name" type="text" required minlength="3">
+            <p id="name-error" class="name-error" style="display: none;"></p>
           </div>
+          
 
           <div>
             <label for="pet-weight">Vekt (kg)</label>
-            <input id="pet-weight" name="weight" type="number">
+            <input id="pet-weight" name="weight" type="number" min="1" required>
+            <p id="weight-error" class="weight-error" style="display: none;"></p>
           </div>
           </div>
 
           <div class="form-row four-col">
             <div>
             <label for="pet-age-years">Alder (år)</label>
-            <input id="pet-age-years" name="age" type="number">
+            <input id="pet-age-years" type="number" min="1" required>
+            <p id="age-error" class="age-error" style="display: none;"></p>
           </div>
 
-       <div class="gender-group">
-  <label>Kjønn</label>
+          <div class="gender-group">
+            <label>Kjønn</label>
+            <div class="form-card btn-group">
+                <input type="radio" name="gender" value="Han" id="gender-male">
+                <label for="gender-male" class="form-btn">Han</label>
 
-  <div class="form-card btn-group">
-    <input type="radio" id="gender-male" name="gender" value="male">
-    <label for="gender-male" class="form-btn">Han</label>
-
-    <input type="radio" id="gender-female" name="gender" value="female">
-    <label for="gender-female" class="form-btn">Hun</label>
-  </div>
-</div>
-        
+                <input type="radio" name="gender" value="Hun" id="gender-female">
+                <label for="gender-female" class="form-btn">Hun</label>
+            </div>
+            </div>
+        </div>
 
           <div class="form-row">
           <div class="full-width">
             <label for="pet-breed">Rase</label>
             <input id="pet-breed" name="breed" type="text">
-            <br>
           </div>
-          
         </div>
 
-            </div>
-            </div>
+           
               <div>
                 <h3>Microchippet?</h3>
             <div class="form-card microchip-selector">
@@ -150,16 +144,10 @@
                 <input type="radio" id="catfriendly-no" name="catfriendly" value="no">
                 <label for="catfriendly-no" class="form-btn">Nei, ikke vennlig med katter</label>
               </div>
-                <h3>Øvrig informasjon</h3>
-                  <label for="extra-info">Andre ting hundepasser burde vite?</label>
-                  <br>
-                  <textarea id="extra-info" name="extra-info" rows="6" cols="60"></textarea>
-                  <div>
-                  </div>
-                  </div>
+              
               <h2>Andre opplysninger</h2>
                   <div class="form-card">
-                  <label for="doctor">Navn på veterinær</label>
+                  <label for="doctor">Navn på vetrinær</label>
                   <br>
                   <input id="doctor" name="doctor" type="text">
                   <br>
@@ -170,10 +158,9 @@
                 <div>
                   <br>
                   <button class="form-btn" type="submit">Lagre opplysninger</button>
-                  <button class="form-btn-delete" type="submit">Slett opplysninger</button>
+                  <button class="form-btn-delete" type="button">Slett opplysninger</button>
                   </div>
                   </form>
-                
                 
     </section>
   </main>
