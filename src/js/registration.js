@@ -7,17 +7,37 @@ document.querySelectorAll(".form-card").forEach(group => {
 
   buttons.forEach(button => {
     button.addEventListener("click", () => {
+  
       if (button.classList.contains("active")) {
         button.classList.remove("active");
         return;
       }
 
+     
       buttons.forEach(btn => btn.classList.remove("active"));
 
       button.classList.add("active");
     });
   });
 });
+
+function renderPets() {
+  const petsSidebar = document.getElementById("pets-sidebar");
+  petsSidebar.innerHTML = "";
+
+  pets.forEach(pet => {
+    const petDiv = document.createElement("div");
+    petDiv.classList.add("card", "active"); 
+    petDiv.innerHTML = `
+      <h4>${pet.name}</h4>
+      <p>Kjønn: ${pet.gender}</p>
+      <p>Vekt: ${pet.weight} kg</p>
+      <p>Alder: ${pet.age}</p>
+      <p>Rase: ${pet.breed}</p>
+    `;
+    petsSidebar.appendChild(petDiv);
+  });
+}
 
 
 const form = document.getElementById("pet-form");
@@ -26,6 +46,7 @@ form.addEventListener("submit", function(e) {
   e.preventDefault();
 
  
+
   const name = document.getElementById("pet-name").value.trim();
   const weight = parseFloat(document.getElementById("pet-weight").value);
   const age = parseInt(document.getElementById("pet-age-years").value);
@@ -34,6 +55,11 @@ form.addEventListener("submit", function(e) {
   const phone = document.getElementById("phone-doctor").value.trim();
 
  
+  const extraInfo = document.getElementById("extra-info").value.trim();
+  const doctor = document.getElementById("doctor").value.trim();
+  const phone = document.getElementById("phone-doctor").value.trim();
+
+
   const gender = document.querySelector('input[name="gender"]:checked')?.value || "";
   const microchipped = document.querySelector('input[name="microchipped"]:checked')?.value || "";
   const neutered = document.querySelector('input[name="neutered"]:checked')?.value || "";
@@ -91,11 +117,30 @@ form.addEventListener("submit", function (e) {
 });
 
 
+  if (name.length < 3) {
+    alert("Navnet må ha minst 3 bokstaver");
+    return;
+  }
+  if (!gender) {
+    alert("Husk å velge kjønn");
+    return;
+  }
+  if (!weight || weight <= 0) {
+    alert("Vekt må være over 0 kg");
+    return;
+  }
+  if (!age || age < 0) {
+    alert("Alder kan ikke være negativ");
+    return;
+  }
+
+ 
   const pet = {
     name,
     weight,
     age,
     breed,
+    extraInfo,
     doctor,
     phone,
     gender,
@@ -112,6 +157,10 @@ form.addEventListener("submit", function (e) {
   pets.push(pet);
 
  
+
+  renderPets();
+
+  
   form.reset();
 
   document.querySelectorAll(".form-btn").forEach(btn => btn.classList.remove("active"));

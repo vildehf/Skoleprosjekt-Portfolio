@@ -9,10 +9,18 @@
   font-size: medium;
 }
 
+#faq-heading {
+  text-align: unset;
+}
+
 .grid-box-2 {
   grid-column-start: 2;
   grid-column-end: 5;
   font-size: medium;
+}
+
+.grid-box-2 h2 {
+  font-size: 1.5rem;
 }
 
 details {
@@ -29,10 +37,6 @@ summary {
   display: flex;
   justify-content: space-between;
   align-items: center;
-}
-
-summary h2 {
-  margin: 0;
 }
 
 summary::after {
@@ -79,6 +83,10 @@ details p {
   grid-column-start: 2;
   grid-column-end: 4;
   font-size: medium;
+}
+
+.grid-box-3 h2 {
+  font-size: 1.5rem;
 }
 
 .grid-box-4 {
