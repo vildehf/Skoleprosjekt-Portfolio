@@ -1,6 +1,9 @@
 :root {
   --primary-bg-color: #2c3e50;
   --secondary-bg-color: #ccd5ae;
+  --border-color: #d1d5db;
+  --btn-delete: #c33838;
+  --bg-label-color: #fff;
 
   --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.06);
@@ -11,6 +14,7 @@
   --btn-height: 40px;
   --btn-padding-x: 16px;
   --btn-font-size: 14px;
+  
 }
 
 *,

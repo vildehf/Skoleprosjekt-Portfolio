@@ -10,8 +10,8 @@
     href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Open+Sans:wght@400;500;600&family=Cherry+Bomb+One&display=swap"
     rel="stylesheet">
 
+  <link rel="stylesheet" href="/src/pages/registration/registration.css">
   <link rel="stylesheet" href="/src/css/global.css">
-  <link rel="stylesheet" href="/src/css/registration.css">
   <link rel="shortcut icon" href="/src/assets/logo.png">
   <title>Finn hundepasser – Potepass</title>
 </head>
@@ -32,6 +32,7 @@
           </li>
           <li><a href="/src/html/booking.html">Mine bookinger</a></li>
           <li><a href="/src/html/profile.html">Min profil</a></li>
+          <li><a href="/src/html/registration.html">Mine kjæledyr</a></li>
           <li><a href="/src/html/contact.html">Kontakt oss</a></li>
         </ul>
       </nav>
@@ -49,113 +50,60 @@
         <section class="container">
         <h1>Fortell oss om ditt kjæledyr</h1>
             <h2>Informasjon om kjæledyret ditt</h2>
-            <div id="pets-form">
-            <form id="pet-form" action="/" method="get"></form>
+            <div class="pets-layout">
+            <div class="pets-form">
+            <form id="pet-form" action="/" method="get">
             <div class="info-card">
 
-          <div class="form-row two-col">
+          <div class="form-row info-col">
           <div>
             <label for="pet-name">Navn</label>
-            <input id="pet-name" name="name" type="text">
+            <input id="pet-name" name="name" type="text" required minlength="2">
+            <span id="name-error" class="error-message"></span>
           </div>
 
           <div>
             <label for="pet-weight">Vekt (kg)</label>
-            <input id="pet-weight" name="weight" type="number">
+            <input id="pet-weight" name="weight" type="number" required min="1">
+            <span id="weight-error" class="error-message"></span>
           </div>
-          </div>
-
-          <div class="form-row four-col">
+          
             <div>
             <label for="pet-age-years">Alder (år)</label>
-            <input id="pet-age-years" type="number">
+            <input id="pet-age-years" type="number" required min="1">
+            <span id="age-error" class="error-message"></span>
           </div>
 
-          <div class="gender-group">
+          <div>
+            <label for="pet-breed">Rase</label>
+            <input id="pet-breed" name="breed" type="text" required minlength="2">
+            <span id="breed-error" class="error-message"></span>
+          </div>
+        </div>
+            </div>
+         <div class="gender-group">
             <label>Kjønn</label>
             <div class="form-card btn-group">
-                <button type="button" class="form-btn">Han</button>
-                <button type="button" class="form-btn">Hun</button>
-            </div>
-            </div>
-        </div>
-
-          <div class="form-row">
-          <div class="full-width">
-            <label for="pet-breed">Rase</label>
-            <input id="pet-breed" name="breed" type="text">
-          </div>
-        </div>
-
+               <input type="radio" id="gender-him" name="gender" value="him">
+               <label for="gender-him" class="form-btn">Han</label>        
+               <input type="radio" id="gender-her" name="gender" value="her">
+               <label for="gender-her" class="form-btn">Hun</label>
             </div>
             </div>
               <div>
-                <h3>Microchippet?</h3>
-            <div class="form-card microchip-selector">
-              <input type="radio" id="microchipped-yes" name="microchipped" value="yes">
-              <label for="microchipped-yes" class="form-btn">Microchippet</label>        
-              <input type="radio" id="microchipped-no" name="microchipped" value="no">
-              <label for="microchipped-no" class="form-btn">Ikke microchippet</label>
-            </div>
-
-            <h3>Sterilisert/Kastrert?</h3>
-            <div class="form-card neutered-selector">
-              <input type="radio" id="neutered-yes" name="neutered" value="yes">
-              <label for="neutered-yes" class="form-btn">Er sterilisert</label>
-              <input type="radio" id="neutered-no" name="neutered" value="no">
-              <label for="neutered-no" class="form-btn">Er ikke sterilisert</label>
-            </div>
-
-            <h3>Stueren?</h3>
-            <div class="form-card cleanliness-selector">
-                <input type="radio" id="cleanliness-yes" name="cleanliness" value="yes">
-                <label for="cleanliness-yes" class="form-btn">Stueren</label>
-                <input type="radio" id="cleanliness-no" name="cleanliness" value="no">
-                <label for="cleanliness-no" class="form-btn">Ikke stueren</label>
-                <input type="radio" id="cleanliness-training" name="cleanliness" value="training">
-                <label for="cleanliness-training" class="form-btn">Trener på å bli stueren</label>
-            </div>
-
-            <h3>Vennlig med barn?</h3>
-            <div class="form-card childfriendly-selector">
-                <input type="radio" id="childfriendly-yes" name="childfriendly" value="yes">
-                <label for="childfriendly-yes" class="form-btn">Ja, vennlig med barn</label>
-                <input type="radio" id="childfriendly-no" name="childfriendly" value="no">
-                <label for="childfriendly-no" class="form-btn">Nei, ikke vennlig med barn</label>
-            </div>
-
-            <h3>Vennlig med hunder?</h3>
-            <div class="form-card dogfriendly-selector">
-                <input type="radio" id="dogfriendly-yes" name="dogfriendly" value="yes">
-                <label for="dogfriendly-yes" class="form-btn">Ja, vennlig med hunder</label>
-                <input type="radio" id="dogfriendly-no" name="dogfriendly" value="no">
-                <label for="dogfriendly-no" class="form-btn">Nei, ikke vennlig med hunder</label>
-            </div>
-
-            <h3>Vennlig med katter?</h3>
-            <div class="form-card catfriendly-selector">
-                <input type="radio" id="catfriendly-yes" name="catfriendly" value="yes">
-                <label for="catfriendly-yes" class="form-btn">Ja, vennlig med katter</label>
-                <input type="radio" id="catfriendly-no" name="catfriendly" value="no">
-                <label for="catfriendly-no" class="form-btn">Nei, ikke vennlig med katter</label>
-              </div>
-
-              <h2>Andre opplysninger</h2>
-                  <div class="form-card">
-                  <label for="doctor">Navn på vetrinær</label>
-                  <br>
-                  <input id="doctor" name="doctor" type="text">
-                  <br>
-                  <label for="phone-doctor">Telefonnummer til vetrinær</label>
-                  <br>
-                  <input id="phone-doctor" name="phone-doctor" type="text">
-                  </div>
                 <div>
                   <br>
                   <button class="form-btn" type="submit">Lagre opplysninger</button>
-                  <button class="form-btn-delete" type="delete">Slett opplysninger</button>
+                  <button class="form-btn-delete" type="button">Slett opplysninger</button>
                   </div>
+                  </div>
+                </div>
+                <div id="pets-container"></div>
+                </div>
+                </form>
                 
+
+</div>
     </section>
   </main>
   <footer class="site-footer">
@@ -217,7 +165,7 @@
       </div>
     </div>
   </footer>
-<script src="/src/js/registration.js"></script>
+<script src="/src/pages/registration/registration.js"></script>
 <script src="/src/js/burger.js"> </script>
   </body>
 </html>
