@@ -28,7 +28,9 @@ async function fetchData(endpoint) {
 
 async function loadCurrentUser() {
   const users = await fetchData("users");
+  console.log("users:", users);
   currentUser = users[0];
+  console.log("currentUser:", currentUser);
 }
 
 function formatDate(dateString) {
@@ -181,23 +183,20 @@ form.addEventListener("submit", async function (event) {
 
   if (!startDate || !endDate) {
     alert("Velg både fra- og til-dato");
+    submitBtn.disabled = false;
     return;
   }
 
   if (endDate < startDate) {
     alert("Til-dato kan ikke være før fra-dato");
+    submitBtn.disabled = false;
     return;
   }
 
   if (!dog || !sitter) {
     alert("Velg hund og hundepasser");
-    return;
-
-    await loadBookings();
-    confirmation.style.display = "block";
-    resetForm();
-
     submitBtn.disabled = false;
+    return;
   }
 
   const bookingData = {
@@ -220,6 +219,7 @@ form.addEventListener("submit", async function (event) {
   await loadBookings();
   confirmation.style.display = "block";
   resetForm();
+  submitBtn.disabled = false;
 });
 
 // INIT
@@ -227,6 +227,7 @@ form.addEventListener("submit", async function (event) {
 async function init() {
   try {
     await loadCurrentUser();
+    console.log("etter loadCurrentUser:", currentUser);
     await loadDogs();
     await loadSitters();
     await loadBookings();
