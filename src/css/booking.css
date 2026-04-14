@@ -99,7 +99,7 @@ textarea {
   border-radius: 10px;
   display: grid;
   gap: 15px;
-  max-width: 600px;
+  flex: 2;
   box-shadow: var(--shadow-sm);
 }
 
@@ -134,4 +134,21 @@ textarea {
   margin-top: 10px;
   color: green;
   font-weight: 600;
+}
+
+.booking-layout {
+  display: flex;
+  gap: 30px;
+  align-items: flex-start;
+}
+
+.booking {
+  flex: 2;
+}
+
+.previous-sitters {
+  flex: 1;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: var(--shadow-sm);
 }

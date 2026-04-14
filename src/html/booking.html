@@ -88,32 +88,39 @@
           </div>
         </div>
 
-        <form class="booking-form">
-          <label for="dog">Velg hund</label>
-          <select name="dog" id="dog">
-            <option value="">Velg hund</option>
-          </select>
+        <div class="booking-layout">
+          <form class="booking-form">
+            <label for="dog">Velg hund</label>
+            <select name="dog" id="dog">
+              <option value="">Velg hund</option>
+            </select>
 
-          <label for="sitter">Velg hundepasser</label>
-          <select id="sitter" name="sitter">
-            <option>Velg hundepasser</option>
-          </select>
+            <label for="sitter">Velg hundepasser</label>
+            <select id="sitter" name="sitter">
+              <option>Velg hundepasser</option>
+            </select>
 
-          <label for="message">Melding</label>
-          <textarea
-            id="message"
-            name="message"
-            placeholder="Skriv en melding..."
-            rows="5"
-          ></textarea>
+            <label for="message">Melding</label>
+            <textarea
+              id="message"
+              name="message"
+              placeholder="Skriv en melding..."
+              rows="5"
+            ></textarea>
 
-          <div class="button-wrapper">
-            <button class="btn btn-primary" type="submit">Book</button>
-          </div>
-          <p id="booking-confirmation" class="confirmation">
-            Bookingen din er sendt! 🐾
-          </p>
-        </form>
+            <div class="button-wrapper">
+              <button class="btn btn-primary" type="submit">Book</button>
+            </div>
+            <p id="booking-confirmation" class="confirmation">
+              Bookingen din er sendt! 🐾
+            </p>
+          </form>
+
+          <section class="previous-sitters">
+            <h2>Tidligere hundepassere</h2>
+            <div id="previous-sitters-list"></div>
+          </section>
+        </div>
       </section>
 
       <section class="bookings">
