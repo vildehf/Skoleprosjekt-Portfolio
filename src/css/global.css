@@ -275,6 +275,12 @@ header {
   box-shadow: var(--shadow-sm);
 }
 
+.btn-delete:hover {
+    background-color: var(--btn-delete);
+    color: var(--bg-label-color);
+}
+
+
 @media (max-width: 768px) {
   .nav {
     justify-self: end;
