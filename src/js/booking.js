@@ -11,6 +11,9 @@ const API_KEY = "123";
 const form = document.querySelector(".booking-form");
 const dogSelect = document.getElementById("dog");
 const sitterSelect = document.getElementById("sitter");
+const previousSittersContainer = document.getElementById(
+  "previous-sitters-list",
+);
 const bookingsContainer = document.getElementById("bookings-list");
 const confirmation = document.getElementById("booking-confirmation");
 
@@ -142,6 +145,42 @@ async function loadBookings() {
     });
 }
 
+async function loadPreviousSitters() {
+  if (!currentUser) return;
+
+  const bookings = await fetchData("bookings");
+  previousSittersContainer.innerHTML = "";
+
+  const userBookings = bookings.filter(
+    (b) => Number(b.userId) === Number(currentUser.id),
+  );
+
+  const sitterIds = [...new Set(userBookings.map((b) => b.petSitterId))];
+
+  if (sitterIds.length === 0) {
+    previousSittersContainer.innerHTML =
+      "<p>Ingen tidligere hundepassere enda</p>";
+    return;
+  }
+
+  sitterIds.forEach((id) => {
+    const card = document.createElement("div");
+    card.classList.add("booking-card");
+
+    card.innerHTML = `<div class="booking-info">
+    <p><strong>Hundepasser:</strong>${sittersMap[id] || "Ukjent"}</p></div>
+
+    <button class="btn btn-primary book-again">Book igjen</button>`;
+
+    const button = card.querySelector(".book-again");
+    button.addEventListener("click", () => {
+      sitterSelect.value = id;
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+    previousSittersContainer.appendChild(card);
+  });
+}
+
 // CREATE BOOKINGS
 
 async function createBooking(data) {
@@ -164,6 +203,7 @@ async function deleteBooking(id) {
   });
 
   await loadBookings();
+  await loadPreviousSitters();
   confirmation.style.display = "block";
   resetForm();
 }
@@ -217,6 +257,7 @@ form.addEventListener("submit", async function (event) {
   }
 
   await loadBookings();
+  await loadPreviousSitters();
   confirmation.style.display = "block";
   resetForm();
   submitBtn.disabled = false;
@@ -231,6 +272,7 @@ async function init() {
     await loadDogs();
     await loadSitters();
     await loadBookings();
+    await loadPreviousSitters();
   } catch (error) {
     console.error("feil ved init:", error);
   }
