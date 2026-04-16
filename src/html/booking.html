@@ -15,8 +15,9 @@
       rel="stylesheet"
     />
 
-    <link rel="stylesheet" href="../css/style.css" />
-    <link rel="shortcut icon" href="../assets/logo.png" />
+    <link rel="stylesheet" href="/src/css/style.css" />
+    <link rel="stylesheet" href="/src/css/booking.css" />
+    <link rel="shortcut icon" href="/src/assets/logo.png" />
     <title>Potepass - Booking</title>
   </head>
 
@@ -28,7 +29,7 @@
       <div class="container header-inner">
         <a href="/index.html" class="logo">
           <img
-            src="../assets/logo.png"
+            src="/src/assets/logo.png"
             alt="Potepass – trygg hundepass"
             class="logo-image"
           />
@@ -46,7 +47,7 @@
                 >Mine bookinger</a
               >
             </li>
-            <li><a href="/src/html/">Min profil</a></li>
+            <li><a href="/src/html/profile.html">Min profil</a></li>
             <li><a href="/src/html/contact.html">Kontakt oss</a></li>
           </ul>
         </nav>
@@ -87,49 +88,44 @@
           </div>
         </div>
 
-        <form class="booking-form">
-          <label for="dog">Velg hund</label>
-          <select name="dog" id="dog">
-            <option value="">Velg hund</option>
-          </select>
+        <div class="booking-layout">
+          <form class="booking-form">
+            <label for="dog">Velg hund</label>
+            <select name="dog" id="dog">
+              <option value="">Velg hund</option>
+            </select>
 
-          <label for="sitter">Velg hundepasser</label>
-          <select id="sitter" name="sitter">
-            <option>Velg hundepasser</option>
-          </select>
+            <label for="sitter">Velg hundepasser</label>
+            <select id="sitter" name="sitter">
+              <option>Velg hundepasser</option>
+            </select>
 
-          <label for="message">Melding</label>
-          <textarea
-            id="message"
-            name="message"
-            placeholder="Skriv en melding..."
-            rows="5"
-          ></textarea>
+            <label for="message">Melding</label>
+            <textarea
+              id="message"
+              name="message"
+              placeholder="Skriv en melding..."
+              rows="5"
+            ></textarea>
 
-          <div class="button-wrapper">
-            <button class="btn btn-primary" type="submit">Book</button>
-          </div>
-          <p id="booking-confirmation" class="confirmation">
-            Bookingen din er sendt! 🐾
-          </p>
-        </form>
+            <div class="button-wrapper">
+              <button class="btn btn-primary" type="submit">Book</button>
+            </div>
+            <p id="booking-confirmation" class="confirmation">
+              Bookingen din er sendt! 🐾
+            </p>
+          </form>
+
+          <section class="previous-sitters">
+            <h2>Tidligere hundepassere</h2>
+            <div id="previous-sitters-list"></div>
+          </section>
+        </div>
       </section>
 
       <section class="bookings">
         <h2>Mine bookinger</h2>
-
-        <article class="booking-card">
-          <div class="booking-info">
-            <p><strong>Periode:</strong> 10.01.2026 – 12.01.2026</p>
-            <p><strong>Hund:</strong> Max</p>
-            <p><strong>Hundepasser:</strong> Kari</p>
-          </div>
-
-          <div class="actions">
-            <button class="btn btn-ghost">Rediger</button>
-            <button class="btn btn-primary">Avbryt</button>
-          </div>
-        </article>
+        <div id="bookings-list"></div>
       </section>
     </main>
     <footer class="site-footer">
@@ -198,6 +194,7 @@
         </div>
       </div>
     </footer>
-    <script src="../js/burger.js"></script>
+    <script src="/src/js/burger.js"></script>
+    <script src="/src/js/booking.js"></script>
   </body>
 </html>
