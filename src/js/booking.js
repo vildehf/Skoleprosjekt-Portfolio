@@ -204,7 +204,13 @@ async function deleteBooking(id) {
 
   await loadBookings();
   await loadPreviousSitters();
+
+  confirmation.textContent = "Bookingen din er slettet 🗑️";
   confirmation.style.display = "block";
+
+  setTimeout(() => {
+    confirmation.style.display = "none";
+  }, 3000);
   resetForm();
 }
 
