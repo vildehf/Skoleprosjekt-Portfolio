@@ -47,6 +47,15 @@ function resetForm() {
   form.querySelector("button").textContent = "Book";
 }
 
+function showMessage(message) {
+  confirmation.textContent = message;
+  confirmation.style.display = "block";
+
+  setTimeout(() => {
+    confirmation.style.display = "none";
+  }, 3000);
+}
+
 function startEdit(booking) {
   editingBookingId = booking.id;
 
@@ -121,6 +130,7 @@ async function loadBookings() {
         <p><strong>Hund:</strong> ${dogsMap[booking.userDogId] || "Ukjent hund"}</p>
         <p><strong>Hundepasser:</strong> ${sittersMap[booking.petSitterId] || "Ukjent passer"}</p>
       </div>
+      <p><strong>Status:</strong>${booking.status === "pending" ? "Venter" : booking.status}</p>
 
       <div class="actions">
     <button class="btn btn-ghost edit-btn">Rediger</button>
@@ -205,12 +215,8 @@ async function deleteBooking(id) {
   await loadBookings();
   await loadPreviousSitters();
 
-  confirmation.textContent = "Bookingen din er slettet 🗑️";
-  confirmation.style.display = "block";
+  showMessage("Bookingen din er slettet 🗑️");
 
-  setTimeout(() => {
-    confirmation.style.display = "none";
-  }, 3000);
   resetForm();
 }
 
@@ -255,7 +261,9 @@ form.addEventListener("submit", async function (event) {
     status: "pending",
   };
 
-  if (editingBookingId) {
+  const isEditing = editingBookingId !== null;
+
+  if (isEditing) {
     await updateBooking(editingBookingId, bookingData);
     editingBookingId = null;
   } else {
@@ -264,7 +272,9 @@ form.addEventListener("submit", async function (event) {
 
   await loadBookings();
   await loadPreviousSitters();
-  confirmation.style.display = "block";
+  showMessage(
+    isEditing ? "Bookingen din er oppdatert" : "Bookingen din er sendt! 🐾",
+  );
   resetForm();
   submitBtn.disabled = false;
 });
