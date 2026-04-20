@@ -101,7 +101,7 @@ async function loadSitters() {
   const sitters = await fetchData("petsitters");
 
   sitters.forEach((sitter) => {
-    sittersMap[sitter.id] = sitter.name;
+    sittersMap[sitter.id] = sitter;
 
     const option = document.createElement("option");
     option.value = sitter.id;
@@ -112,47 +112,49 @@ async function loadSitters() {
 }
 
 // LOAD BOOKINGS
+function renderBooking(booking) {
+  return `<article class="booking-card">
+      <div class="booking-info">
+        <p><strong>Periode:</strong> ${formatDate(booking.fromDate)} - ${formatDate(booking.toDate)}</p>
+        <p><strong>Hund:</strong> ${dogsMap[booking.userDogId] || "Ukjent hund"}</p>
+        <p><strong>Hundepasser:</strong> ${sittersMap[booking.petSitterId]?.name || "Ukjent passer"}</p>
+      </div>
+      <p><strong>Status:</strong> ${booking.status === "pending" ? "Venter" : booking.status}</p>
+
+      <div class="actions">
+    <button class="btn btn-ghost edit-btn" data-id="${booking.id}">Rediger</button>
+    <button class="btn btn-primary delete-btn" data-id="${booking.id}">Slett</button>
+  </div>
+  </article>
+    `;
+}
 
 async function loadBookings() {
   if (!currentUser) return;
   const bookings = await fetchData("bookings");
-  bookingsContainer.innerHTML = "";
 
-  bookings
-    .filter((b) => Number(b.userId) === Number(currentUser.id))
-    .forEach((booking) => {
-      const card = document.createElement("article");
-      card.classList.add("booking-card");
+  const userBookings = bookings.filter(
+    (b) => Number(b.userId) === Number(currentUser.id),
+  );
 
-      card.innerHTML = `
-      <div class="booking-info">
-        <p><strong>Periode:</strong> ${formatDate(booking.fromDate)} - ${formatDate(booking.toDate)}</p>
-        <p><strong>Hund:</strong> ${dogsMap[booking.userDogId] || "Ukjent hund"}</p>
-        <p><strong>Hundepasser:</strong> ${sittersMap[booking.petSitterId] || "Ukjent passer"}</p>
-      </div>
-      <p><strong>Status:</strong>${booking.status === "pending" ? "Venter" : booking.status}</p>
+  bookingsContainer.innerHTML = userBookings.map(renderBooking).join("");
 
-      <div class="actions">
-    <button class="btn btn-ghost edit-btn">Rediger</button>
-    <button class="btn btn-primary delete-btn" data-id="${booking.id}">Slett</button>
-  </div>
-    `;
-
-      bookingsContainer.appendChild(card);
-
-      const editBtn = card.querySelector(".edit-btn");
-
-      editBtn.addEventListener("click", () => {
-        startEdit(booking);
-      });
-      const deleteBtn = card.querySelector(".delete-btn");
-
-      deleteBtn.addEventListener("click", async () => {
-        if (confirm("Er du sikker på at du vil slette denne bookingen?")) {
-          await deleteBooking(booking.id);
-        }
-      });
+  bookingsContainer.querySelectorAll(".edit-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const id = btn.dataset.id;
+      const booking = userBookings.find((b) => b.id == id);
+      startEdit(booking);
     });
+  });
+
+  bookingsContainer.querySelectorAll(".delete-btn").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      const id = btn.dataset.id;
+      if (confirm("Er du sikker på at du vil slette denne bookingen?")) {
+        await deleteBooking(id);
+      }
+    });
+  });
 }
 
 async function loadPreviousSitters() {
@@ -178,7 +180,7 @@ async function loadPreviousSitters() {
     card.classList.add("booking-card");
 
     card.innerHTML = `<div class="booking-info">
-    <p><strong>Hundepasser:</strong>${sittersMap[id] || "Ukjent"}</p></div>
+    <p><strong>Hundepasser:</strong>${sittersMap[id]?.name || "Ukjent"}</p></div>
 
     <button class="btn btn-primary book-again">Book igjen</button>`;
 
