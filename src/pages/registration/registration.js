@@ -9,29 +9,14 @@ const nameInput = document.getElementById("pet-name");
 const weightInput = document.getElementById("pet-weight");
 const ageInput = document.getElementById("pet-age-years");
 const breedInput = document.getElementById("pet-breed");
+const allergyInput = document.getElementById("allergy");
+
 
 const nameError = document.getElementById("name-error");
 const weightError = document.getElementById("weight-error");
 const ageError = document.getElementById("age-error");
 const breedError = document.getElementById("breed-error");
-
-
-document.querySelectorAll(".form-card").forEach(group => {
-  const buttons = group.querySelectorAll(".form-btn");
-
-  buttons.forEach(button => {
-    button.addEventListener("click", () => {
-
-      if (button.classList.contains("active")) {
-        button.classList.remove("active");
-        return;
-      }
-
-      buttons.forEach(btn => btn.classList.remove("active"));
-      button.classList.add("active");
-    });
-  });
-});
+const allergyError = document.getElementById("allergy-error");
 
 
 form.addEventListener("submit", function (e) {
@@ -71,6 +56,14 @@ form.addEventListener("submit", function (e) {
     breedError.classList.remove("show");
   }
 
+  if (!allergyInput.reportValidity()) {
+    allergyError.textContent = "Vennligst velg et allergialternativ";
+    allergyError.classList.add("show");
+    valid = false;
+  } else {
+    allergyError.classList.remove("show");
+  }
+
   if (!valid) return;
 
   const name = nameInput.value.trim();
@@ -78,7 +71,7 @@ form.addEventListener("submit", function (e) {
   const age = parseInt(ageInput.value);
   const breed = breedInput.value.trim();
   const gender = document.querySelector('input[name="gender"]:checked')?.value || "";
-
+  const allergy = allergyInput.value;
 
   const pet = {
   id: Date.now(),
@@ -87,6 +80,7 @@ form.addEventListener("submit", function (e) {
   age,
   breed,
   gender,
+  allergy,
   image: "https://www.amatorfotografen.no/images/1000x700-Hund-Laika-Laika-20111023_02_2113.jpg"
 };
   
@@ -99,10 +93,6 @@ form.addEventListener("submit", function (e) {
 
   form.reset();
   
-
-  document.querySelectorAll(".form-btn").forEach(btn =>
-    btn.classList.remove("active")
-  );
 });
 
 function renderPets(petsList) {
@@ -127,6 +117,7 @@ card.innerHTML = `
       <p class="pet-meta">Alder: ${pet.age} år</p>
       <p class="pet-meta">Vekt: ${pet.weight} kg</p>
       <p class="pet-meta">Kjønn: ${pet.gender === "him" ? "Han" : "Hun"}</p>
+      <p class="pet-meta">Allergi: ${pet.allergy}</p>
     </div>
 
     ${

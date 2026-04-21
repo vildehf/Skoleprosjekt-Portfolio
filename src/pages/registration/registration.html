@@ -81,22 +81,33 @@
             <input id="pet-breed" name="breed" type="text" required minlength="2">
             <span id="breed-error" class="error-message"></span>
           </div>
-        </div>
-            </div>
-         <div class="gender-group">
-            <label>Kjønn</label>
-            <div class="form-card btn-group">
+
+          <div>
+            <label for="allergy">Allergier</label>
+            <select id="allergy" name="allergy">
+              <option value="Ingen allergier">Ingen allergier</option>
+              <option value="Egg">Egg</option>
+              <option value="Wheat">Hvete</option>
+              <option value="Milk">Melk</option>
+              <option value="Corn">Mais</option>
+            </select>
+             <span id="allergy-error" class="error-message"></span>
+          </div>
+             <label>Kjønn</label>
+            <div class="btn-group">
                <input type="radio" id="gender-him" name="gender" value="him">
                <label for="gender-him" class="form-btn">Han</label>        
                <input type="radio" id="gender-her" name="gender" value="her">
                <label for="gender-her" class="form-btn">Hun</label>
             </div>
+        </div>
             </div>
+        
               <div>
                 <div>
                   <br>
                   <button class="btn" type="submit">Lagre opplysninger</button>
-                  <button class="form-btn-delete" type="button">Slett opplysninger</button>
+                  <button class="btn-delete" type="button">Slett opplysninger</button>
                   </div>
                   </div>
                 </div>

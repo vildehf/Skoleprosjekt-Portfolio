@@ -19,10 +19,14 @@ h1, h2, h3, h4{
 }
 
 .info-card {
-    padding-top: 1rem;
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
+    background: #eee;
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 10px;
+    box-shadow: var(--shadow-sm);
 }
 
 .form-row {
@@ -32,7 +36,8 @@ h1, h2, h3, h4{
 }
 
 
-.info-card input {
+.info-card input, select {
+  font: inherit;
     width: 100%;
     padding: 0.7rem;
     border: 1px solid var(--border-color);
@@ -42,13 +47,17 @@ h1, h2, h3, h4{
 .btn-group {
     display: flex;
     gap: 0.8rem;
+    height: var(--btn-height);
+    text-align: center;
+    align-items: center;
 }
 
 .form-btn {
     font: inherit;
     font-size: var(--btn-font-size);
     font-weight: 700;
-    padding: var(--btn-padding-x);
+    padding: 7px;
+    width: 60px;
     color: var(--secondary-bg-color);
     border: 1px solid var(--primary-bg-color);
     border-radius: var(--btn-radius);
@@ -58,7 +67,8 @@ h1, h2, h3, h4{
 }
 
 
-.form-btn-delete {
+.btn-delete {
+  color: var(--primary-bg-color);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -81,9 +91,9 @@ h1, h2, h3, h4{
     transform 0.2s ease;
 }
 
-.form-btn-delete:hover {
-    background-color: var(--btn-delete);
-    color: var(--bg-label-color);
+.btn-delete:hover {
+  background-color: var(--btn-delete);
+  color: var(--bg-label-color);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -98,6 +108,7 @@ h1, h2, h3, h4{
   text-decoration: none;
   white-space: nowrap;
   cursor: pointer;
+  box-shadow: var(--shadow-sm);
   transition:
     background-color 0.2s ease,
     color 0.2s ease,
@@ -113,11 +124,14 @@ h1, h2, h3, h4{
    
 }
 
-
-.form-card input[type="radio"] {
+.btn-group input[type="radio"] {
     display: none;
 }
 
+.btn-group input[type="radio"]:checked + .form-btn {
+  background-color: var(--secondary-bg-color);
+  color: var(--primary-bg-color);
+}
 
 .form-btn.active {
   background-color: var(--secondary-bg-color);
