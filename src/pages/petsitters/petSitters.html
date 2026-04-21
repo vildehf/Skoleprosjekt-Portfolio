@@ -17,8 +17,8 @@
     />
 
     <link rel="stylesheet" href="/src/css/style.css" />
-    <link rel="stylesheet" href="/src/css/petSitter.css" />
-    <link rel="shortcut icon" href="../assets/logo.png" />
+    <link rel="stylesheet" href="/src/pages/petsitters/petSitter.css" />
+    <link rel="shortcut icon" href="/src/assets/logo.png" />
   </head>
   <body>
     <a class="skip-link" href="#main">Hopp til innhold</a>
@@ -27,7 +27,7 @@
       <div class="container header-inner">
         <a href="index.html" class="logo">
           <img
-            src="../assets/logo.png"
+            src="/src/assets/logo.png"
             alt="Potepass - trygg hundepass"
             class="logo-image"
             width="48"
@@ -44,9 +44,16 @@
                 >Finn hundepasser</a
               >
             </li>
-            <li><a href="/src/html/booking.html">Mine bookinger</a></li>
-            <li><a href="/src/html/profile.html">Min profil</a></li>
-            <li><a href="/src/html/contact.html">Kontakt oss</a></li>
+            <li>
+              <a href="/src/pages/booking/booking.html">Mine bookinger</a>
+            </li>
+            <li><a href="/src/pages/profile/profile.html">Min profil</a></li>
+            <li>
+              <a href="/src/pages/registration/registration.html"
+                >Mine kjæledyr</a
+              >
+            </li>
+            <li><a href="/src/pages/contact/contact.html">Kontakt oss</a></li>
           </ul>
         </nav>
 
@@ -197,7 +204,7 @@
               <article class="card sitter-row" data-id="1">
                 <div class="sitter-portrait">
                   <img
-                    src="../assets/dogsitter1.png"
+                    src="/src/assets/dogsitter1.png"
                     alt="Portrett av Oda"
                     width="96"
                     height="96"
@@ -228,7 +235,9 @@
                   </p>
 
                   <div class="sitter-card-actions">
-                    <a class="btn btn-primary" href="/src/html/profile.html"
+                    <a
+                      class="btn btn-primary"
+                      href="/src/pages/profile/profile.html"
                       >Se profil</a
                     >
                     <button class="btn btn-ghost" type="button" data-id="1">
@@ -248,7 +257,7 @@
               <article class="card sitter-row" data-id="2">
                 <div class="sitter-portrait">
                   <img
-                    src="../assets/dogsitter3.png"
+                    src="/src/assets/dogsitter3.png"
                     alt="Portrett av Mari"
                     width="96"
                     height="96"
@@ -279,7 +288,9 @@
                   </p>
 
                   <div class="sitter-card-actions">
-                    <a class="btn btn-primary" href="/src/html/profile.html"
+                    <a
+                      class="btn btn-primary"
+                      href="/src/pages/profile/profile.html"
                       >Se profil</a
                     >
                     <button
@@ -303,7 +314,7 @@
               <article class="card sitter-row" data-id="3">
                 <div class="sitter-portrait">
                   <img
-                    src="../assets/dogsitter2.png"
+                    src="/src/assets/dogsitter2.png"
                     alt="Portrett av Elias"
                     width="96"
                     height="96"
@@ -334,7 +345,9 @@
                   </p>
 
                   <div class="sitter-card-actions">
-                    <a class="btn btn-primary" href="/src/html/profile.html"
+                    <a
+                      class="btn btn-primary"
+                      href="/src/pages/profile/profile.html"
                       >Se profil</a
                     >
                     <button
@@ -473,7 +486,7 @@
 
         <div class="footer-dogs">
           <img
-            src="../assets/puppies.png"
+            src="/src/assets/puppies.png"
             alt="Illustrasjon av hunder"
             width="200"
             height="120"
@@ -533,7 +546,7 @@
         </div>
       </div>
     </footer>
-    <script src="../js/burger.js"></script>
-    <script src="../js/petsitter.js"></script>
+    <script src="/src/js/burger.js"></script>
+    <script src="/src/pages/petsitters/petsitter.js"></script>
   </body>
 </html>
