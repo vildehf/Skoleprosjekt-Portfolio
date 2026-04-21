@@ -59,22 +59,51 @@ h1, h2, h3, h4{
 
 
 .form-btn-delete {
-    font: inherit;
-    font-weight: 700;
-    font-size: var(--btn-font-size);
-    padding: var(--btn-padding-x);
-    color: var(--secondary-bg-color);
-    border: 1px solid var(--primary-bg-color);
-    border-radius: var(--btn-radius);
-    background: var(--primary-bg-color);
-    cursor: pointer;
-    transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--btn-height);
+  padding: 0 var(--btn-padding-x);
+  border: 1px solid transparent;
+  border-radius: var(--btn-radius);
+  font: inherit;
+  font-size: var(--btn-font-size);
+  font-weight: 700;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
 }
 
 .form-btn-delete:hover {
     background-color: var(--btn-delete);
     color: var(--bg-label-color);
-
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--btn-height);
+  padding: 0 var(--btn-padding-x);
+  border: 1px solid transparent;
+  border-radius: var(--btn-radius);
+  font: inherit;
+  font-size: var(--btn-font-size);
+  font-weight: 700;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
    
 }
 
