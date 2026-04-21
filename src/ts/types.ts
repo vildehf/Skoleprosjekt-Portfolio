@@ -4,8 +4,23 @@ export interface Users {
     password: string | number
     email: string | number
     description: string | null
+    dogs: Dog[]
     created: string
     updated: string
+}
+
+export interface Dog {
+    id: number
+    name: string
+    breed: string
+    age: number
+    allergies: Allergy[]
+    created: string
+    updated: string
+}
+
+export interface Allergy {
+    
 }
 
 export interface petSitters {
