@@ -48,7 +48,7 @@ h1, h2, h3, h4{
     font: inherit;
     font-size: var(--btn-font-size);
     font-weight: 700;
-    padding: var(--btn-padding-x);
+    padding: 10px 20px;
     color: var(--secondary-bg-color);
     border: 1px solid var(--primary-bg-color);
     border-radius: var(--btn-radius);
@@ -143,9 +143,9 @@ h1, h2, h3, h4{
 
 .pet-card-actions {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 8px;
-  align-items: flex-end;
+  align-items: start;
 }
 
 .pet-card-info {
@@ -175,27 +175,49 @@ h1, h2, h3, h4{
 }
 
 @media (max-width: 720px) {
-    h1,h2 {
-        text-align: center;
-    }
-    .pet-card-content {
-    grid-template-columns: 1fr 1fr;
-    align-items: start;
-    
-    }
-    .pets-layout {
-        display: flex;
-        flex-direction: column;
-    }
-    
-    .pet-card-image {
-      width: 100%;
-      max-width: 180px;
-      height: 180px;
-    }
-  
-    .pet-card-actions {
-    flex-direction: row;
-    align-items: flex-start;
+
+  h1, h2 {
+    text-align: center;
+  }
+
+ .pets-layout { 
+  display: flex; 
+  flex-direction: column; 
+}
+ .pet-card-content {
+   display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas:
+    "info image"
+    "actions actions";
+  gap: 1rem;
+  align-items: start;
+  }
+
+.pet-card-info {
+  width: 100%;
+}
+
+.pet-card-actions {
+  grid-area: actions;
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  align-items: start;
+  flex-direction: row;
+}
+  .pet-card-image {
+    width: 100%;
+    max-width: 160px;
+    height: 160px;
+    margin: 0 auto;
+  }
+
+  .pets-form {
+    width: 100%;
+  }
+
+  .pet-card-image {
+    margin: 0 auto;
   }
 }

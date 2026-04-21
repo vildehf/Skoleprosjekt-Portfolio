@@ -32,8 +32,7 @@
           </li>
           <li><a href="/src/html/booking.html">Mine bookinger</a></li>
           <li><a href="/src/html/profile.html">Min profil</a></li>
-          <li><a href="/src/html/registration.html">Mine kjæledyr</a></li>
-          <li><a href="/src/html/registration.html">Mine kjæledyr</a></li>
+          <li><a href="/src/pages/registration/registration.html">Mine hunder</a></li>
           <li><a href="/src/html/contact.html">Kontakt oss</a></li>
         </ul>
       </nav>
@@ -49,8 +48,8 @@
   </header>
 <main>
         <section class="container">
-        <h1>Fortell oss om ditt kjæledyr</h1>
-            <h2>Informasjon om kjæledyret ditt</h2>
+         <h1 id="form-title">Fortell oss om hunden din</h1>
+            <h2>Informasjon om Hunden din</h2>
             <div class="pets-layout">
             <div class="pets-form">
             <form id="pet-form" action="/" method="get">
@@ -81,6 +80,12 @@
             <input id="pet-breed" name="breed" type="text" required minlength="2">
             <span id="breed-error" class="error-message"></span>
           </div>
+
+          <div>
+            <label for="pet-allergies">Allergier</label>
+            <input id="pet-allergies" name="allergies" type="text" required minlength="2">
+            <span id="allergies-error" class="error-message"></span>
+          </div>
         </div>
             </div>
          <div class="gender-group">
@@ -95,8 +100,8 @@
               <div>
                 <div>
                   <br>
-                  <button class="form-btn" type="submit">Lagre opplysninger</button>
-                  <button class="form-btn-delete" type="button">Slett opplysninger</button>
+                  <button id="submit-btn" class="btn btn-primary" type="submit">Lagre opplysninger</button>
+                  <button id="cancel-btn" class="btn btn-delete" type="button">Tøm skjema</button>  
                   </div>
                   </div>
                 </div>
@@ -169,5 +174,6 @@
   </footer>
 <script src="/src/pages/registration/registration.js"></script>
 <script src="/src/js/burger.js"> </script>
+
   </body>
 </html>
