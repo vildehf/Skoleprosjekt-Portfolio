@@ -220,6 +220,8 @@ header {
 }
 
 .btn {
+  background-color: var(--primary-bg-color);
+  color: var(--secondary-bg-color);
   display: inline-flex;
   align-items: center;
   justify-content: center;

@@ -1,3 +1,6 @@
+export interface LoginResponse {
+    API_KEY: string
+}
 export interface Users {
     id: number
     userName: string
@@ -7,16 +10,19 @@ export interface Users {
     dogs: Dog[]
     created: string
     updated: string
+    image?: string
 }
 
 export interface Dog {
     id: number
     name: string
     breed: string
+    gender: "Him" | "Her"
     age: number
     allergies: Allergy[]
     created: string
     updated: string
+    image?: string
 }
 
 export interface Allergy {
@@ -26,6 +32,7 @@ export interface Allergy {
 export interface petSitters {
     id: number
     name: string
+    image?: string
     location: string
     pricePerDay: number
     rating: number
@@ -53,6 +60,3 @@ export interface Bookings {
 }
 
 
-export interface LoginResponse {
-    API_KEY: string
-}
