@@ -1,3 +1,6 @@
+import { BASE_URL, API_KEY } from "../../ts/api.ts";
+import { login } from "../../ts/api.ts";
+
 const style = document.createElement("style");
 style.textContent = `
   @keyframes fadeUp {
@@ -8,8 +11,8 @@ style.textContent = `
 document.head.appendChild(style);
 
 document.querySelectorAll("details").forEach((details) => {
-  const summary = details.querySelector("summary");
-  const content = details.querySelector("p");
+  const summary = details.querySelector("summary") as HTMLElement;
+  const content = details.querySelector("p") as HTMLElement;
 
   summary.addEventListener("click", (e) => {
     e.preventDefault();
