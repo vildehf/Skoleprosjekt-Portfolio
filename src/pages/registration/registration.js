@@ -1,6 +1,5 @@
-const BASE_URL = "http://localhost:3000/api";
-const API_KEY = "123";
-const USER_ID = 1;
+import { BASE_URL, API_KEY } from "../../ts/api.ts";
+import { login } from "../../ts/api.ts";
 
 let dogs = [];
 let editingId = null;
@@ -12,38 +11,13 @@ const nameInput = document.getElementById("pet-name");
 const weightInput = document.getElementById("pet-weight");
 const ageInput = document.getElementById("pet-age-years");
 const breedInput = document.getElementById("pet-breed");
-const allergiesInput = document.getElementById("pet-allergies");
+const allergyInput = document.getElementById("allergy");
 
 const nameError = document.getElementById("name-error");
 const weightError = document.getElementById("weight-error");
 const ageError = document.getElementById("age-error");
 const breedError = document.getElementById("breed-error");
-const allergiesError = document.getElementById("allergies-error");
-
-const formTitle = document.getElementById("form-title");
-const submitButton = document.getElementById("submit-btn");
-const cancelButton = document.getElementById("cancel-btn");
-
-const genderInputs = document.querySelectorAll('input[name="gender"]');
-const genderButtons = document.querySelectorAll(".form-btn");
-
-
-document.querySelectorAll(".form-card").forEach(group => {
-  const buttons = group.querySelectorAll(".form-btn");
-
-  buttons.forEach(button => {
-    button.addEventListener("click", () => {
-
-      if (button.classList.contains("active")) {
-        button.classList.remove("active");
-        return;
-      }
-
-      buttons.forEach(btn => btn.classList.remove("active"));
-      button.classList.add("active");
-    });
-  });
-});
+const allergyError = document.getElementById("allergy-error");
 
 function resetErrors() {
   nameError.textContent = "";
@@ -74,282 +48,11 @@ function validateForm() {
   let valid = true;
   resetErrors();
 
-  if (!nameInput.reportValidity()) {
-    nameError.textContent = "Navnet må inneholde minst 2 bokstaver.";
-    nameError.classList.add("show");
-    valid = false;
-  }
-
-  if (!weightInput.reportValidity()) {
-    weightError.textContent = "Vekt må være minst 1 kg";
-    weightError.classList.add("show");
-    valid = false;
-  }
-
-  if (!ageInput.reportValidity()) {
-    ageError.textContent = "Alder må være minst 1 år";
-    ageError.classList.add("show");
-    valid = false;
-  }
-
-  if (!breedInput.reportValidity()) {
-    breedError.textContent = "Rase må inneholde minst 2 bokstaver";
-    breedError.classList.add("show");
-    valid = false;
-  }
-
-  if (!allergiesInput.reportValidity()) {
-    allergiesError.textContent = "Skriv allergier eller 'Ingen'";
-    allergiesError.classList.add("show");
-    valid = false;
-  }
-
-  return valid;
-}
-
-function getGenderText(genderValue) {
-  if (genderValue === "him" || genderValue === "Hannhund") {
-    return "Hannhund";
-  }
-
-  if (genderValue === "her" || genderValue === "Tispe") {
-    return "Tispe";
-  }
-
-  return "Ikke valgt";
-}
-
-function getSelectedGender() {
-  const selectedGender = document.querySelector('input[name="gender"]:checked')?.value;
-
-  if (selectedGender === "him") {
-    return "Hannhund";
-  }
-
-  if (selectedGender === "her") {
-    return "Tispe";
-  }
-
-  return "";
-}
-
-function setGenderInForm(genderValue) {
-  genderInputs.forEach((input) => {
-    input.checked = false;
-  });
-
-  genderButtons.forEach((btn) => {
-    btn.classList.remove("active");
-  });
-
-  let inputToCheck = null;
-
-  if (genderValue === "Hannhund" || genderValue === "him") {
-    inputToCheck = document.getElementById("gender-him");
-  } else if (genderValue === "Tispe" || genderValue === "her") {
-    inputToCheck = document.getElementById("gender-her");
-  }
-
-  if (inputToCheck) {
-    inputToCheck.checked = true;
-
-    const label = document.querySelector(`label[for="${inputToCheck.id}"]`);
-    if (label) {
-      label.classList.add("active");
-    }
-  }
-}
-
-async function fetchDogs() {
-  try {
-    const response = await fetch(`${BASE_URL}/dogs`);
-
-    if (!response.ok) {
-      throw new Error("Kunne ikke hente hunder.");
-    }
-
-    dogs = await response.json();
-    renderDogs(dogs);
-  } catch (error) {
-    console.error("Feil ved henting av hunder:", error);
-    petsContainer.innerHTML = `<p class="empty-state">Ingen hunder registrert</p>`;
-  }
-}
-
-function renderDogs(dogsList) {
-  petsContainer.innerHTML = "";
-
-  if (dogsList.length === 0) {
-    petsContainer.innerHTML = `<p class="empty-state">Ingen hunder registrert ennå.</p>`;
-    return;
-  }
-
-  dogsList.forEach((dog) => {
-    const card = document.createElement("article");
-    card.className = "pet-card";
-
-    card.innerHTML = `
-      <div class="pet-card-content">
-        <div class="pet-card-info">
-          <h3 class="pet-name">${dog.name}</h3>
-          <p class="pet-meta">Rase: ${dog.breed}</p>
-          <p class="pet-meta">Alder: ${dog.age} år</p>
-          <p class="pet-meta">Vekt: ${dog.weight} kg</p>
-          <p class="pet-meta">Allergier: ${dog.allergies}</p>
-          <p class="pet-meta">Kjønn: ${getGenderText(dog.gender)}</p>
-        </div>
-
-         <div class="pet-card-image">
-          ${
-            dog.image
-              ? `<img src="${dog.image}" alt="Bilde av ${dog.name}">`
-              : `<div class="no-image"></div>`
-          }
-        </div>
-       
-        <div class="pet-card-actions">
-          <button onclick="editDog(${dog.id})" class="btn btn-edit">Rediger</button>
-          <button onclick="deleteDog(${dog.id})" class="btn btn-delete">Slett</button>
-        </div>
-      </div>
-    `; 
-
-    petsContainer.appendChild(card);
-    console.log("Hund:", dog.name, "ID:", dog.id, "Bilde:", dog.image);
-  });
-  
-}
-
-async function createDog(data) {
-  try {
-    const response = await fetch(`${BASE_URL}/dogs`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${API_KEY}`,
-      },
-      body: JSON.stringify(data),
-    });
-
-    if (!response.ok) {
-      throw new Error("Kunne ikke lagre hund.");
-    }
-
-    await fetchDogs();
-    resetForm();
-  } catch (error) {
-    console.error("Feil ved opprettelse av hund:", error);
-    alert("Noe gikk galt ved lagring.");
-  }
-}
-async function updateDog(id, data) {
-  try {
-    const response = await fetch(`${BASE_URL}/dogs/${id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${API_KEY}`,
-      },
-      body: JSON.stringify(data),
-    });
-
-    if (!response.ok) {
-      throw new Error("Kunne ikke oppdatere hund.");
-    }
-
-    await fetchDogs();
-    resetForm();
-  } catch (error) {
-    console.error("Feil ved oppdatering av hund:", error);
-    alert("Noe gikk galt da hunden skulle oppdateres.");
-  }
-}
-
-async function deleteDog(id) {
-  const confirmed = confirm("Er du sikker på at du vil slette denne hunden?");
-  if (!confirmed) return;
-
-  try {
-    const response = await fetch(`${BASE_URL}/dogs/${id}`, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${API_KEY}`,
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error("Kunne ikke slette hund.");
-    }
-
-    await fetchDogs();
-
-    if (editingId === id) {
-      resetForm();
-    }
-  } catch (error) {
-    console.error("Feil ved sletting av hund:", error);
-    alert("Noe gikk galt da hunden skulle slettes.");
-  }
-}
-
-async function editDog(id) {
-  try {
-    const response = await fetch(`${BASE_URL}/dogs/${id}`);
-
-    if (!response.ok) {
-      throw new Error("Kunne ikke hente hund.");
-    }
-
-    const dog = await response.json();
-
-    nameInput.value = dog.name || "";
-    weightInput.value = dog.weight || "";
-    ageInput.value = dog.age || "";
-    breedInput.value = dog.breed || "";
-    allergiesInput.value = dog.allergies || "";
-
-    setGenderInForm(dog.gender);
-
-    editingId = id;
-    formTitle.textContent = "Rediger hund";
-    submitButton.textContent = "Lagre endringer";
-
-    resetErrors();
-  } catch (error) {
-    console.error("Feil ved henting av hund for redigering:", error);
-    alert("Noe gikk galt da hunden skulle hentes.");
-  }
-}
-
-form.addEventListener("submit", async (event) => {
-  event.preventDefault();
-
-  if (!validateForm()) {
-    return;
-  }
-
-  const data = {
-    name: nameInput.value.trim(),
-    weight: Number(weightInput.value),
-    age: Number(ageInput.value),
-    breed: breedInput.value.trim(),
-    allergies: allergiesInput.value.trim(),
-    gender: getSelectedGender(),
-    image: "",
-  };
-
-  if (editingId !== null) {
-    await updateDog(editingId, data);
-  } else {
-    await createDog(data);
-  }
-});
-
-cancelButton.addEventListener("click", resetForm);
-
-async function init() {
-  await fetchDogs();
-}
+  if (!nameInput.reportValidity() || nameInput.value().length < 2) 
+  if (!weightInput.reportValidity() || parseFloat(weightInput.value) < 1) 
+  if (!ageInput.reportValidity() || parseInt(ageInput.value) < 1)
+  if (!breedInput.reportValidity() || breedInput.value.trim().length < 2) 
+  if (!nameInput.reportValidity() || nameInput.value.trim().length < 2) 
 
 init();
 
@@ -360,16 +63,17 @@ init();
   const breed = breedInput.value.trim();
   const allergies = allergiesInput.value.trim();
   const gender = document.querySelector('input[name="gender"]:checked')?.value || "";
+  const allergy = allergyInput.value;
 
-
-  const dog = {
-  id:"",
+  const pet = {
+  id,
   name,
   weight,
   age,
   breed,
   gender,
-  image: ""
+  allergy,
+  image: "https://www.amatorfotografen.no/images/1000x700-Hund-Laika-Laika-20111023_02_2113.jpg"
 };
   
 
@@ -382,10 +86,6 @@ init();
 
   form.reset();
   
-
-  document.querySelectorAll(".form-btn").forEach(btn =>
-    btn.classList.remove("active")
-  );
 });
 
 function renderDogs(dogsList) {
@@ -410,6 +110,7 @@ card.innerHTML = `
       <p class="pet-meta">Alder: ${pet.age} år</p>
       <p class="pet-meta">Vekt: ${pet.weight} kg</p>
       <p class="pet-meta">Kjønn: ${pet.gender === "him" ? "Han" : "Hun"}</p>
+      <p class="pet-meta">Allergi: ${pet.allergy}</p>
     </div>
 
     ${
