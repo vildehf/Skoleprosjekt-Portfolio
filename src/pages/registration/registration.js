@@ -1,5 +1,5 @@
-const BASE_URL = "http://localhost:3000/";
-const API_KEY = "123";
+import { BASE_URL, API_KEY } from "../../ts/api.ts";
+import { login } from "../../ts/api.ts";
 
 let pets = [];
 
@@ -10,7 +10,6 @@ const weightInput = document.getElementById("pet-weight");
 const ageInput = document.getElementById("pet-age-years");
 const breedInput = document.getElementById("pet-breed");
 const allergyInput = document.getElementById("allergy");
-
 
 const nameError = document.getElementById("name-error");
 const weightError = document.getElementById("weight-error");
@@ -24,45 +23,11 @@ form.addEventListener("submit", function (e) {
 
   let valid = true;
 
-  if (!nameInput.reportValidity()) {
-    nameError.textContent = "Navnet må inneholde minst 2 bokstaver";
-    nameError.classList.add("show");
-    valid = false;
-  } else {
-    nameError.classList.remove("show");
-  }
-
-  if (!weightInput.reportValidity()) {
-    weightError.textContent = "Vekt kan ikke være mindre enn 1 kg";
-    weightError.classList.add("show");
-    valid = false;
-  } else {
-    weightError.classList.remove("show");
-  }
-
-  if (!ageInput.reportValidity()) {
-    ageError.textContent = "Alder kan ikke være mindre enn 1";
-    ageError.classList.add("show");
-    valid = false;
-  } else {
-    ageError.classList.remove("show");
-  }
-  
-  if (!breedInput.reportValidity()) {
-    breedError.textContent = "Hunderase må inneholde minst 2 bokstaver";
-    breedError.classList.add("show");
-    valid = false;
-  } else {
-    breedError.classList.remove("show");
-  }
-
-  if (!allergyInput.reportValidity()) {
-    allergyError.textContent = "Vennligst velg et allergialternativ";
-    allergyError.classList.add("show");
-    valid = false;
-  } else {
-    allergyError.classList.remove("show");
-  }
+  if (!nameInput.reportValidity() || nameInput.value().length < 2) 
+  if (!weightInput.reportValidity() || parseFloat(weightInput.value) < 1) 
+  if (!ageInput.reportValidity() || parseInt(ageInput.value) < 1)
+  if (!breedInput.reportValidity() || breedInput.value.trim().length < 2) 
+  if (!nameInput.reportValidity() || nameInput.value.trim().length < 2) 
 
   if (!valid) return;
 
@@ -74,7 +39,7 @@ form.addEventListener("submit", function (e) {
   const allergy = allergyInput.value;
 
   const pet = {
-  id: Date.now(),
+  id,
   name,
   weight,
   age,
