@@ -4,6 +4,52 @@ h1, h2, h3, h4{
     
 }
 
+.hidden {
+  display: none !important;
+}
+
+#status-message {
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+
+#status-message.success {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+#status-message.error {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.login-section {
+  font: inherit;
+  font-size: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  max-width: 20rem;
+  color: var(--primary-bg-color);
+  padding: 10px;
+  background: #eee;
+  border-radius: 10px;
+}
+
+#login-form {
+  gap: 3rem;
+}
+
+.login-section input {
+    font: inherit;
+    width: 100%;
+    padding: 0.2rem;
+    gap: 0.1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+}
+
+
 #pets-container {
    display: flex;
     flex-direction: column;

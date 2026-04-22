@@ -25,6 +25,7 @@
       </a>
 
       <nav id="primary-nav" class="nav" aria-label="Hovedmeny">
+        
         <ul class="nav-menu">
           <li><a href="/index.html">Hjem</a></li>
           <li>
@@ -35,6 +36,7 @@
           <li><a href="/src/pages/registration/registration.html">Mine hunder</a></li>
           <li><a href="/src/html/contact.html">Kontakt oss</a></li>
         </ul>
+        
       </nav>
 
       <button class="hamburger" aria-controls="primary-nav" aria-expanded="false" aria-label="Åpne meny">
@@ -48,6 +50,28 @@
   </header>
 <main>
         <section class="container">
+                <!-- Logg inn seksjon-->
+      <section id="login-section" class="login-section">
+        <p>Logg inn</p>
+        <form id="login-form">
+          <input
+            type="email"
+            name="email"
+            id="email"
+            placeholder="E-post"
+            required
+          />
+          <input
+            type="password"
+            name="password"
+            id="password"
+            placeholder="Passord"
+            required
+          />
+          <button type="submit" class="btn">Logg inn</button>
+        </form>
+        <p id="status-message" class="hidden"></p>
+      </section>
          <h1 id="form-title">Fortell oss om hunden din</h1>
             <h2>Informasjon om Hunden din</h2>
             <div class="pets-layout">
@@ -62,7 +86,6 @@
             <span id="name-error" class="error-message"></span>
           </div>
           
-
           <div>
             <label for="pet-weight">Vekt (kg)</label>
             <input id="pet-weight" name="weight" type="number" required min="1">
@@ -94,9 +117,9 @@
           </div>
              <label>Kjønn</label>
             <div class="btn-group">
-               <input type="radio" id="gender-him" name="gender" value="him">
+               <input type="radio" id="gender-him" name="gender" value="Him">
                <label for="gender-him" class="form-btn">Han</label>        
-               <input type="radio" id="gender-her" name="gender" value="her">
+               <input type="radio" id="gender-her" name="gender" value="Her">
                <label for="gender-her" class="form-btn">Hun</label>
             </div>
         </div>
@@ -105,8 +128,8 @@
               <div>
                 <div>
                   <br>
-                  <button class="btn" type="submit">Lagre opplysninger</button>
-                  <button class="btn-delete" type="button">Slett opplysninger</button>
+                  <button id="submit-button" class="btn" type="submit">Lagre opplysninger</button>
+                  <button id="delete-button" class="btn-delete" type="button">Slett opplysninger</button>
                   </div>
                   </div>
                 </div>
@@ -177,7 +200,7 @@
       </div>
     </div>
   </footer>
-<script src="/src/pages/registration/registration.js"></script>
+<script type="module" src="/src/pages/registration/registration.js"></script>
 <script src="/src/js/burger.js"> </script>
 
   </body>
