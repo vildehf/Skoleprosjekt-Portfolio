@@ -9,8 +9,8 @@ const modal = document.getElementById("sitter-modal");
 const sitterList = document.getElementById("sitter-list");
 const sitterForm = document.getElementById("sitter-form");
 
-const BASE_URL = "http://127.0.0.1:3000/api/petSitters";
-const API_KEY = "API123456";
+const BASE_URL = "http://localhost:3000/api/petSitters";
+const API_KEY = "123";
 
 let editingId = null;
 

@@ -1,9 +1,11 @@
 import { BASE_URL, API_KEY } from "../../ts/api.ts";
 import { login } from "../../ts/api.ts";
 
-let pets = [];
+let dogs = [];
+let editingId = null;
 
 const form = document.getElementById("pet-form");
+const petsContainer = document.getElementById("pets-container");
 
 const nameInput = document.getElementById("pet-name");
 const weightInput = document.getElementById("pet-weight");
@@ -17,11 +19,34 @@ const ageError = document.getElementById("age-error");
 const breedError = document.getElementById("breed-error");
 const allergyError = document.getElementById("allergy-error");
 
+function resetErrors() {
+  nameError.textContent = "";
+  weightError.textContent = "";
+  ageError.textContent = "";
+  breedError.textContent = "";
+  allergiesError.textContent = "";
 
-form.addEventListener("submit", function (e) {
-  e.preventDefault();
+  nameError.classList.remove("show");
+  weightError.classList.remove("show");
+  ageError.classList.remove("show");
+  breedError.classList.remove("show");
+  allergiesError.classList.remove("show");
+}
 
+function resetForm() {
+  form.reset();
+  editingId = null;
+
+  formTitle.textContent = "Fortell oss om hunden din";
+  submitButton.textContent = "Lagre opplysninger";
+
+  genderButtons.forEach((btn) => btn.classList.remove("active"));
+  resetErrors();
+}
+
+function validateForm() {
   let valid = true;
+  resetErrors();
 
   if (!nameInput.reportValidity() || nameInput.value().length < 2) 
   if (!weightInput.reportValidity() || parseFloat(weightInput.value) < 1) 
@@ -29,12 +54,14 @@ form.addEventListener("submit", function (e) {
   if (!breedInput.reportValidity() || breedInput.value.trim().length < 2) 
   if (!nameInput.reportValidity() || nameInput.value.trim().length < 2) 
 
-  if (!valid) return;
+init();
 
+/*
   const name = nameInput.value.trim();
   const weight = parseFloat(weightInput.value);
   const age = parseInt(ageInput.value);
   const breed = breedInput.value.trim();
+  const allergies = allergiesInput.value.trim();
   const gender = document.querySelector('input[name="gender"]:checked')?.value || "";
   const allergy = allergyInput.value;
 
@@ -50,27 +77,28 @@ form.addEventListener("submit", function (e) {
 };
   
 
-  pets.push(pet);
+  dogs.push(dogs);
 
-  renderPets(pets);
+  renderDogs(dogs);
+  console.log(dog);
 
-  console.log("Pets lagret:", pets);
+  console.log("Kjæledyr lagret:", dogs);
 
   form.reset();
   
 });
 
-function renderPets(petsList) {
+function renderDogs(dogsList) {
   const container = document.getElementById("pets-container");
 
   container.innerHTML = "";
 
-  if (petsList.length === 0) {
-    container.innerHTML = `<p class="empty-state">Ingen kjæledyr registrert ennå.</p>`;
+  if (dogsList.length === 0) {
+    container.innerHTML = `<p class="empty-state">Ingen hunder registrert ennå.</p>`;
     return;
   }
 
-  petsList.forEach((pet) => {
+  dogsList.forEach((dogs) => {
     const card = document.createElement("article");
     card.className = "pet-card";
 
@@ -106,4 +134,4 @@ card.innerHTML = `
   });
 } 
 
- renderPets(pets);
+ renderDogs(dogs);*/
