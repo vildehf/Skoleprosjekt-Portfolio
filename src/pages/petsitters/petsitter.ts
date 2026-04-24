@@ -19,6 +19,94 @@ const API_KEY = "123";
 
 let editingId: number | null = null;
 
+async function loadPetSitters() {
+  if (!sitterList) return;
+
+  sitterList.innerHTML = "<p>Laster hundepassere...</p>";
+
+  try {
+    const response = await fetch(BASE_URL);
+
+    if (!response.ok) {
+      throw new Error("Kunne ikke hente hundepassere");
+    }
+    const petSitters: petSitters[] = await response.json();
+
+    sitterList.innerHTML = "";
+
+    petSitters.forEach((ps) => {
+      const imageSrc = ps.image
+        ? `/src/${ps.image}`
+        : "/src/assets/dogsitter1.png";
+
+      const card = document.createElement("article");
+      card.className = "card sitter-row";
+      card.dataset.id = String(ps.id);
+
+      card.innerHTML = `
+      <div class="sitter-portrait">
+      <img 
+      src="${imageSrc}"
+      alt="Portrett av ${ps.name}"
+      width="96"
+      height="96"
+      loading="lazy"
+      />
+      </div>
+
+      <div class="sitter-info">
+          <h3 class="sitter-name">${ps.name}</h3>
+          <p class="sitter-meta">${ps.location}</p>
+
+          <div class="sitter-badges">
+            <span class="badge">${ps.available ? "Ledig" : "Ikke ledig"}</span>
+            <span class="badge">${ps.yearsOfExperience} års erfaring</span>
+          </div>
+
+          <p class="sitter-desc">${ps.experienceDescription}</p>
+        </div>
+
+        <div class="sitter-side">
+          <p class="sitter-price"><strong>${ps.pricePerDay} kr</strong> / døgn</p>
+          <p class="sitter-rating">
+            ★ ${ps.rating} <span class="muted">(${ps.reviewCount} anmeldelser)</span>
+          </p>
+
+          <div class="sitter-card-actions">
+            <a class="btn btn-primary" href="/src/pages/profile/profile.html?id=${ps.id}">
+              Se profil
+            </a>
+            <button class="btn btn-ghost edit-btn" type="button" data-id="${ps.id}">
+              Rediger
+            </button>
+            <button class="btn btn-ghost delete-btn" type="button" data-id="${ps.id}">
+              Slett
+            </button>
+          </div>
+        </div>
+      `;
+
+      card.querySelector(".delete-btn")?.addEventListener("click", () => {
+        deletePetSitter(ps.id);
+      });
+
+      card.querySelector(".edit-btn")?.addEventListener("click", () => {
+        editingId = ps.id;
+        fillForm(ps);
+        openModal();
+      });
+
+      sitterList.appendChild(card);
+    });
+  } catch (error) {
+    console.error("Feil:", error);
+
+    sitterList.innerHTML = `
+      <p>Kunne ikke hente hundepassere. Prøv igjen senere.</p>
+    `;
+  }
+}
+
 // Modal
 function openModal() {
   if (!modal) return;
@@ -47,82 +135,6 @@ function fillForm(ps: petSitters): void {
   (document.getElementById("description") as HTMLTextAreaElement).value =
     ps.experienceDescription ?? "";
   (document.getElementById("image") as HTMLInputElement).value = ps.image ?? "";
-}
-
-// READ / render
-async function loadPetSitters() {
-  if (!sitterList) return;
-
-  try {
-    const response = await fetch(BASE_URL);
-    const petSitters: petSitters[] = await response.json();
-
-    sitterList.innerHTML = "";
-
-    petSitters.forEach((ps) => {
-      const imageSrc = ps.image || "assets/dogsitter1.png";
-
-      const card = document.createElement("article");
-      card.className = "card sitter-row";
-      card.dataset.id = String(ps.id);
-
-      card.innerHTML = `
-        <div class="sitter-portrait">
-          <img
-            src="${imageSrc}"
-            alt="Portrett av ${ps.name}"
-            width="96"
-            height="96"
-            loading="lazy"
-          />
-        </div>
-
-        <div class="sitter-info">
-          <h4 class="sitter-name">${ps.name}</h4>
-          <p class="sitter-meta">${ps.location}</p>
-          <p class="sitter-desc">${ps.experienceDescription}</p>
-        </div>
-
-        <div class="sitter-side">
-          <p class="sitter-price"><strong>${ps.pricePerDay} kr</strong> / døgn</p>
-          <p class="sitter-rating">
-            ★ ${ps.rating} <span class="muted">(${ps.reviewCount} anmeldelser)</span>
-          </p>
-
-          <div class="sitter-card-actions">
-            <a class="btn btn-primary" href="/src/pages/profile.html">Se profil</a>
-            <button class="btn btn-ghost edit-btn" type="button" data-id="${ps.id}">
-              Rediger
-            </button>
-            <button class="btn btn-ghost delete-btn" type="button" data-id="${ps.id}">
-              Slett
-            </button>
-          </div>
-        </div>
-      `;
-
-      const deleteBtn = card.querySelector(".delete-btn");
-      const editBtn = card.querySelector(".edit-btn");
-
-      if (deleteBtn) {
-        deleteBtn.addEventListener("click", () => {
-          deletePetSitter(ps.id);
-        });
-      }
-
-      if (editBtn) {
-        editBtn.addEventListener("click", () => {
-          editingId = ps.id;
-          fillForm(ps);
-          openModal();
-        });
-      }
-
-      sitterList.appendChild(card);
-    });
-  } catch (error) {
-    console.error("Feil:", error);
-  }
 }
 
 // DELETE
