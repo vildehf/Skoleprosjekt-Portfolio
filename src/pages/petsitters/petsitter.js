@@ -77,7 +77,7 @@ async function loadPetSitters() {
           </p>
 
           <div class="sitter-card-actions">
-            <a class="btn btn-primary" href="/src/html/profile.html">Se profil</a>
+            <a class="btn btn-primary" href="/src/pages/profile.html">Se profil</a>
             <button class="btn btn-ghost edit-btn" type="button" data-id="${ps.id}">
               Rediger
             </button>
