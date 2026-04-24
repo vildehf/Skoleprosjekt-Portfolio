@@ -1,12 +1,12 @@
-import { fetchData } from "../../ts/api";
-console.log("JS funker!");
+const API_URL = "http://localhost:3000/api";
+import type {} from "../../ts/types.ts";
+
+function getApiKey(): string {
+  return localStorage.getItem("API_KEY") ?? "";
+}
 
 let editingBookingId: number | null = null;
 let currentUser: number | null = null;
-
-// Konstanter
-const API_URL = "http://localhost:3000/api";
-const API_KEY = "123";
 
 // ELEMENTER
 const form = document.querySelector(".booking-form");
@@ -25,7 +25,7 @@ let sittersMap = {};
 // FETCH HELPERS
 async function fetchData(endpoint: string) {
   const response = await fetch(`${API_URL}/${endpoint}`, {
-    headers: { Authorization: `Bearer ${API_KEY}` },
+    headers: { Authorization: `Bearer ${getApiKey()}` },
   });
   return response.json();
 }
@@ -75,7 +75,7 @@ async function updateBooking(id, data) {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${API_KEY}`,
+      Authorization: `Bearer ${getApiKey()}`,
     },
     body: JSON.stringify(data),
   });
@@ -202,7 +202,7 @@ async function createBooking(data) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${API_KEY}`,
+      Authorization: `Bearer ${getApiKey()}`,
     },
     body: JSON.stringify(data),
   });
@@ -212,7 +212,7 @@ async function deleteBooking(id) {
   await fetch(`${API_URL}/bookings/${id}`, {
     method: "DELETE",
     headers: {
-      Authorization: `Bearer ${API_KEY}`,
+      Authorization: `Bearer ${getApiKey()}`,
     },
   });
 
