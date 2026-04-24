@@ -1,12 +1,42 @@
 const API_URL = "http://localhost:3000/api";
 import type {} from "../../ts/types.ts";
 
+/* dette bør i types.ts */
+interface Booking {
+  id: number;
+  userId: number;
+  userDogId: number;
+  petSitterId: number;
+  fromDate: string;
+  toDate: string;
+  message: string;
+  status: string;
+}
+
+interface User {
+  id: number;
+  dogs: Dog[];
+}
+
+interface Dog {
+  id: number;
+  name: string;
+}
+
+interface PetSitter {
+  id: number;
+  name: string;
+  location: string;
+  pricePerDay: number;
+}
+
+/* denne bør i api.ts? */
 function getApiKey(): string {
   return localStorage.getItem("API_KEY") ?? "";
 }
 
 let editingBookingId: number | null = null;
-let currentUser: number | null = null;
+let currentUser: User | null = null;
 
 // ELEMENTER
 const form = document.querySelector(".booking-form");
@@ -19,10 +49,11 @@ const bookingsContainer = document.getElementById("bookings-list");
 const confirmation = document.getElementById("booking-confirmation");
 
 // DATA MAPS
-let dogsMap = {};
-let sittersMap = {};
+let dogsMap: Record<number, string> = {};
+let sittersMap: Record<number, PetSitter> = {};
 
 // FETCH HELPERS
+/* denne bør i api.ts? */
 async function fetchData(endpoint: string) {
   const response = await fetch(`${API_URL}/${endpoint}`, {
     headers: { Authorization: `Bearer ${getApiKey()}` },
@@ -228,7 +259,12 @@ async function deleteBooking(id) {
 form.addEventListener("submit", async function (event) {
   event.preventDefault();
 
-  const submitBtn = form.querySelector("button");
+  if (!currentUser) {
+    alert("Du må være logget inn");
+    return;
+  }
+
+  const submitBtn = form.querySelector("button") as HTMLButtonElement;
   submitBtn.disabled = true;
 
   const startDate = document.getElementById("start-date").value;
