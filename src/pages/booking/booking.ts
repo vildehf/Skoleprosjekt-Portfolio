@@ -89,7 +89,7 @@ function showMessage(message) {
   }, 3000);
 }
 
-function startEdit(booking) {
+function startEdit(booking: Booking) {
   editingBookingId = booking.id;
 
   document.getElementById("start-date").value = booking.fromDate;
@@ -145,7 +145,7 @@ async function loadSitters() {
 }
 
 // LOAD BOOKINGS
-function renderBooking(booking) {
+function renderBooking(booking: Booking) {
   return `<article class="booking-card">
       <div class="booking-info">
         <p><strong>Periode:</strong> ${formatDate(booking.fromDate)} - ${formatDate(booking.toDate)}</p>
