@@ -1,18 +1,111 @@
 // Siden er laget av Vilde Hvitstein
 // Denne filen håndterer CRUD-funksjonalitet (Create, Read, Update, Delete) for hundepassere.
 // Data hentes fra et API og vises som kort i en liste. Brukeren kan legge til, redigere og slette
+
+import type { petSitters } from "../../ts/types";
+
 // hundepassere via et modal-skjema. Alt oppdateres dynamisk uten side reload.
 const addSitterBtn = document.getElementById("add-sitter-btn");
 const closeModalBtn = document.getElementById("close-modal-btn");
 const cancelBtn = document.getElementById("cancel-btn");
 const modal = document.getElementById("sitter-modal");
 const sitterList = document.getElementById("sitter-list");
-const sitterForm = document.getElementById("sitter-form");
+const sitterForm = document.getElementById(
+  "sitter-form",
+) as HTMLFormElement | null;
 
 const BASE_URL = "http://localhost:3000/api/petSitters";
 const API_KEY = "123";
 
-let editingId = null;
+let editingId: number | null = null;
+
+async function loadPetSitters() {
+  if (!sitterList) return;
+
+  sitterList.innerHTML = "<p>Laster hundepassere...</p>";
+
+  try {
+    const response = await fetch(BASE_URL);
+
+    if (!response.ok) {
+      throw new Error("Kunne ikke hente hundepassere");
+    }
+    const petSitters: petSitters[] = await response.json();
+
+    sitterList.innerHTML = "";
+
+    petSitters.forEach((ps) => {
+      const imageSrc = ps.image
+        ? `/src/${ps.image}`
+        : "/src/assets/dogsitter1.png";
+
+      const card = document.createElement("article");
+      card.className = "card sitter-row";
+      card.dataset.id = String(ps.id);
+
+      card.innerHTML = `
+      <div class="sitter-portrait">
+      <img 
+      src="${imageSrc}"
+      alt="Portrett av ${ps.name}"
+      width="96"
+      height="96"
+      loading="lazy"
+      />
+      </div>
+
+      <div class="sitter-info">
+          <h3 class="sitter-name">${ps.name}</h3>
+          <p class="sitter-meta">${ps.location}</p>
+
+          <div class="sitter-badges">
+            <span class="badge">${ps.available ? "Ledig" : "Ikke ledig"}</span>
+            <span class="badge">${ps.yearsOfExperience} års erfaring</span>
+          </div>
+
+          <p class="sitter-desc">${ps.experienceDescription}</p>
+        </div>
+
+        <div class="sitter-side">
+          <p class="sitter-price"><strong>${ps.pricePerDay} kr</strong> / døgn</p>
+          <p class="sitter-rating">
+            ★ ${ps.rating} <span class="muted">(${ps.reviewCount} anmeldelser)</span>
+          </p>
+
+          <div class="sitter-card-actions">
+            <a class="btn btn-primary" href="/src/pages/profile/profile.html?id=${ps.id}">
+              Se profil
+            </a>
+            <button class="btn btn-ghost edit-btn" type="button" data-id="${ps.id}">
+              Rediger
+            </button>
+            <button class="btn btn-ghost delete-btn" type="button" data-id="${ps.id}">
+              Slett
+            </button>
+          </div>
+        </div>
+      `;
+
+      card.querySelector(".delete-btn")?.addEventListener("click", () => {
+        deletePetSitter(ps.id);
+      });
+
+      card.querySelector(".edit-btn")?.addEventListener("click", () => {
+        editingId = ps.id;
+        fillForm(ps);
+        openModal();
+      });
+
+      sitterList.appendChild(card);
+    });
+  } catch (error) {
+    console.error("Feil:", error);
+
+    sitterList.innerHTML = `
+      <p>Kunne ikke hente hundepassere. Prøv igjen senere.</p>
+    `;
+  }
+}
 
 // Modal
 function openModal() {
@@ -26,94 +119,26 @@ function closeModal() {
 }
 
 // Fyll skjema ved redigering
-function fillForm(ps) {
-  document.getElementById("name").value = ps.name || "";
-  document.getElementById("city").value = ps.location || "";
-  document.getElementById("pricePerDay").value = ps.pricePerDay || "";
-  document.getElementById("rating").value = ps.rating || "";
-  document.getElementById("reviewCount").value = ps.reviewCount || "";
-  document.getElementById("description").value = ps.experienceDescription || "";
-  document.getElementById("image").value = ps.image || "";
-}
-
-// READ / render
-async function loadPetSitters() {
-  if (!sitterList) return;
-
-  try {
-    const response = await fetch(BASE_URL);
-    const petSitters = await response.json();
-
-    sitterList.innerHTML = "";
-
-    petSitters.forEach((ps) => {
-      const imageSrc = ps.image || "assets/dogsitter1.png";
-
-      const card = document.createElement("article");
-      card.className = "card sitter-row";
-      card.dataset.id = ps.id;
-
-      card.innerHTML = `
-        <div class="sitter-portrait">
-          <img
-            src="${imageSrc}"
-            alt="Portrett av ${ps.name}"
-            width="96"
-            height="96"
-            loading="lazy"
-          />
-        </div>
-
-        <div class="sitter-info">
-          <h4 class="sitter-name">${ps.name}</h4>
-          <p class="sitter-meta">${ps.location}</p>
-          <p class="sitter-desc">${ps.experienceDescription}</p>
-        </div>
-
-        <div class="sitter-side">
-          <p class="sitter-price"><strong>${ps.pricePerDay} kr</strong> / døgn</p>
-          <p class="sitter-rating">
-            ★ ${ps.rating} <span class="muted">(${ps.reviewCount} anmeldelser)</span>
-          </p>
-
-          <div class="sitter-card-actions">
-            <a class="btn btn-primary" href="/src/html/profile.html">Se profil</a>
-            <button class="btn btn-ghost edit-btn" type="button" data-id="${ps.id}">
-              Rediger
-            </button>
-            <button class="btn btn-ghost delete-btn" type="button" data-id="${ps.id}">
-              Slett
-            </button>
-          </div>
-        </div>
-      `;
-
-      const deleteBtn = card.querySelector(".delete-btn");
-      const editBtn = card.querySelector(".edit-btn");
-
-      if (deleteBtn) {
-        deleteBtn.addEventListener("click", () => {
-          deletePetSitter(ps.id);
-        });
-      }
-
-      if (editBtn) {
-        editBtn.addEventListener("click", () => {
-          editingId = ps.id;
-          fillForm(ps);
-          openModal();
-        });
-      }
-
-      sitterList.appendChild(card);
-    });
-  } catch (error) {
-    console.error("Feil:", error);
-  }
+function fillForm(ps: petSitters): void {
+  (document.getElementById("name") as HTMLInputElement).value = ps.name ?? "";
+  (document.getElementById("city") as HTMLInputElement).value =
+    ps.location ?? "";
+  (document.getElementById("pricePerDay") as HTMLInputElement).value = String(
+    ps.pricePerDay ?? "",
+  );
+  (document.getElementById("rating") as HTMLInputElement).value = String(
+    ps.rating ?? "",
+  );
+  (document.getElementById("reviewCount") as HTMLInputElement).value = String(
+    ps.reviewCount ?? "",
+  );
+  (document.getElementById("description") as HTMLTextAreaElement).value =
+    ps.experienceDescription ?? "";
+  (document.getElementById("image") as HTMLInputElement).value = ps.image ?? "";
 }
 
 // DELETE
-async function deletePetSitter(id) {
+async function deletePetSitter(id: number): Promise<void> {
   try {
     const response = await fetch(`${BASE_URL}/${id}`, {
       method: "DELETE",
@@ -133,7 +158,10 @@ async function deletePetSitter(id) {
 }
 
 // UPDATE
-async function updatePetSitter(id, updatedPetSitter) {
+async function updatePetSitter(
+  id: number,
+  updatedPetSitter: Partial<petSitters>,
+): Promise<void> {
   try {
     const response = await fetch(`${BASE_URL}/${id}`, {
       method: "PATCH",
@@ -157,7 +185,9 @@ async function updatePetSitter(id, updatedPetSitter) {
 }
 
 // CREATE
-async function createPetSitter(newPetSitter) {
+async function createPetSitter(
+  newPetSitter: Omit<petSitters, "id">,
+): Promise<void> {
   try {
     const response = await fetch(BASE_URL, {
       method: "POST",
@@ -216,23 +246,30 @@ if (sitterForm) {
     event.preventDefault();
 
     const petSitterData = {
-      name: document.getElementById("name").value,
-      location: document.getElementById("city").value,
-      pricePerDay: Number(document.getElementById("pricePerDay").value),
-      rating: Number(document.getElementById("rating").value),
-      reviewCount: Number(document.getElementById("reviewCount").value),
-      experienceDescription: document.getElementById("description").value,
-      image: document.getElementById("image").value,
+      name: (document.getElementById("name") as HTMLInputElement).value,
+      location: (document.getElementById("city") as HTMLInputElement).value,
+      pricePerDay: Number(
+        (document.getElementById("pricePerDay") as HTMLInputElement).value,
+      ),
+      rating: Number(
+        (document.getElementById("rating") as HTMLInputElement).value,
+      ),
+      reviewCount: Number(
+        (document.getElementById("reviewCount") as HTMLInputElement).value,
+      ),
+      experienceDescription: (
+        document.getElementById("description") as HTMLTextAreaElement
+      ).value,
+      image: (document.getElementById("image") as HTMLInputElement).value,
       updated: new Date().toISOString(),
     };
 
-    if (editingId) {
+    if (editingId !== null) {
       await updatePetSitter(editingId, petSitterData);
     } else {
       await createPetSitter({
         ...petSitterData,
         created: new Date().toISOString(),
-        maxDogs: 1,
         acceptsPuppies: false,
         acceptsLargeDogs: false,
         yearsOfExperience: 1,
