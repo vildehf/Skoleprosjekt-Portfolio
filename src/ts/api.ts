@@ -1,10 +1,42 @@
-import type { LoginResponse } from "./types";
+import type { LoginResponse, Users } from "./types";
 
 export const BASE_URL = "http://localhost:3000/api";
 export const API_KEY = "123";
 
-function getApiKey(): string {
-  return localStorage.getItem("api_key") ?? "";
+export function getApiKey(): string {
+  return API_KEY;
+}
+
+
+export async function getUsers(): Promise<Users[]> {
+  const response = await fetch(`${BASE_URL}/users`,{
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${getApiKey()}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Kunne ikke hente brukere");
+  }
+  const data = await response.json();
+  return data.users;
+}
+
+
+export function getLoggedInEmail(): string | null {
+  return localStorage.getItem("LoggedinUser");
+}
+
+export async function getLoggedInUser(): Promise<Users | null> {
+  const email = getLoggedInEmail();
+
+  if (!email) {
+    return null;
+  }
+
+  const users = await getUsers();
+  return users.find((user) => user.email === email) ?? null;
 }
 
 export async function login(
@@ -12,19 +44,30 @@ export async function login(
   password: string,
 ): Promise<LoginResponse> {
   const response = await fetch(`${BASE_URL}/users`, {
-    method: "POST",
+    method: "GET",
     headers: {
       "Content-Type": "application/json",
+      "Authorization": `Bearer ${getApiKey()}`,
     },
-    body: JSON.stringify({ email, password }),
   });
 
   if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.message ?? "Innlogging feilet");
+    throw new Error("Innlogging feilet");
   }
 
-  localStorage.setItem("LoggedinUser", email);
+  
+  const users: Users[] = await response.json();
 
-  return response.json();
+  const user = users.find(
+    (user) => user.email === email && user.password === password,
+  );
+
+  if (!user) {
+    throw new Error("Feil e-post eller passord");
+  }
+
+  localStorage.setItem("LoggedinUser", user.email);
+  localStorage.setItem("api_key", API_KEY);
+
+  return { API_KEY };
 }
