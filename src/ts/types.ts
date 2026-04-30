@@ -26,6 +26,28 @@ export interface Dog {
 }
 
 export interface Allergy {}
+    id: number
+    userName: string
+    password: string | number
+    email: string 
+    description: string | null
+    dogs: Dog[]
+    created: string
+    updated: string
+    image?: string
+}
+
+export interface Dog {
+    id: number
+    name: string
+    weight: number
+    age: number
+    breed: string
+    allergies: string[]
+    gender: "Him" | "Her"
+    image?: string
+}
+
 
 export interface PetSitters {
   id: number;
