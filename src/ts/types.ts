@@ -16,6 +16,30 @@ export interface Users {
 export interface Dog {
   id: number;
   name: string;
+  breed: string;
+  gender: "Him" | "Her";
+  age: number;
+  allergies: Allergy[];
+  created: string;
+  updated: string;
+  image?: string;
+}
+
+export interface Allergy {}
+    id: number
+    userName: string
+    password: string | number
+    email: string 
+    description: string | null
+    dogs: Dog[]
+    created: string
+    updated: string
+    image?: string
+}
+
+export interface Dog {
+  id: number;
+  name: string;
   weight: number;
   age: number;
   breed: string;
@@ -24,7 +48,8 @@ export interface Dog {
   image?: string;
 }
 
-export interface petSitters {
+
+export interface PetSitters {
   id: number;
   name: string;
   image?: string;
@@ -32,6 +57,7 @@ export interface petSitters {
   pricePerDay: number;
   rating: number;
   reviewCount: number;
+  maxDogs: number;
   acceptsPuppies: boolean;
   acceptsLargeDogs: boolean;
   yearsOfExperience: number;
@@ -46,8 +72,8 @@ export interface Booking {
   userId: number;
   userDogId: number;
   petSitterId: number;
-  fromDate: string;
-  toDate: string;
+  fromDate: string | null;
+  toDate: string | null;
   status: string;
   message: string;
   created: string;
