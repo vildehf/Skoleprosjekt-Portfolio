@@ -5,7 +5,7 @@ export interface Users {
   id: number;
   userName: string;
   password: string | number;
-  email: string | number;
+  email: string;
   description: string | null;
   dogs: Dog[];
   created: string;
@@ -38,14 +38,14 @@ export interface Allergy {}
 }
 
 export interface Dog {
-    id: number
-    name: string
-    weight: number
-    age: number
-    breed: string
-    allergies: string[]
-    gender: "Him" | "Her"
-    image?: string
+  id: number;
+  name: string;
+  weight: number;
+  age: number;
+  breed: string;
+  allergies: string[];
+  gender: "Him" | "Her";
+  image?: string;
 }
 
 
@@ -67,7 +67,7 @@ export interface PetSitters {
   updated: string;
 }
 
-export interface Bookings {
+export interface Booking {
   id: number;
   userId: number;
   userDogId: number;
