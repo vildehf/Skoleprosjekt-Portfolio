@@ -1,5 +1,7 @@
-import type { Booking, Users, petSitters } from "../../ts/types.ts";
-import { BASE_URL, API_KEY, getLoggedInUser } from "../../ts/api.ts";
+/* Siden laget av Line Nerli Tveite */
+
+import type { Booking, Users, PetSitters } from "../../ts/types.ts";
+import { BASE_URL, API_KEY, getLoggedInUser } from "../../ts/api";
 
 type CreateBooking = Omit<Booking, "id" | "created" | "updated">;
 
@@ -22,7 +24,7 @@ const confirmation = document.getElementById(
 
 // DATA MAPS
 let dogsMap: Record<number, string> = {};
-let sittersMap: Record<number, petSitters> = {};
+let sittersMap: Record<number, PetSitters> = {};
 
 // FETCH HELPERS
 /* denne bør i api.ts? */
@@ -40,7 +42,11 @@ async function fetchData<T>(endpoint: string): Promise<T> {
 
 async function loadCurrentUser() {
   currentUser = await getLoggedInUser();
-  console.log("currentUser:", currentUser);
+
+  if (!currentUser) {
+    alert("Du må være logget inn for å se denne siden");
+    return;
+  }
 }
 
 function formatDate(dateString: string) {
@@ -68,9 +74,9 @@ function startEdit(booking: Booking) {
   editingBookingId = booking.id;
 
   (document.getElementById("start-date") as HTMLInputElement).value =
-    booking.fromDate;
+    booking.fromDate ?? "";
   (document.getElementById("end-date") as HTMLInputElement).value =
-    booking.toDate;
+    booking.toDate ?? "";
   dogSelect.value = String(booking.userDogId);
   sitterSelect.value = String(booking.petSitterId);
   (document.getElementById("message") as HTMLTextAreaElement).value =
@@ -110,7 +116,7 @@ async function loadDogs() {
 
 // LOAD SITTERS
 async function loadSitters() {
-  const sitters = await fetchData<petSitters[]>("petsitters");
+  const sitters = await fetchData<PetSitters[]>("petsitters");
 
   sitters.forEach((sitter) => {
     sittersMap[sitter.id] = sitter;
@@ -127,11 +133,12 @@ async function loadSitters() {
 function renderBooking(booking: Booking): string {
   return `<article class="booking-card">
       <div class="booking-info">
-        <p><strong>Periode:</strong> ${formatDate(booking.fromDate)} - ${formatDate(booking.toDate)}</p>
-        <p><strong>Hund:</strong> ${dogsMap[booking.userDogId] || "Ukjent hund"}</p>
-        <p><strong>Hundepasser:</strong> ${sittersMap[booking.petSitterId]?.name || "Ukjent passer"}</p>
-      </div>
+        <p><strong>Periode:</strong> ${formatDate(booking.fromDate ?? "")} - ${formatDate(booking.toDate ?? "")}</p>
+        <p><strong>Hund:</strong> ${dogsMap[booking.userDogId] ?? "Ukjent hund"}</p>
+        <p><strong>Hundepasser:</strong> ${sittersMap[booking.petSitterId]?.name ?? "Ukjent passer"}</p>
       <p><strong>Status:</strong> ${booking.status === "pending" ? "Venter" : booking.status}</p>
+      </div>
+      
 
       <div class="actions">
     <button class="btn btn-ghost edit-btn" data-id="${booking.id}">Rediger</button>
@@ -178,17 +185,15 @@ async function loadBookings() {
 }
 
 async function loadPreviousSitters() {
-  const user = currentUser;
-  if (!user) return;
+  if (!currentUser) return;
 
   const bookings = await fetchData<Booking[]>("bookings");
-  previousSittersContainer.innerHTML = "";
 
-  const userBookings = bookings.filter(
-    (b) => Number(b.userId) === Number(user.id),
-  );
+  const userBookings = bookings.filter((b) => b.userId === currentUser!.id);
 
   const sitterIds = [...new Set(userBookings.map((b) => b.petSitterId))];
+
+  previousSittersContainer.innerHTML = "";
 
   if (sitterIds.length === 0) {
     previousSittersContainer.innerHTML =
@@ -198,19 +203,20 @@ async function loadPreviousSitters() {
 
   sitterIds.forEach((id) => {
     const card = document.createElement("div");
-    card.classList.add("booking-card");
+    card.classList.add("previous-sitter-card");
 
-    card.innerHTML = `<div class="booking-info">
-    <p><strong>Hundepasser:</strong>${sittersMap[id]?.name || "Ukjent"}</p></div>
+    card.innerHTML = `
+       <p><strong>${sittersMap[id]?.name || "Ukjent"}</strong></p>
+      <button class="btn btn-ghost book-again">Book igjen</button>
+`;
 
-    <button class="btn btn-primary book-again">Book igjen</button>`;
+    card
+      .querySelector<HTMLButtonElement>(".book-again")
+      ?.addEventListener("click", () => {
+        sitterSelect.value = String(id);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
 
-    const button = card.querySelector<HTMLButtonElement>(".book-again");
-    if (!button) return;
-    button.addEventListener("click", () => {
-      sitterSelect.value = String(id);
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    });
     previousSittersContainer.appendChild(card);
   });
 }
