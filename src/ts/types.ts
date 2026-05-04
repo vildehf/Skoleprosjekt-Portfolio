@@ -48,7 +48,7 @@ export interface Bookings {
     userDogId: number
     petSitterId: number
     fromDate: string | null
-    toDate: number
+    toDate: string | null
     status: string
     message: string
     created: string

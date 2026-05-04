@@ -37,7 +37,9 @@ h1, h2, h3, h4{
 }
 
 #login-form {
-  gap: 3rem;
+   display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .login-section input {
@@ -82,7 +84,8 @@ h1, h2, h3, h4{
 }
 
 
-.info-card input, select {
+.info-card input, 
+.info-card select {
   font: inherit;
     width: 100%;
     padding: 0.7rem;
@@ -138,30 +141,9 @@ h1, h2, h3, h4{
 }
 
 .btn-delete:hover {
-  background-color: var(--btn-delete);
+ background-color: var(--btn-delete);
   color: var(--bg-label-color);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: var(--btn-height);
-  padding: 0 var(--btn-padding-x);
-  border: 1px solid transparent;
-  border-radius: var(--btn-radius);
-  font: inherit;
-  font-size: var(--btn-font-size);
-  font-weight: 700;
-  line-height: 1;
-  text-decoration: none;
-  white-space: nowrap;
-  cursor: pointer;
   box-shadow: var(--shadow-sm);
-  transition:
-    background-color 0.2s ease,
-    color 0.2s ease,
-    border-color 0.2s ease,
-    box-shadow 0.2s ease,
-    transform 0.2s ease;
-   
 }
 
 .form-btn:hover {
@@ -285,6 +267,7 @@ h1, h2, h3, h4{
 
 .pet-card-info {
   width: 100%;
+  grid-area: info;
 }
 
 .pet-card-actions {
@@ -300,13 +283,11 @@ h1, h2, h3, h4{
     max-width: 160px;
     height: 160px;
     margin: 0 auto;
+     grid-area: image;
   }
 
   .pets-form {
     width: 100%;
   }
 
-  .pet-card-image {
-    margin: 0 auto;
-  }
 }
