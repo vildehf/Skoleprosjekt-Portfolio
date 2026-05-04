@@ -79,7 +79,7 @@
         <section class="section center">
           <h1>Finn hundepasser</h1>
           <p>
-            Filtrer etter sted, dato og tilgjengelighet - og finn en passer du
+            Filtrer etter sted, pris og tilgjengelighet - og finn en passer du
             liker.
           </p>
         </section>
@@ -101,7 +101,7 @@
                     />
                   </div>
 
-                  <div class="field">
+                  <!-- <div class="field">
                     <p class="field-title">Dato</p>
 
                     <div class="date-row">
@@ -115,18 +115,18 @@
                         <input id="to" type="date" />
                       </div>
                     </div>
-                  </div>
+                  </div>  ---->
 
                   <div class="field">
                     <label for="availability">Tilgjengelighet</label>
-                    <select id="availability">
-                      <option>Alle</option>
-                      <option>Kun ledige</option>
-                      <option>Helg</option>
-                      <option>Hverdager</option>
+                    <select id="availability" name="availability">
+                      <option value="all">Alle</option>
+                      <option value="available">Kun ledige</option>
+                      <option value="unavailable">Ikke ledige</option>
                     </select>
                   </div>
 
+                  <!--
                   <div class="field">
                     <label for="service">Type pass</label>
                     <select id="service">
@@ -134,7 +134,7 @@
                       <option>Dagpass</option>
                       <option>Tur</option>
                     </select>
-                  </div>
+                  </div> -->
 
                   <div class="field">
                     <label for="price">Pris per døgn (NOK)</label>
@@ -152,7 +152,7 @@
                     </div>
                   </div>
 
-                  <div class="checks">
+                  <!---       <div class="checks">
                     <label class="check">
                       <input type="checkbox" />
                       <span>Passer kan ha egen hund</span>
@@ -168,9 +168,12 @@
                       <span>Ønsker oppdateringer/bilder</span>
                     </label>
                   </div>
+                  -->
 
                   <div class="filter-actions">
-                    <button class="btn btn-primary">Bruk filtre</button>
+                    <button class="btn btn-primary" type="submit">
+                      Bruk filtre
+                    </button>
                     <button class="btn btn-ghost" type="reset">
                       Nullstill
                     </button>
@@ -292,7 +295,7 @@
               </select>
             </div>
 
-            <div class="field">
+            <!--- <div class="field">
               <label for="serviceType">Type pass</label>
               <select id="serviceType" name="serviceType">
                 <option value="Overnatting">Overnatting</option>
@@ -300,7 +303,7 @@
                 <option value="Tur">Tur</option>
               </select>
             </div>
-
+-->
             <div class="field field-full">
               <label for="description">Beskrivelse</label>
               <textarea
