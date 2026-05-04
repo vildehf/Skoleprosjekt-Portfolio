@@ -25,7 +25,7 @@ export interface Dog {
   image?: string;
 }
 
-export interface Allergy {}
+export interface Allergy {
     id: number
     userName: string
     password: string | number
@@ -43,7 +43,7 @@ export interface Dog {
   weight: number;
   age: number;
   breed: string;
-  allergies: string[];
+  allergy: string[];
   gender: "Him" | "Her";
   image?: string;
 }

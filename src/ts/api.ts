@@ -41,22 +41,6 @@ export async function getUsers(): Promise<Users[]> {
 }
 
 
-export function getLoggedInEmail(): string | null {
-  return localStorage.getItem("LoggedinUser");
-}
-
-export async function getLoggedInUser(): Promise<Users | null> {
-  const email = getLoggedInEmail();
-
-  if (!email) {
-    return null;
-  }
-
-  const users = await getUsers();
-  return users.find((user) => user.email === email) ?? null;
-  console.log("API response:");
-}
-
 export async function login(
   email: string,
   password: string,
