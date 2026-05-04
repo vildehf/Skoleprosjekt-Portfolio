@@ -8,6 +8,23 @@ export function getApiKey(): string {
 }
 
 
+export async function updateUser(user: Users): Promise<Users> {
+  const response = await fetch(`${BASE_URL}/users/${user.id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${getApiKey()}`,
+    },
+    body: JSON.stringify(user),
+  });
+
+  if (!response.ok) {
+    throw new Error("Kunne ikke oppdatere bruker");
+  }
+
+  return await response.json();
+}
+
 export async function getUsers(): Promise<Users[]> {
   const response = await fetch(`${BASE_URL}/users`,{
     headers: {
@@ -19,8 +36,8 @@ export async function getUsers(): Promise<Users[]> {
   if (!response.ok) {
     throw new Error("Kunne ikke hente brukere");
   }
-  const data = await response.json();
-  return data.users;
+    const users: Users[] = await response.json();
+  return users;
 }
 
 
@@ -37,26 +54,20 @@ export async function getLoggedInUser(): Promise<Users | null> {
 
   const users = await getUsers();
   return users.find((user) => user.email === email) ?? null;
+  console.log("API response:");
 }
 
 export async function login(
   email: string,
   password: string,
 ): Promise<LoginResponse> {
-  const response = await fetch(`${BASE_URL}/users`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${getApiKey()}`,
-    },
-  });
+  const response = await fetch(`${BASE_URL}/users`);
 
   if (!response.ok) {
     throw new Error("Innlogging feilet");
   }
 
-  
-  const users: Users[] = await response.json();
+ const users: Users[] = await response.json();
 
   const user = users.find(
     (user) => user.email === email && user.password === password,
@@ -67,7 +78,7 @@ export async function login(
   }
 
   localStorage.setItem("LoggedinUser", user.email);
-  localStorage.setItem("api_key", API_KEY);
+  localStorage.setItem("API_KEY", API_KEY);
 
   return { API_KEY };
 }

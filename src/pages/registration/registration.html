@@ -13,7 +13,7 @@
   <link rel="stylesheet" href="/src/css/style.css">
   <link rel="stylesheet" href="/src/pages/registration/registration.css">
   <link rel="shortcut icon" href="/src/assets/logo.png">
-  <title>Finn hundepasser – Potepass</title>
+  <title>Mine hunder – Potepass</title>
 </head>
 <body>
   <header>
@@ -60,20 +60,19 @@
             id="email"
             placeholder="E-post"
             required
-          />
+          >
           <input
             type="password"
             name="password"
             id="password"
             placeholder="Passord"
             required
-          />
+          >
           <button type="submit" class="btn">Logg inn</button>
         </form>
         <p id="status-message" class="hidden"></p>
       </section>
          <h1 id="form-title">Fortell oss om hunden din</h1>
-            <h2>Informasjon om Hunden din</h2>
             <div class="pets-layout">
             <div class="pets-form">
             <form id="pet-form" action="/" method="get">
@@ -94,7 +93,7 @@
           
             <div>
             <label for="pet-age-years">Alder (år)</label>
-            <input id="pet-age-years" type="number" required min="1">
+            <input id="pet-age-years" name="age" type="number" required min="1">
             <span id="age-error" class="error-message"></span>
           </div>
 
@@ -133,12 +132,11 @@
                   </div>
                   </div>
                 </div>
+                </form>
                 <div id="pets-container"></div>
                 </div>
-                </form>
                 
-
-</div>
+                
     </section>
   </main>
   <footer class="site-footer">
