@@ -19,6 +19,27 @@ const API_KEY = "123";
 
 let editingId: number | null = null;
 
+const fallbackPetSitters: petSitters[] = [
+  {
+    id: 1,
+    name: "Oda",
+    location: "Oslo, 0561",
+    pricePerDay: 450,
+    rating: 4.9,
+    reviewCount: 19,
+    maxDogs: 2,
+    acceptsPuppies: true,
+    acceptsLargeDogs: true,
+    yearsOfExperience: 3,
+    experienceDescription:
+      "Rolig og trygg hundepasser. Bor nær parker og har erfaring med store hunder.",
+    available: true,
+    image: "assets/dogsitter1.png",
+    created: new Date().toISOString(),
+    updated: new Date().toISOString(),
+  },
+];
+
 async function loadPetSitters() {
   if (!sitterList) return;
 
@@ -30,81 +51,84 @@ async function loadPetSitters() {
     if (!response.ok) {
       throw new Error("Kunne ikke hente hundepassere");
     }
+
     const petSitters: petSitters[] = await response.json();
+    renderPetSitters(petSitters);
+  } catch (error) {
+    console.error("Feil:", error);
+    renderPetSitters(fallbackPetSitters);
+  }
+}
 
-    sitterList.innerHTML = "";
+function renderPetSitters(petSitters: petSitters[]) {
+  if (!sitterList) return;
 
-    petSitters.forEach((ps) => {
-      const imageSrc = ps.image
-        ? `/src/${ps.image}`
-        : "/src/assets/dogsitter1.png";
+  sitterList.innerHTML = "";
 
-      const card = document.createElement("article");
-      card.className = "card sitter-row";
-      card.dataset.id = String(ps.id);
+  petSitters.forEach((ps) => {
+    const imageSrc = ps.image
+      ? `/src/${ps.image}`
+      : "/src/assets/dogsitter1.png";
 
-      card.innerHTML = `
+    const card = document.createElement("article");
+    card.className = "card sitter-row";
+    card.dataset.id = String(ps.id);
+
+    card.innerHTML = `
       <div class="sitter-portrait">
-      <img 
-      src="${imageSrc}"
-      alt="Portrett av ${ps.name}"
-      width="96"
-      height="96"
-      loading="lazy"
-      />
+        <img 
+          src="${imageSrc}"
+          alt="Portrett av ${ps.name}"
+          width="96"
+          height="96"
+          loading="lazy"
+        />
       </div>
 
       <div class="sitter-info">
-          <h3 class="sitter-name">${ps.name}</h3>
-          <p class="sitter-meta">${ps.location}</p>
+        <h3 class="sitter-name">${ps.name}</h3>
+        <p class="sitter-meta">${ps.location}</p>
 
-          <div class="sitter-badges">
-            <span class="badge">${ps.available ? "Ledig" : "Ikke ledig"}</span>
-            <span class="badge">${ps.yearsOfExperience} års erfaring</span>
-          </div>
-
-          <p class="sitter-desc">${ps.experienceDescription}</p>
+        <div class="sitter-badges">
+          <span class="badge">${ps.available ? "Ledig" : "Ikke ledig"}</span>
+          <span class="badge">${ps.yearsOfExperience} års erfaring</span>
         </div>
 
-        <div class="sitter-side">
-          <p class="sitter-price"><strong>${ps.pricePerDay} kr</strong> / døgn</p>
-          <p class="sitter-rating">
-            ★ ${ps.rating} <span class="muted">(${ps.reviewCount} anmeldelser)</span>
-          </p>
+        <p class="sitter-desc">${ps.experienceDescription}</p>
+      </div>
 
-          <div class="sitter-card-actions">
-            <a class="btn btn-primary" href="/src/pages/profile/profile.html?id=${ps.id}">
-              Se profil
-            </a>
-            <button class="btn btn-ghost edit-btn" type="button" data-id="${ps.id}">
-              Rediger
-            </button>
-            <button class="btn btn-ghost delete-btn" type="button" data-id="${ps.id}">
-              Slett
-            </button>
-          </div>
+      <div class="sitter-side">
+        <p class="sitter-price"><strong>${ps.pricePerDay} kr</strong> / døgn</p>
+        <p class="sitter-rating">
+          ★ ${ps.rating} <span class="muted">(${ps.reviewCount} anmeldelser)</span>
+        </p>
+
+        <div class="sitter-card-actions">
+          <a class="btn btn-primary" href="/src/pages/profile/profile.html?id=${ps.id}">
+            Se profil
+          </a>
+          <button class="btn btn-ghost edit-btn" type="button" data-id="${ps.id}">
+            Rediger
+          </button>
+          <button class="btn btn-ghost delete-btn" type="button" data-id="${ps.id}">
+            Slett
+          </button>
         </div>
-      `;
-
-      card.querySelector(".delete-btn")?.addEventListener("click", () => {
-        deletePetSitter(ps.id);
-      });
-
-      card.querySelector(".edit-btn")?.addEventListener("click", () => {
-        editingId = ps.id;
-        fillForm(ps);
-        openModal();
-      });
-
-      sitterList.appendChild(card);
-    });
-  } catch (error) {
-    console.error("Feil:", error);
-
-    sitterList.innerHTML = `
-      <p>Kunne ikke hente hundepassere. Prøv igjen senere.</p>
+      </div>
     `;
-  }
+
+    card.querySelector(".delete-btn")?.addEventListener("click", () => {
+      deletePetSitter(ps.id);
+    });
+
+    card.querySelector(".edit-btn")?.addEventListener("click", () => {
+      editingId = ps.id;
+      fillForm(ps);
+      openModal();
+    });
+
+    sitterList.appendChild(card);
+  });
 }
 
 // Modal
@@ -122,9 +146,17 @@ function closeModal() {
 
 // Fyll skjema ved redigering
 function fillForm(ps: petSitters): void {
+  const [city, postalCode] = (ps.location ?? "")
+    .split(",")
+    .map((part) => part.trim());
+
   (document.getElementById("name") as HTMLInputElement).value = ps.name ?? "";
-  (document.getElementById("city") as HTMLInputElement).value =
-    ps.location ?? "";
+
+  (document.getElementById("city") as HTMLInputElement).value = city ?? "";
+
+  (document.getElementById("postalCode") as HTMLInputElement).value =
+    postalCode ?? "";
+
   (document.getElementById("pricePerDay") as HTMLInputElement).value = String(
     ps.pricePerDay ?? "",
   );
@@ -136,6 +168,7 @@ function fillForm(ps: petSitters): void {
   );
   (document.getElementById("description") as HTMLTextAreaElement).value =
     ps.experienceDescription ?? "";
+
   (document.getElementById("image") as HTMLInputElement).value = ps.image ?? "";
   (document.getElementById("availabilityStatus") as HTMLSelectElement).value =
     ps.available ? "Ledig" : "Ikke ledig";
@@ -249,15 +282,16 @@ if (sitterForm) {
   sitterForm.addEventListener("submit", async (event) => {
     event.preventDefault();
 
-    const availabilityStatus = (
-      document.getElementById("availabilityStatus") as HTMLSelectElement
+    const city = (document.getElementById("city") as HTMLInputElement).value;
+    const postalCode = (
+      document.getElementById("postalCode") as HTMLInputElement
     ).value;
 
-    const available = availabilityStatus !== "Ikke ledig";
+    const location = postalCode ? `${city}, ${postalCode}` : city;
 
     const petSitterData = {
       name: (document.getElementById("name") as HTMLInputElement).value,
-      location: (document.getElementById("city") as HTMLInputElement).value,
+      location,
       pricePerDay: Number(
         (document.getElementById("pricePerDay") as HTMLInputElement).value,
       ),

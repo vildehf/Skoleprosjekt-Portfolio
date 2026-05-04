@@ -1,70 +1,45 @@
-const API_URL = "http://localhost:3000/api";
-import type {} from "../../ts/types.ts";
+import type { Booking, Users, petSitters } from "../../ts/types.ts";
+import { BASE_URL, API_KEY, getLoggedInUser } from "../../ts/api.ts";
 
-/* dette bør i types.ts */
-interface Booking {
-  id: number;
-  userId: number;
-  userDogId: number;
-  petSitterId: number;
-  fromDate: string;
-  toDate: string;
-  message: string;
-  status: string;
-}
-
-interface User {
-  id: number;
-  dogs: Dog[];
-}
-
-interface Dog {
-  id: number;
-  name: string;
-}
-
-interface PetSitter {
-  id: number;
-  name: string;
-  location: string;
-  pricePerDay: number;
-}
-
-/* denne bør i api.ts? */
-function getApiKey(): string {
-  return localStorage.getItem("API_KEY") ?? "";
-}
+type CreateBooking = Omit<Booking, "id" | "created" | "updated">;
 
 let editingBookingId: number | null = null;
-let currentUser: User | null = null;
+let currentUser: Users | null = null;
 
 // ELEMENTER
-const form = document.querySelector(".booking-form");
-const dogSelect = document.getElementById("dog");
-const sitterSelect = document.getElementById("sitter");
+const form = document.querySelector(".booking-form") as HTMLFormElement;
+const dogSelect = document.getElementById("dog") as HTMLSelectElement;
+const sitterSelect = document.getElementById("sitter") as HTMLSelectElement;
 const previousSittersContainer = document.getElementById(
   "previous-sitters-list",
-);
-const bookingsContainer = document.getElementById("bookings-list");
-const confirmation = document.getElementById("booking-confirmation");
+) as HTMLDivElement;
+const bookingsContainer = document.getElementById(
+  "bookings-list",
+) as HTMLDivElement;
+const confirmation = document.getElementById(
+  "booking-confirmation",
+) as HTMLDivElement;
 
 // DATA MAPS
 let dogsMap: Record<number, string> = {};
-let sittersMap: Record<number, PetSitter> = {};
+let sittersMap: Record<number, petSitters> = {};
 
 // FETCH HELPERS
 /* denne bør i api.ts? */
-async function fetchData(endpoint: string) {
-  const response = await fetch(`${API_URL}/${endpoint}`, {
-    headers: { Authorization: `Bearer ${getApiKey()}` },
+async function fetchData<T>(endpoint: string): Promise<T> {
+  const response = await fetch(`${BASE_URL}/${endpoint}`, {
+    headers: { Authorization: `Bearer ${API_KEY}` },
   });
+
+  if (!response.ok) {
+    throw new Error("Noe gikk galt");
+  }
+
   return response.json();
 }
 
 async function loadCurrentUser() {
-  const users = await fetchData("users");
-  console.log("users:", users);
-  currentUser = users[0];
+  currentUser = await getLoggedInUser();
   console.log("currentUser:", currentUser);
 }
 
@@ -80,7 +55,7 @@ function resetForm(): void {
   button.textContent = "Book";
 }
 
-function showMessage(message) {
+function showMessage(message: string) {
   confirmation.textContent = message;
   confirmation.style.display = "block";
 
@@ -92,21 +67,25 @@ function showMessage(message) {
 function startEdit(booking: Booking) {
   editingBookingId = booking.id;
 
-  document.getElementById("start-date").value = booking.fromDate;
-  document.getElementById("end-date").value = booking.toDate;
-  dogSelect.value = booking.userDogId;
-  sitterSelect.value = booking.petSitterId;
-  document.getElementById("message").value = booking.message;
-  form.querySelector("button").textContent = "Oppdater booking";
+  (document.getElementById("start-date") as HTMLInputElement).value =
+    booking.fromDate;
+  (document.getElementById("end-date") as HTMLInputElement).value =
+    booking.toDate;
+  dogSelect.value = String(booking.userDogId);
+  sitterSelect.value = String(booking.petSitterId);
+  (document.getElementById("message") as HTMLTextAreaElement).value =
+    booking.message;
+  const button = form.querySelector("button") as HTMLButtonElement;
+  button.textContent = "Oppdater booking";
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
-async function updateBooking(id, data) {
-  await fetch(`${API_URL}/bookings/${id}`, {
+async function updateBooking(id: number, data: CreateBooking) {
+  await fetch(`${BASE_URL}/bookings/${id}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${getApiKey()}`,
+      Authorization: `Bearer ${API_KEY}`,
     },
     body: JSON.stringify(data),
   });
@@ -122,7 +101,7 @@ async function loadDogs() {
     dogsMap[dog.id] = dog.name;
 
     const option = document.createElement("option");
-    option.value = dog.id;
+    option.value = String(dog.id);
     option.textContent = dog.name;
 
     dogSelect.appendChild(option);
@@ -131,13 +110,13 @@ async function loadDogs() {
 
 // LOAD SITTERS
 async function loadSitters() {
-  const sitters = await fetchData("petsitters");
+  const sitters = await fetchData<petSitters[]>("petsitters");
 
   sitters.forEach((sitter) => {
     sittersMap[sitter.id] = sitter;
 
     const option = document.createElement("option");
-    option.value = sitter.id;
+    option.value = String(sitter.id);
     option.textContent = sitter.name;
 
     sitterSelect.appendChild(option);
@@ -145,7 +124,7 @@ async function loadSitters() {
 }
 
 // LOAD BOOKINGS
-function renderBooking(booking: Booking) {
+function renderBooking(booking: Booking): string {
   return `<article class="booking-card">
       <div class="booking-info">
         <p><strong>Periode:</strong> ${formatDate(booking.fromDate)} - ${formatDate(booking.toDate)}</p>
@@ -163,41 +142,50 @@ function renderBooking(booking: Booking) {
 }
 
 async function loadBookings() {
-  if (!currentUser) return;
-  const bookings = await fetchData("bookings");
+  const user = currentUser;
+  if (!user) return;
+  const bookings = await fetchData<Booking[]>("bookings");
 
   const userBookings = bookings.filter(
-    (b) => Number(b.userId) === Number(currentUser.id),
+    (b) => Number(b.userId) === Number(user.id),
   );
 
   bookingsContainer.innerHTML = userBookings.map(renderBooking).join("");
 
-  bookingsContainer.querySelectorAll(".edit-btn").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const id = btn.dataset.id;
-      const booking = userBookings.find((b) => b.id == id);
-      startEdit(booking);
+  bookingsContainer
+    .querySelectorAll<HTMLButtonElement>(".edit-btn")
+    .forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const id = btn.dataset.id;
+        if (!id) return;
+        const booking = userBookings.find((b) => String(b.id) === id);
+        if (!booking) return;
+        startEdit(booking);
+      });
     });
-  });
 
-  bookingsContainer.querySelectorAll(".delete-btn").forEach((btn) => {
-    btn.addEventListener("click", async () => {
-      const id = btn.dataset.id;
-      if (confirm("Er du sikker på at du vil slette denne bookingen?")) {
-        await deleteBooking(id);
-      }
+  bookingsContainer
+    .querySelectorAll<HTMLButtonElement>(".delete-btn")
+    .forEach((btn) => {
+      btn.addEventListener("click", async () => {
+        const id = btn.dataset.id;
+        if (!id) return;
+        if (confirm("Er du sikker på at du vil slette denne bookingen?")) {
+          await deleteBooking(Number(id));
+        }
+      });
     });
-  });
 }
 
 async function loadPreviousSitters() {
-  if (!currentUser) return;
+  const user = currentUser;
+  if (!user) return;
 
-  const bookings = await fetchData("bookings");
+  const bookings = await fetchData<Booking[]>("bookings");
   previousSittersContainer.innerHTML = "";
 
   const userBookings = bookings.filter(
-    (b) => Number(b.userId) === Number(currentUser.id),
+    (b) => Number(b.userId) === Number(user.id),
   );
 
   const sitterIds = [...new Set(userBookings.map((b) => b.petSitterId))];
@@ -217,9 +205,10 @@ async function loadPreviousSitters() {
 
     <button class="btn btn-primary book-again">Book igjen</button>`;
 
-    const button = card.querySelector(".book-again");
+    const button = card.querySelector<HTMLButtonElement>(".book-again");
+    if (!button) return;
     button.addEventListener("click", () => {
-      sitterSelect.value = id;
+      sitterSelect.value = String(id);
       window.scrollTo({ top: 0, behavior: "smooth" });
     });
     previousSittersContainer.appendChild(card);
@@ -228,22 +217,22 @@ async function loadPreviousSitters() {
 
 // CREATE BOOKINGS
 
-async function createBooking(data) {
-  await fetch(`${API_URL}/bookings`, {
+async function createBooking(data: CreateBooking) {
+  await fetch(`${BASE_URL}/bookings`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${getApiKey()}`,
+      Authorization: `Bearer ${API_KEY}`,
     },
     body: JSON.stringify(data),
   });
 }
 
-async function deleteBooking(id) {
-  await fetch(`${API_URL}/bookings/${id}`, {
+async function deleteBooking(id: number) {
+  await fetch(`${BASE_URL}/bookings/${id}`, {
     method: "DELETE",
     headers: {
-      Authorization: `Bearer ${getApiKey()}`,
+      Authorization: `Bearer ${API_KEY}`,
     },
   });
 
@@ -267,11 +256,14 @@ form.addEventListener("submit", async function (event) {
   const submitBtn = form.querySelector("button") as HTMLButtonElement;
   submitBtn.disabled = true;
 
-  const startDate = document.getElementById("start-date").value;
-  const endDate = document.getElementById("end-date").value;
+  const startDate = (document.getElementById("start-date") as HTMLInputElement)
+    .value;
+  const endDate = (document.getElementById("end-date") as HTMLInputElement)
+    .value;
   const dog = dogSelect.value;
   const sitter = sitterSelect.value;
-  const message = document.getElementById("message").value;
+  const message = (document.getElementById("message") as HTMLTextAreaElement)
+    .value;
 
   if (!startDate || !endDate) {
     alert("Velg både fra- og til-dato");
@@ -303,7 +295,7 @@ form.addEventListener("submit", async function (event) {
 
   const isEditing = editingBookingId !== null;
 
-  if (isEditing) {
+  if (editingBookingId !== null) {
     await updateBooking(editingBookingId, bookingData);
     editingBookingId = null;
   } else {
@@ -312,6 +304,7 @@ form.addEventListener("submit", async function (event) {
 
   await loadBookings();
   await loadPreviousSitters();
+
   showMessage(
     isEditing ? "Bookingen din er oppdatert" : "Bookingen din er sendt! 🐾",
   );
