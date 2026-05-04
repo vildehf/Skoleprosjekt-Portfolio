@@ -63,9 +63,8 @@
       </p>
 
       <div class="hero-actions">
-        <button type="button">Registrer deg</button>
-        <button type="button">Logg inn</button>
-      </div>
+  <button type="button" id="openLogin">Logg inn</button>
+</div>
     </section>
 
     <section class="about" aria-labelledby="about-title">
@@ -87,6 +86,27 @@
         Når du booker gjennom Potepass, skal du kjenne på ro i magen.
       </p>
     </section>
+    <dialog id="loginDialog" class="auth-dialog" aria-labelledby="login-title">
+  <form method="dialog" class="auth-box">
+    
+    <button type="button" class="auth-close" id="closeLogin" aria-label="Lukk">
+      ×
+    </button>
+
+    <h2 id="login-title">Logg inn</h2>
+
+    <label for="loginEmail">E-post</label>
+    <input id="loginEmail" type="email" placeholder="din@email.no" required />
+
+    <label for="loginPassword">Passord</label>
+    <input id="loginPassword" type="password" placeholder="Passord" required />
+
+    <button type="submit" class="auth-submit">
+      Logg inn
+    </button>
+
+  </form>
+</dialog>
     </main>
 
   </div>
@@ -159,6 +179,7 @@
 
 
 <script src="/src/js/burger.js"> </script>
+<script src="src/ts/landingpage.ts"></script>
     
 </body>
 </html>
