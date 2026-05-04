@@ -15,9 +15,11 @@ let dogs: Dog[] = [];
 let editingId: number | null = null;
 let currentUser: Users | null = null;
 
+
 /* Variabler */
 
 const loginSection = document.getElementById("login-section") as HTMLElement;
+const logoutButton = document.getElementById("logout-button") as HTMLButtonElement;
 const loginForm = document.getElementById("login-form") as HTMLFormElement;
 const statusMessage = document.getElementById("status-message") as HTMLParagraphElement;
 const form = document.getElementById("pet-form") as HTMLFormElement;
@@ -40,6 +42,10 @@ const deleteButton = document.getElementById("delete-button") as HTMLButtonEleme
 
 /* Logg inn funksjon*/
 
+function delay(ms: number): Promise<void> {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 function showStatus(message: string, isError = false): void {
   statusMessage.textContent = message;
   statusMessage.classList.remove("hidden", "error", "success");
@@ -55,16 +61,45 @@ loginForm.addEventListener("submit", async (e) => {
   try {
     const data = await login(email, password);
    localStorage.setItem("API_KEY", data.API_KEY);
+   showStatus("Logger inn...");
+
+   await delay(1000);
+
+    
+    await loadUserDogs();
     showStatus("Du er nå logget inn");
 
-    await loadUserDogs();
-
-    setTimeout(() => {
-      loginSection.classList.add("hidden");
-    }, 2000);
+   setTimeout(() => {
+  loginSection.classList.add("hidden");
+  logoutButton.classList.remove("hidden");
+}, 2000);
   } catch (error) {
     showStatus((error as Error).message, true);
   }
+});
+
+/* Logg ut funksjon */
+
+logoutButton.addEventListener("click", () => {
+  localStorage.removeItem("LoggedinUser");
+  localStorage.removeItem("API_KEY");
+
+  dogs = [];
+  currentUser = null;
+
+  renderDogs([]);
+  resetForm();
+  loginForm.reset(); 
+
+  statusMessage.textContent = "";
+  statusMessage.classList.add("hidden");
+  statusMessage.classList.remove("success", "error");
+
+  loginSection.classList.remove("hidden");
+  logoutButton.classList.add("hidden");
+
+ 
+  
 });
 
 /* Reset form */
@@ -278,5 +313,11 @@ deleteButton.addEventListener("click", resetForm);
 await loadUserDogs();
  if (localStorage.getItem("LoggedinUser")) {
   loginSection.classList.add("hidden");
+  loadUserDogs();
+}
+
+if (localStorage.getItem("LoggedinUser")) {
+  loginForm.classList.add("hidden");
+  logoutButton.classList.remove("hidden");
   loadUserDogs();
 }
