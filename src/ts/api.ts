@@ -7,55 +7,7 @@ export function getApiKey(): string {
   return API_KEY;
 }
 
-
-export async function updateUser(user: Users): Promise<Users> {
-  const response = await fetch(`${BASE_URL}/users/${user.id}`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${getApiKey()}`,
-    },
-    body: JSON.stringify(user),
-  });
-
-  if (!response.ok) {
-    throw new Error("Kunne ikke oppdatere bruker");
-  }
-
-  return await response.json();
-}
-
-export async function getUsers(): Promise<Users[]> {
-  const response = await fetch(`${BASE_URL}/users`,{
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${getApiKey()}`,
-    },
-  });
-
-  if (!response.ok) {
-    throw new Error("Kunne ikke hente brukere");
-  }
-    const users: Users[] = await response.json();
-  return users;
-}
-
-
-export function getLoggedInEmail(): string | null {
-  return localStorage.getItem("LoggedinUser");
-}
-
-export async function getLoggedInUser(): Promise<Users | null> {
-  const email = getLoggedInEmail();
-
-  if (!email) {
-    return null;
-  }
-
-  const users = await getUsers();
-  return users.find((user) => user.email === email) ?? null;
-  console.log("API response:");
-}
+/* Logg inn funksjon */ 
 
 export async function login(
   email: string,
@@ -81,4 +33,49 @@ export async function login(
   localStorage.setItem("API_KEY", API_KEY);
 
   return { API_KEY };
+}
+
+/* Hent bruker */ 
+export async function getUsers(): Promise<Users[]> {
+  const response = await fetch(`${BASE_URL}/users`,{
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${getApiKey()}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Kunne ikke hente brukere");
+  }
+    const users: Users[] = await response.json();
+  return users;
+}
+
+/* Oppdater bruker */
+
+export async function updateUser(user: Users): Promise<Users> {
+  const response = await fetch(`${BASE_URL}/users/${user.id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${getApiKey()}`,
+    },
+    body: JSON.stringify(user),
+  });
+
+  if (!response.ok) {
+    throw new Error("Kunne ikke oppdatere bruker");
+  }
+
+  return await response.json();
+}
+
+/* Logget inn bruker */ 
+
+export async function getCurrentUser(): Promise<Users | null> {
+  const email = localStorage.getItem("LoggedinUser");
+  if (!email) return null;
+
+  const users = await getUsers();
+  return users.find((user) => user.email === email) ?? null;
 }
