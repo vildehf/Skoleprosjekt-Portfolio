@@ -2,6 +2,8 @@
 
 import type { Booking, Users, PetSitters } from "../../ts/types.ts";
 import { BASE_URL, API_KEY, getLoggedInUser } from "../../ts/api";
+import type { Booking, Users, PetSitters } from "../../ts/types.ts";
+import { BASE_URL, API_KEY, getLoggedInUser } from "../../ts/api.ts";
 
 type CreateBooking = Omit<Booking, "id" | "created" | "updated">;
 
