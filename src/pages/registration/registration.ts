@@ -1,3 +1,13 @@
+/* Siden av laget av Silje Elvik */
+
+/* 
+Opprett hund - Create
+Endre hund - Update
+Hent hund/hunder fra Users - Read
+Slett hund - Delete 
+*/
+  
+
 import { BASE_URL, API_KEY } from "../../ts/api.ts";
 import { login } from "../../ts/api.ts";
 import type { Dog, Users } from "../../ts/types.ts";
@@ -47,6 +57,8 @@ loginForm.addEventListener("submit", async (e) => {
    localStorage.setItem("API_KEY", data.API_KEY);
     showStatus("Du er nå logget inn");
 
+    await loadUserDogs();
+
     setTimeout(() => {
       loginSection.classList.add("hidden");
     }, 2000);
@@ -54,6 +66,8 @@ loginForm.addEventListener("submit", async (e) => {
     showStatus((error as Error).message, true);
   }
 });
+
+/* Reset form */
 
 function resetErrors() {
   nameError.textContent = "";
@@ -77,21 +91,38 @@ function resetForm() {
   resetErrors();
 }
 
-function validateForm() {
+/* Validerings funksjon */
+
+function validateForm(): boolean {
  
   let valid = true;
   resetErrors();
 
   if (!nameInput.reportValidity() || nameInput.value.trim().length < 2) 
-  if (!weightInput.reportValidity() || parseFloat(weightInput.value) < 1) 
-  if (!ageInput.reportValidity() || parseInt(ageInput.value) < 1)
-  if (!breedInput.reportValidity() || breedInput.value.trim().length < 2) 
-  if (!nameInput.reportValidity() || nameInput.value.trim().length < 2) 
-  if (!allergyInput.reportValidity() || allergyInput.value.trim().length < 2) 
+    {
+    valid = false;
+  }
+  if (!weightInput.reportValidity() || parseFloat(weightInput.value) < 1) {
+    valid = false;
+  }
+    
+  if (!ageInput.reportValidity() || parseInt(ageInput.value) < 1) {
+    valid = false;
+  }
+  if (!breedInput.reportValidity() || breedInput.value.trim().length < 2) {
+    valid = false;
+  }
+  if (!nameInput.reportValidity() || nameInput.value.trim().length < 2) {
+    valid = false;
+  }
+  if (!allergyInput.reportValidity() || allergyInput.value.trim().length < 2) {
+    valid = false;
+  }
 
   return valid;
 }
 
+/* Informasjon som skal inn i form */ 
 
 form.addEventListener("submit", function (event) {
   event.preventDefault();
@@ -106,8 +137,33 @@ form.addEventListener("submit", function (event) {
   const selectedGender = document.querySelector('input[name="gender"]:checked') as HTMLInputElement | null;
   const gender = selectedGender ? (selectedGender.value as "Him" | "Her") : "Him";
 
+  if (editingId !== null) {
+  const dogToEdit = dogs.find((dog) => dog.id === editingId);
 
-  dogs.push(Dog);
+  if (dogToEdit) {
+    dogToEdit.name = name;
+    dogToEdit.weight = weight;
+    dogToEdit.age = age;
+    dogToEdit.breed = breed;
+    dogToEdit.gender = gender;
+    dogToEdit.allergies = [allergy];
+  }
+} else {
+
+  const newId = dogs.length > 0 ? Math.max(...dogs.map((dog) => dog.id)) + 1 : 1;
+
+  const newDog: Dog = {
+    id: newId,
+    name: name,
+    weight: weight,
+    age: age,
+    breed: breed,
+    gender: gender,
+    allergies: [allergy],
+  };
+
+  dogs.push(newDog);
+}
   renderDogs(dogs);
   console.log("Hund lagret:", dogs);
   resetForm();
@@ -117,6 +173,7 @@ function renderDogs(dogsList: Dog[]) {
   const container = document.getElementById("pets-container");
 
   if (!container) return; "";
+  container.innerHTML = "";
 
   if (dogsList.length === 0) {
     container.innerHTML = `<p class="empty-state">Ingen hunder registrert ennå.</p>`;
@@ -138,16 +195,6 @@ card.innerHTML = `
       <p class="pet-meta">Allergi: ${dog.allergies[0]}</p>
     </div>
 
-    ${
-      dog.image
-        ? `
-      <div class="pet-card-image">
-        <img src="${dog.image}" alt="Bilde av ${dog.name}">
-      </div>
-    `
-        : ""
-    }
-
     <div class="pet-card-actions">
       <button class="btn btn-ghost edit-btn" data-id="${dog.id}">Rediger</button>
       <button class="btn btn-ghost delete-btn" data-id="${dog.id}">Slett</button>
@@ -156,6 +203,29 @@ card.innerHTML = `
 `;
 
     container.appendChild(card);
+
+    const editButton = card.querySelector(".edit-btn") as HTMLButtonElement;
+
+editButton.addEventListener("click", () => {
+  editingId = dog.id;
+
+  nameInput.value = dog.name;
+  weightInput.value = dog.weight.toString();
+  ageInput.value = dog.age.toString();
+  breedInput.value = dog.breed;
+  allergyInput.value = dog.allergies[0];
+
+  const genderInput = document.querySelector(
+    `input[name="gender"][value="${dog.gender}"]`
+  ) as HTMLInputElement;
+
+  if (genderInput) {
+    genderInput.checked = true;
+  }
+
+  formTitle.textContent = "Endre informasjon om hunden";
+  submitButton.textContent = "Oppdater opplysninger";
+});
   });
 } 
 async function loadUserDogs() {
@@ -165,21 +235,20 @@ async function loadUserDogs() {
     return;
   }
 
-  const response = await fetch(`${BASE_URL}/users`, {
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${API_KEY}`,
-    },
-  });
-  const data = await response.json();
+  const response = await fetch(`${BASE_URL}/users`);
 
-  const currentUser = data.users.find((user: Users) => user.email === loggedInEmail);
+   if (!response.ok) {
+    return;
+  }
+
+  const users: Users[] = await response.json();
+  const currentUser = users.find((user) => user.email === loggedInEmail);
 
   if (!currentUser) {
     return;
   }
 
-  dogs = currentUser.dogs;
+  dogs = currentUser.dogs || [];
   renderDogs(dogs);
 }
 

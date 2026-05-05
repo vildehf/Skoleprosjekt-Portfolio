@@ -135,11 +135,13 @@ function renderPetSitters(petSitters: petSitters[]) {
 function openModal() {
   if (!modal) return;
   modal.classList.add("active");
+  modal.setAttribute("aria-hidden", "false");
 }
 
 function closeModal() {
   if (!modal) return;
   modal.classList.remove("active");
+  modal.setAttribute("aria-hidden", "true");
 }
 
 // Fyll skjema ved redigering
@@ -168,6 +170,8 @@ function fillForm(ps: petSitters): void {
     ps.experienceDescription ?? "";
 
   (document.getElementById("image") as HTMLInputElement).value = ps.image ?? "";
+  (document.getElementById("availabilityStatus") as HTMLSelectElement).value =
+    ps.available ? "Ledig" : "Ikke ledig";
 }
 
 // DELETE
@@ -301,6 +305,7 @@ if (sitterForm) {
         document.getElementById("description") as HTMLTextAreaElement
       ).value,
       image: (document.getElementById("image") as HTMLInputElement).value,
+      available,
       updated: new Date().toISOString(),
     };
 
@@ -313,7 +318,6 @@ if (sitterForm) {
         acceptsPuppies: false,
         acceptsLargeDogs: false,
         yearsOfExperience: 1,
-        available: true,
       });
     }
 
