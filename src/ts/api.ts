@@ -47,8 +47,10 @@ export async function getUsers(): Promise<Users[]> {
   if (!response.ok) {
     throw new Error("Kunne ikke hente brukere");
   }
-    const users: Users[] = await response.json();
-  return users;
+
+  const data = await response.json();
+  return data.users ?? data;
+
 }
 
 export function getLoggedInEmail(): string | null {
@@ -67,16 +69,7 @@ export async function getLoggedInUser(): Promise<Users | null> {
   console.log("API response:");
 }
 
-export async function login(
-  email: string,
-  password: string,
-): Promise<LoginResponse> {
-  const response = await fetch(`${BASE_URL}/users`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${getApiKey()}`,
-    },
+  
 /* Oppdater bruker */
 
 export async function updateUser(user: Users): Promise<Users> {
