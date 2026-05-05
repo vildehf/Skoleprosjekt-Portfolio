@@ -40,15 +40,22 @@
           <ul class="nav-menu">
             <li><a href="/index.html">Hjem</a></li>
             <li>
-              <a href="/src/html/petSitters.html">Finn hundepasser</a>
+              <a href="/src/pages/petsitters/petSitters.html"
+                >Finn hundepasser</a
+              >
             </li>
             <li>
-              <a href="/src/html/booking.html" aria-current="page"
+              <a href="/src/pages/booking/booking.html" aria-current="page"
                 >Mine bookinger</a
               >
             </li>
-            <li><a href="/src/html/profile.html">Min profil</a></li>
-            <li><a href="/src/html/contact.html">Kontakt oss</a></li>
+            <li><a href="/src/pages/profile/profile.html">Min profil</a></li>
+            <li>
+              <a href="/src/pages/registration/registration.html"
+                >Mine hunder</a
+              >
+            </li>
+            <li><a href="/src/pages/contact/contact.html">Kontakt oss</a></li>
           </ul>
         </nav>
 
@@ -72,7 +79,6 @@
 
       <section class="booking">
         <h2>Ny booking</h2>
-
         <div class="hero">
           <img
             src="/src/assets/hero.webp"
@@ -80,33 +86,43 @@
           />
 
           <div class="calendar-box">
-            <label for="start-date">Fra:</label>
-            <input type="date" id="start-date" name="start-date" />
+            <div class="field">
+              <label for="start-date">Fra:</label>
+              <input type="date" id="start-date" name="start-date" />
+            </div>
 
-            <label for="end-date">Til:</label>
-            <input type="date" id="end-date" name="end-date" />
+            <div class="field">
+              <label for="end-date">Til:</label>
+              <input type="date" id="end-date" name="end-date" />
+            </div>
           </div>
         </div>
 
         <div class="booking-layout">
           <form class="booking-form">
-            <label for="dog">Velg hund</label>
-            <select name="dog" id="dog">
-              <option value="">Velg hund</option>
-            </select>
+            <div class="field">
+              <label for="dog">Velg hund</label>
+              <select name="dog" id="dog">
+                <option value="">Velg hund</option>
+              </select>
+            </div>
 
-            <label for="sitter">Velg hundepasser</label>
-            <select id="sitter" name="sitter">
-              <option>Velg hundepasser</option>
-            </select>
+            <div class="field">
+              <label for="sitter">Velg hundepasser</label>
+              <select id="sitter" name="sitter">
+                <option>Velg hundepasser</option>
+              </select>
+            </div>
 
-            <label for="message">Melding</label>
-            <textarea
-              id="message"
-              name="message"
-              placeholder="Skriv en melding..."
-              rows="5"
-            ></textarea>
+            <div class="field">
+              <label for="message">Melding</label>
+              <textarea
+                id="message"
+                name="message"
+                placeholder="Skriv en melding..."
+                rows="5"
+              ></textarea>
+            </div>
 
             <div class="button-wrapper">
               <button class="btn btn-primary" type="submit">Book</button>
@@ -134,7 +150,7 @@
 
         <div class="footer-dogs">
           <img
-            src="../assets/puppies.png"
+            src="/src/assets/puppies.png"
             alt="Illustrasjon av hunder"
             width="200"
             height="120"
@@ -195,6 +211,6 @@
       </div>
     </footer>
     <script src="/src/js/burger.js"></script>
-    <script src="/src/pages/booking/booking.js"></script>
+    <script type="module" src="/src/pages/booking/booking.ts"></script>
   </body>
 </html>

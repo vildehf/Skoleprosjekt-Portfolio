@@ -37,10 +37,10 @@ export async function login(
 
 /* Hent bruker */ 
 export async function getUsers(): Promise<Users[]> {
-  const response = await fetch(`${BASE_URL}/users`,{
+  const response = await fetch(`${BASE_URL}/users`, {
     headers: {
       "Content-Type": "application/json",
-      "Authorization": `Bearer ${getApiKey()}`,
+      Authorization: `Bearer ${getApiKey()}`,
     },
   });
 
@@ -51,6 +51,32 @@ export async function getUsers(): Promise<Users[]> {
   return users;
 }
 
+export function getLoggedInEmail(): string | null {
+  return localStorage.getItem("LoggedinUser");
+}
+
+export async function getLoggedInUser(): Promise<Users | null> {
+  const email = getLoggedInEmail();
+
+  if (!email) {
+    return null;
+  }
+
+  const users = await getUsers();
+  return users.find((user) => user.email === email) ?? null;
+  console.log("API response:");
+}
+
+export async function login(
+  email: string,
+  password: string,
+): Promise<LoginResponse> {
+  const response = await fetch(`${BASE_URL}/users`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${getApiKey()}`,
+    },
 /* Oppdater bruker */
 
 export async function updateUser(user: Users): Promise<Users> {
@@ -67,6 +93,7 @@ export async function updateUser(user: Users): Promise<Users> {
     throw new Error("Kunne ikke oppdatere bruker");
   }
 
+  const users: Users[] = await response.json();
   return await response.json();
 }
 
