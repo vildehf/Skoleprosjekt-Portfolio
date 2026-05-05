@@ -2,7 +2,7 @@
 // Denne filen håndterer CRUD-funksjonalitet (Create, Read, Update, Delete) for hundepassere.
 // Data hentes fra et API og vises som kort i en liste. Brukeren kan legge til, redigere og slette
 
-import type { petSitters } from "../../ts/types";
+import type { PetSitters } from "../../ts/types";
 
 // hundepassere via et modal-skjema. Alt oppdateres dynamisk uten side reload.
 const addSitterBtn = document.getElementById("add-sitter-btn");
@@ -18,8 +18,9 @@ const BASE_URL = "http://localhost:3000/api/petSitters";
 const API_KEY = "123";
 
 let editingId: number | null = null;
+let allPetSitters: PetSitters[] = [];
 
-const fallbackPetSitters: petSitters[] = [
+const fallbackPetSitters: PetSitters[] = [
   {
     id: 1,
     name: "Oda",
@@ -52,15 +53,17 @@ async function loadPetSitters() {
       throw new Error("Kunne ikke hente hundepassere");
     }
 
-    const petSitters: petSitters[] = await response.json();
-    renderPetSitters(petSitters);
+    const petSitters: PetSitters[] = await response.json();
+    allPetSitters = petSitters;
+    renderPetSitters(allPetSitters);
   } catch (error) {
     console.error("Feil:", error);
-    renderPetSitters(fallbackPetSitters);
+    allPetSitters = fallbackPetSitters;
+    renderPetSitters(allPetSitters);
   }
 }
 
-function renderPetSitters(petSitters: petSitters[]) {
+function renderPetSitters(petSitters: PetSitters[]) {
   if (!sitterList) return;
 
   sitterList.innerHTML = "";
@@ -130,6 +133,33 @@ function renderPetSitters(petSitters: petSitters[]) {
     sitterList.appendChild(card);
   });
 }
+function applyFilters(): void {
+  const place = (document.getElementById("place") as HTMLInputElement).value
+    .toLowerCase()
+    .trim();
+
+  const availability = (
+    document.getElementById("availability") as HTMLSelectElement
+  ).value;
+
+  const maxPrice = Number(
+    (document.getElementById("price") as HTMLInputElement).value,
+  );
+
+  const filteredSitters = allPetSitters.filter((sitter) => {
+    const matchesPlace = sitter.location.toLowerCase().includes(place);
+    const matchesPrice = sitter.pricePerDay <= maxPrice;
+
+    const matchesAvailability =
+      availability === "all" ||
+      (availability === "available" && sitter.available) ||
+      (availability === "unavaible" && !sitter.available);
+
+    return matchesPlace && matchesPrice && matchesAvailability;
+  });
+
+  renderPetSitters(filteredSitters);
+}
 
 // Modal
 function openModal() {
@@ -145,10 +175,10 @@ function closeModal() {
 }
 
 // Fyll skjema ved redigering
-function fillForm(ps: petSitters): void {
+function fillForm(ps: PetSitters): void {
   const [city, postalCode] = (ps.location ?? "")
     .split(",")
-    .map((part) => part.trim());
+    .map((part: string) => part.trim());
 
   (document.getElementById("name") as HTMLInputElement).value = ps.name ?? "";
 
@@ -197,7 +227,7 @@ async function deletePetSitter(id: number): Promise<void> {
 // UPDATE
 async function updatePetSitter(
   id: number,
-  updatedPetSitter: Partial<petSitters>,
+  updatedPetSitter: Partial<PetSitters>,
 ): Promise<void> {
   try {
     const response = await fetch(`${BASE_URL}/${id}`, {
@@ -223,7 +253,7 @@ async function updatePetSitter(
 
 // CREATE
 async function createPetSitter(
-  newPetSitter: Omit<petSitters, "id">,
+  newPetSitter: Omit<PetSitters, "id">,
 ): Promise<void> {
   try {
     const response = await fetch(BASE_URL, {
@@ -277,6 +307,23 @@ document.addEventListener("keydown", (event) => {
   }
 });
 
+const filterForm = document.querySelector(
+  ".filter-form",
+) as HTMLFormElement | null;
+
+if (filterForm) {
+  filterForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    applyFilters();
+  });
+
+  filterForm.addEventListener("reset", () => {
+    setTimeout(() => {
+      renderPetSitters(allPetSitters);
+    }, 0);
+  });
+}
+
 // Submit form
 if (sitterForm) {
   sitterForm.addEventListener("submit", async (event) => {
@@ -288,6 +335,12 @@ if (sitterForm) {
     ).value;
 
     const location = postalCode ? `${city}, ${postalCode}` : city;
+
+    const availabilityStatus = (
+      document.getElementById("availabilityStatus") as HTMLSelectElement
+    ).value;
+
+    const available = availabilityStatus !== "Ikke ledig";
 
     const petSitterData = {
       name: (document.getElementById("name") as HTMLInputElement).value,
@@ -315,6 +368,7 @@ if (sitterForm) {
       await createPetSitter({
         ...petSitterData,
         created: new Date().toISOString(),
+        maxDogs: 1,
         acceptsPuppies: false,
         acceptsLargeDogs: false,
         yearsOfExperience: 1,
