@@ -19,34 +19,27 @@ export interface Dog {
   breed: string;
   gender: "Him" | "Her";
   age: number;
+  weight: number;
   allergies: Allergy[];
-  created: string;
-  updated: string;
-  image?: string;
 }
 
-export interface Allergy {}
-    id: number
-    userName: string
-    password: string | number
-    email: string 
-    description: string | null
-    dogs: Dog[]
-    created: string
-    updated: string
-    image?: string
-}
+export type Allergy =
+  | "Ingen allergier"
+  | "Egg"
+  | "Hvete"
+  | "Melk"
+  | "Mais";
 
-export interface Dog {
+/*export interface Dog {
   id: number;
   name: string;
   weight: number;
   age: number;
   breed: string;
-  allergies: string[];
+  allergy: string[];
   gender: "Him" | "Her";
   image?: string;
-}
+}*/
 
 
 export interface PetSitters {

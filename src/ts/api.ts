@@ -7,24 +7,35 @@ export function getApiKey(): string {
   return API_KEY;
 }
 
+/* Logg inn funksjon */ 
 
-export async function updateUser(user: Users): Promise<Users> {
-  const response = await fetch(`${BASE_URL}/users/${user.id}`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${getApiKey()}`,
-    },
-    body: JSON.stringify(user),
-  });
+export async function login(
+  email: string,
+  password: string,
+): Promise<LoginResponse> {
+  const response = await fetch(`${BASE_URL}/users`);
 
   if (!response.ok) {
-    throw new Error("Kunne ikke oppdatere bruker");
+    throw new Error("Innlogging feilet");
   }
 
-  return await response.json();
+ const users: Users[] = await response.json();
+
+  const user = users.find(
+    (user) => user.email === email && user.password === password,
+  );
+
+  if (!user) {
+    throw new Error("Feil e-post eller passord");
+  }
+
+  localStorage.setItem("LoggedinUser", user.email);
+  localStorage.setItem("API_KEY", API_KEY);
+
+  return { API_KEY };
 }
 
+/* Hent bruker */ 
 export async function getUsers(): Promise<Users[]> {
   const response = await fetch(`${BASE_URL}/users`, {
     headers: {
@@ -66,24 +77,32 @@ export async function login(
       "Content-Type": "application/json",
       Authorization: `Bearer ${getApiKey()}`,
     },
+/* Oppdater bruker */
+
+export async function updateUser(user: Users): Promise<Users> {
+  const response = await fetch(`${BASE_URL}/users/${user.id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${getApiKey()}`,
+    },
+    body: JSON.stringify(user),
   });
 
   if (!response.ok) {
-    throw new Error("Innlogging feilet");
+    throw new Error("Kunne ikke oppdatere bruker");
   }
 
   const users: Users[] = await response.json();
+  return await response.json();
+}
 
-  const user = users.find(
-    (user) => user.email === email && user.password === password,
-  );
+/* Logget inn bruker */ 
 
-  if (!user) {
-    throw new Error("Feil e-post eller passord");
-  }
+export async function getCurrentUser(): Promise<Users | null> {
+  const email = localStorage.getItem("LoggedinUser");
+  if (!email) return null;
 
-  localStorage.setItem("LoggedinUser", user.email);
-  localStorage.setItem("API_KEY", API_KEY);
-
-  return { API_KEY };
+  const users = await getUsers();
+  return users.find((user) => user.email === email) ?? null;
 }
