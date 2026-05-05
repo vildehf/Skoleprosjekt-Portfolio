@@ -7,12 +7,11 @@ export function getApiKey(): string {
   return API_KEY;
 }
 
-
 export async function getUsers(): Promise<Users[]> {
-  const response = await fetch(`${BASE_URL}/users`,{
+  const response = await fetch(`${BASE_URL}/users`, {
     headers: {
       "Content-Type": "application/json",
-      "Authorization": `Bearer ${getApiKey()}`,
+      Authorization: `Bearer ${getApiKey()}`,
     },
   });
 
@@ -22,7 +21,6 @@ export async function getUsers(): Promise<Users[]> {
   const data = await response.json();
   return data.users;
 }
-
 
 export function getLoggedInEmail(): string | null {
   return localStorage.getItem("LoggedinUser");
@@ -47,7 +45,7 @@ export async function login(
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      "Authorization": `Bearer ${getApiKey()}`,
+      Authorization: `Bearer ${getApiKey()}`,
     },
   });
 
@@ -55,7 +53,6 @@ export async function login(
     throw new Error("Innlogging feilet");
   }
 
-  
   const users: Users[] = await response.json();
 
   const user = users.find(

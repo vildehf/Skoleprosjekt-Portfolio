@@ -206,8 +206,10 @@ async function loadPreviousSitters() {
     card.classList.add("previous-sitter-card");
 
     card.innerHTML = `
-       <p><strong>${sittersMap[id]?.name || "Ukjent"}</strong></p>
-      <button class="btn btn-ghost book-again">Book igjen</button>
+       <div class="previous-sitter-content">
+         <p><strong>${sittersMap[id]?.name || "Ukjent"}</strong></p>
+         <button class="btn btn-ghost book-again">Book igjen</button>
+       </div>
 `;
 
     card
