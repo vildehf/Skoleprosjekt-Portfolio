@@ -147,9 +147,8 @@ h1 {
 }
 
 .booking-info {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
+  display: grid;
+  gap: 8px;
 }
 
 .actions {
@@ -169,16 +168,18 @@ h1 {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 320px;
   gap: 24px;
-  margin-top: 20px;
+  margin-top: 40px;
   align-items: start;
 }
 
 .previous-sitters {
+  display: grid;
+  gap: 20px;
   padding: 20px;
   border-radius: 18px;
   box-shadow: var(--shadow-panel);
   border: 1px solid rgba(44, 62, 80, 0.08);
-  background: #fff;
+  background: transparent;
 }
 
 .previous-sitter-card {
@@ -187,8 +188,19 @@ h1 {
   align-items: center;
   padding: 12px 0;
   border-bottom: 1px solid rgba(44, 62, 80, 0.08);
+  padding: 12px;
+  border-radius: 12px;
 }
 
 .previous-sitter-card:last-child {
   border-bottom: none;
+}
+
+.bookings {
+  margin-top: 40px;
+}
+
+#bookings-list {
+  display: grid;
+  gap: 30px;
 }

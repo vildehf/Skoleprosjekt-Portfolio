@@ -19,7 +19,7 @@ export async function getUsers(): Promise<Users[]> {
     throw new Error("Kunne ikke hente brukere");
   }
   const data = await response.json();
-  return data.users;
+  return data.users ?? data;
 }
 
 export function getLoggedInEmail(): string | null {

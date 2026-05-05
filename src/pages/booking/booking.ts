@@ -2,8 +2,6 @@
 
 import type { Booking, Users, PetSitters } from "../../ts/types.ts";
 import { BASE_URL, API_KEY, getLoggedInUser } from "../../ts/api";
-import type { Booking, Users, PetSitters } from "../../ts/types.ts";
-import { BASE_URL, API_KEY, getLoggedInUser } from "../../ts/api.ts";
 
 type CreateBooking = Omit<Booking, "id" | "created" | "updated">;
 
@@ -208,10 +206,8 @@ async function loadPreviousSitters() {
     card.classList.add("previous-sitter-card");
 
     card.innerHTML = `
-       <div class="previous-sitter-content">
          <p><strong>${sittersMap[id]?.name || "Ukjent"}</strong></p>
          <button class="btn btn-ghost book-again">Book igjen</button>
-       </div>
 `;
 
     card
