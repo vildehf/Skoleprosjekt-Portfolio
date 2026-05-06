@@ -68,6 +68,11 @@ function renderPetSitters(petSitters: PetSitters[]) {
 
   sitterList.innerHTML = "";
 
+  if (petSitters.length === 0) {
+    sitterList.innerHTML = "<p>Ingen hundepassere funnet.</p>";
+    return;
+  }
+
   petSitters.forEach((ps) => {
     const imageSrc = ps.image
       ? `/src/${ps.image}`
@@ -145,6 +150,10 @@ function applyFilters(): void {
   const maxPrice = Number(
     (document.getElementById("price") as HTMLInputElement).value,
   );
+  console.log("place:", place);
+  console.log("availability:", availability);
+  console.log("maxPrice:", maxPrice);
+  console.log("allPetSitters:", allPetSitters);
 
   const filteredSitters = allPetSitters.filter((sitter) => {
     const matchesPlace = sitter.location.toLowerCase().includes(place);
@@ -153,7 +162,7 @@ function applyFilters(): void {
     const matchesAvailability =
       availability === "all" ||
       (availability === "available" && sitter.available) ||
-      (availability === "unavaible" && !sitter.available);
+      (availability === "unavailable" && !sitter.available);
 
     return matchesPlace && matchesPrice && matchesAvailability;
   });
