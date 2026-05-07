@@ -1,7 +1,7 @@
 /* Siden laget av Line Nerli Tveite */
 
 import type { Booking, Users, PetSitters } from "../../ts/types.ts";
-import { BASE_URL, API_KEY, getLoggedInUser } from "../../ts/api";
+import { BASE_URL, API_KEY, getLoggedInUser, login } from "../../ts/api.ts";
 
 type CreateBooking = Omit<Booking, "id" | "created" | "updated">;
 
@@ -21,6 +21,24 @@ const bookingsContainer = document.getElementById(
 const confirmation = document.getElementById(
   "booking-confirmation",
 ) as HTMLDivElement;
+const loginMessage = document.getElementById("login-message") as HTMLDivElement;
+const loginDialog = document.getElementById("loginDialog") as HTMLDialogElement;
+const openLogin = document.getElementById("openLogin") as HTMLButtonElement;
+const closeLogin = document.getElementById("closeLogin") as HTMLButtonElement;
+const loginForm = document.getElementById("loginForm") as HTMLFormElement;
+const loginEmail = document.getElementById("loginEmail") as HTMLInputElement;
+const loginPassword = document.getElementById(
+  "loginPassword",
+) as HTMLInputElement;
+const loginStatus = document.getElementById(
+  "login-status",
+) as HTMLParagraphElement;
+const logoutBtn = document.getElementById("logout-button") as HTMLButtonElement;
+const calendarBox = document.getElementById("calendar-box") as HTMLDivElement;
+const previousSitters = document.getElementById(
+  "previous-sitters",
+) as HTMLDivElement;
+const bookingsSection = document.getElementById("bookings") as HTMLDivElement;
 
 // DATA MAPS
 let dogsMap: Record<number, string> = {};
@@ -44,8 +62,23 @@ async function loadCurrentUser() {
   currentUser = await getLoggedInUser();
 
   if (!currentUser) {
-    alert("Du må være logget inn for å se denne siden");
-    return;
+    loginMessage.classList.remove("hidden");
+
+    form.style.display = "none";
+    calendarBox.style.display = "none";
+    previousSitters.style.display = "none";
+    bookingsSection.style.display = "none";
+
+    logoutBtn.classList.add("hidden");
+  } else {
+    loginMessage.classList.add("hidden");
+
+    form.style.display = "";
+    calendarBox.style.display = "";
+    previousSitters.style.display = "";
+    bookingsSection.style.display = "";
+
+    logoutBtn.classList.remove("hidden");
   }
 }
 
@@ -261,6 +294,7 @@ form.addEventListener("submit", async function (event) {
 
   const submitBtn = form.querySelector("button") as HTMLButtonElement;
   submitBtn.disabled = true;
+  submitBtn.textContent = editingBookingId ? "Oppdaterer..." : "Sender...";
 
   const startDate = (document.getElementById("start-date") as HTMLInputElement)
     .value;
@@ -273,18 +307,21 @@ form.addEventListener("submit", async function (event) {
 
   if (!startDate || !endDate) {
     alert("Velg både fra- og til-dato");
+    submitBtn.textContent = editingBookingId ? "Oppdater booking" : "Book";
     submitBtn.disabled = false;
     return;
   }
 
   if (endDate < startDate) {
     alert("Til-dato kan ikke være før fra-dato");
+    submitBtn.textContent = editingBookingId ? "Oppdater booking" : "Book";
     submitBtn.disabled = false;
     return;
   }
 
   if (!dog || !sitter) {
     alert("Velg hund og hundepasser");
+    submitBtn.textContent = editingBookingId ? "Oppdater booking" : "Book";
     submitBtn.disabled = false;
     return;
   }
@@ -315,6 +352,7 @@ form.addEventListener("submit", async function (event) {
     isEditing ? "Bookingen din er oppdatert" : "Bookingen din er sendt! 🐾",
   );
   resetForm();
+  submitBtn.textContent = "Book";
   submitBtn.disabled = false;
 });
 
@@ -323,7 +361,6 @@ form.addEventListener("submit", async function (event) {
 async function init() {
   try {
     await loadCurrentUser();
-    console.log("etter loadCurrentUser:", currentUser);
     await loadDogs();
     await loadSitters();
     await loadBookings();
@@ -332,5 +369,60 @@ async function init() {
     console.error("feil ved init:", error);
   }
 }
+
+if (openLogin && closeLogin && loginDialog) {
+  openLogin.addEventListener("click", () => {
+    loginDialog.showModal();
+  });
+
+  closeLogin.addEventListener("click", () => {
+    loginDialog.close();
+  });
+}
+
+loginForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  const loginBtn = loginForm.querySelector(".auth-submit") as HTMLButtonElement;
+  loginBtn.disabled = true;
+  loginBtn.textContent = "Logger inn...";
+
+  try {
+    await login(loginEmail.value, loginPassword.value);
+
+    loginDialog.close();
+
+    await loadCurrentUser();
+    await loadDogs();
+    await loadBookings();
+    await loadPreviousSitters();
+
+    loginBtn.disabled = false;
+    loginBtn.textContent = "Logg inn";
+
+    loginStatus.textContent = "Du er nå logget inn! 🐶";
+    loginStatus.classList.remove("hidden");
+
+    setTimeout(() => {
+      loginStatus.classList.add("hidden");
+    }, 6000);
+  } catch (error) {
+    console.error("feil ved login:", error);
+    alert("Feil e-post eller passord");
+    loginBtn.disabled = false;
+    loginBtn.textContent = "Logg inn";
+  }
+});
+
+logoutBtn.addEventListener("click", () => {
+  localStorage.removeItem("LoggedinUser");
+  localStorage.removeItem("API_KEY");
+  loadCurrentUser();
+  loginStatus.textContent = "Du er nå logget ut.";
+  loginStatus.classList.remove("hidden");
+  setTimeout(() => {
+    loginStatus.classList.add("hidden");
+  }, 4000);
+});
 
 document.addEventListener("DOMContentLoaded", init);

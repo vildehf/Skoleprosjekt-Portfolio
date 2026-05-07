@@ -78,6 +78,8 @@ h1 {
 
 .calendar-box {
   display: grid;
+  gap: 2rem;
+  margin-top: 2rem;
   grid-template-columns: 1fr 1fr;
   position: absolute;
   right: 20px;
@@ -119,11 +121,6 @@ h1 {
 }
 
 .booking-form {
-  background: #fff;
-  padding: 20px;
-  border-radius: 18px;
-  box-shadow: var(--shadow-panel);
-  border: 1px solid rgba(44, 62, 80, 0.08);
   display: grid;
   gap: 12px;
 }
@@ -166,7 +163,7 @@ h1 {
 
 .booking-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 320px;
+  grid-template-columns: 2fr 1fr;
   gap: 24px;
   margin-top: 40px;
   align-items: start;
@@ -200,7 +197,125 @@ h1 {
   margin-top: 40px;
 }
 
+.booking-form {
+  background: #ffffff;
+  padding: 2rem;
+  border-radius: 20px;
+  box-shadow: var(--shadow-panel);
+}
+
 #bookings-list {
   display: grid;
   gap: 30px;
+}
+
+#login-message {
+  text-align: center;
+  padding: 40px;
+  background: rgba(44, 62, 80, 0.08);
+  border-radius: 18px;
+  box-shadow: var(--shadow-panel);
+  border: 1px solid rgba(44, 62, 80, 0.08);
+  margin-bottom: 20px;
+}
+
+.auth-dialog {
+  border: none;
+  border-radius: 20px;
+  padding: 0;
+  width: min(90%, 400px);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+}
+
+.auth-dialog::backdrop {
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.auth-box {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  padding: 2rem;
+  background: #ffffff;
+}
+
+.auth-box h2 {
+  margin-bottom: 0.5rem;
+  font-family: "Playfair Display", serif;
+}
+
+.auth-box input {
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+}
+
+.auth-submit {
+  margin-top: 1rem;
+  padding: 0.8rem;
+  border: none;
+  border-radius: 12px;
+  background: #f4a261;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.auth-submit:hover {
+  filter: brightness(1.05);
+}
+
+.auth-close {
+  align-self: flex-end;
+  background: none;
+  border: none;
+  font-size: 1.8rem;
+  cursor: pointer;
+}
+
+#login-status {
+  text-align: center;
+  padding: 20px;
+  background: rgba(44, 62, 80, 0.08);
+  border-radius: 18px;
+  box-shadow: var(--shadow-panel);
+  border: 1px solid rgba(44, 62, 80, 0.08);
+}
+
+.intro {
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: center;
+  color: #2c3e50;
+  margin-bottom: 30px;
+}
+
+.hidden {
+  display: none;
+}
+
+.button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+#logout-button {
+  display: none;
+}
+
+#logout-button:not(.hidden) {
+  display: block;
+  margin-left: auto;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+  .booking-layout {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .booking-form,
+  .previous-sitters {
+    width: 100%;
+  }
 }

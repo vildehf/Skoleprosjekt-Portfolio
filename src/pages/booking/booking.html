@@ -76,16 +76,30 @@
 
     <main id="main" class="container">
       <h1>Booking</h1>
+      <p class="intro">
+        Velkommen til din booking-side! Her kan du enkelt velge datoer for når
+        du trenger hundepass, velge hundepasser, og se dine tidligere bookinger.
+      </p>
+
+      <div id="login-message" class="hidden">
+        <p>Du må være logget inn for å se dine bookinger.</p>
+        <button id="openLogin" class="btn btn-primary">Logg inn</button>
+      </div>
+
+      <p id="login-status" class="hidden"></p>
+
+      <button id="logout-button" class="btn btn-secondary hidden">
+        Logg ut
+      </button>
 
       <section class="booking">
-        <h2>Ny booking</h2>
         <div class="hero">
           <img
             src="/src/assets/hero.webp"
             alt="Kvinne leker med hunder i parken"
           />
 
-          <div class="calendar-box">
+          <div class="calendar-box" id="calendar-box">
             <div class="field">
               <label for="start-date">Fra:</label>
               <input type="date" id="start-date" name="start-date" />
@@ -100,6 +114,8 @@
 
         <div class="booking-layout">
           <form class="booking-form">
+            <h2>Ny booking</h2>
+
             <div class="field">
               <label for="dog">Velg hund</label>
               <select name="dog" id="dog">
@@ -132,17 +148,54 @@
             </p>
           </form>
 
-          <section class="previous-sitters">
+          <section class="previous-sitters" id="previous-sitters">
             <h2>Tidligere hundepassere</h2>
             <div id="previous-sitters-list"></div>
           </section>
         </div>
       </section>
 
-      <section class="bookings">
+      <section class="bookings" id="bookings">
         <h2>Mine bookinger</h2>
         <div id="bookings-list"></div>
       </section>
+
+      <dialog
+        id="loginDialog"
+        class="auth-dialog"
+        aria-labelledby="login-title"
+      >
+        <form id="loginForm" class="auth-box">
+          <button
+            type="button"
+            class="auth-close"
+            id="closeLogin"
+            aria-label="Lukk"
+          >
+            ×
+          </button>
+
+          <h2 id="login-title">Logg inn</h2>
+
+          <label for="loginEmail">E-post</label>
+          <input
+            id="loginEmail"
+            type="email"
+            placeholder="din@email.no"
+            required
+          />
+
+          <label for="loginPassword">Passord</label>
+          <input
+            id="loginPassword"
+            type="password"
+            placeholder="Passord"
+            required
+          />
+
+          <button type="submit" class="auth-submit">Logg inn</button>
+        </form>
+      </dialog>
     </main>
     <footer class="site-footer">
       <div class="container footer-row">
