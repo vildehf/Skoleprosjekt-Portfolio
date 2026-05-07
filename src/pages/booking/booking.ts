@@ -33,6 +33,7 @@ const loginPassword = document.getElementById(
 const loginStatus = document.getElementById(
   "login-status",
 ) as HTMLParagraphElement;
+const logoutBtn = document.getElementById("logout-button") as HTMLButtonElement;
 const calendarBox = document.getElementById("calendar-box") as HTMLDivElement;
 const previousSitters = document.getElementById(
   "previous-sitters",
@@ -67,6 +68,8 @@ async function loadCurrentUser() {
     calendarBox.style.display = "none";
     previousSitters.style.display = "none";
     bookingsSection.style.display = "none";
+
+    logoutBtn.classList.add("hidden");
   } else {
     loginMessage.classList.add("hidden");
 
@@ -74,6 +77,8 @@ async function loadCurrentUser() {
     calendarBox.style.display = "";
     previousSitters.style.display = "";
     bookingsSection.style.display = "";
+
+    logoutBtn.classList.remove("hidden");
   }
 }
 
@@ -282,8 +287,6 @@ async function deleteBooking(id: number) {
 form.addEventListener("submit", async function (event) {
   event.preventDefault();
 
-  console.log("submit fungerer");
-
   if (!currentUser) {
     alert("Du må være logget inn");
     return;
@@ -358,7 +361,6 @@ form.addEventListener("submit", async function (event) {
 async function init() {
   try {
     await loadCurrentUser();
-    console.log("etter loadCurrentUser:", currentUser);
     await loadDogs();
     await loadSitters();
     await loadBookings();
@@ -410,6 +412,17 @@ loginForm.addEventListener("submit", async (event) => {
     loginBtn.disabled = false;
     loginBtn.textContent = "Logg inn";
   }
+});
+
+logoutBtn.addEventListener("click", () => {
+  localStorage.removeItem("LoggedinUser");
+  localStorage.removeItem("API_KEY");
+  loadCurrentUser();
+  loginStatus.textContent = "Du er nå logget ut.";
+  loginStatus.classList.remove("hidden");
+  setTimeout(() => {
+    loginStatus.classList.add("hidden");
+  }, 4000);
 });
 
 document.addEventListener("DOMContentLoaded", init);

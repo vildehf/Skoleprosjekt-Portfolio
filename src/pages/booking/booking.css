@@ -298,6 +298,16 @@ h1 {
   cursor: not-allowed;
 }
 
+#logout-button {
+  display: none;
+}
+
+#logout-button:not(.hidden) {
+  display: block;
+  margin-left: auto;
+  margin-bottom: 20px;
+}
+
 @media (max-width: 768px) {
   .booking-layout {
     display: flex;
