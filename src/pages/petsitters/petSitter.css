@@ -85,31 +85,6 @@
   margin-bottom: 16px;
 }
 
-.sort select {
-  height: 40px;
-  padding: 0 38px 0 14px;
-  border: 1px solid rgba(44, 62, 80, 0.14);
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-
-  border-radius: 14px;
-  background: #fff;
-  font: inherit;
-  color: #1f2937;
-  cursor: pointer;
-
-  background-image: url("data:image/svg+xml;utf8,<svg fill='%232c3e50' height='16' viewBox='0 0 20 20' width='16' xmlns='http://www.w3.org/2000/svg'><path d='M5 7l5 5 5-5z'/></svg>");
-  background-repeat: no-repeat;
-  background-position: right 12px center;
-}
-
-.sort select:focus {
-  outline: none;
-  border-color: #ccd5ae;
-  box-shadow: 0 0 0 3px rgba(44, 80, 70, 0.15);
-}
-
 .sitter-list {
   display: grid;
   gap: 30px;
@@ -234,18 +209,6 @@
   gap: 10px;
   flex-wrap: wrap;
   margin-top: 8px;
-}
-
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
 }
 
 .modal {
