@@ -13,33 +13,17 @@ const sitterList = document.getElementById("sitter-list");
 const sitterForm = document.getElementById(
   "sitter-form",
 ) as HTMLFormElement | null;
+const filterButton = document.querySelector(
+  ".filter-form button[type='submit']",
+) as HTMLButtonElement | null;
+
+if (filterButton) filterButton.disabled = true;
 
 const BASE_URL = "http://localhost:3000/api/petSitters";
 const API_KEY = "123";
 
 let editingId: number | null = null;
 let allPetSitters: PetSitters[] = [];
-
-const fallbackPetSitters: PetSitters[] = [
-  {
-    id: 1,
-    name: "Oda",
-    location: "Oslo, 0561",
-    pricePerDay: 450,
-    rating: 4.9,
-    reviewCount: 19,
-    maxDogs: 2,
-    acceptsPuppies: true,
-    acceptsLargeDogs: true,
-    yearsOfExperience: 3,
-    experienceDescription:
-      "Rolig og trygg hundepasser. Bor nær parker og har erfaring med store hunder.",
-    available: true,
-    image: "assets/dogsitter1.png",
-    created: new Date().toISOString(),
-    updated: new Date().toISOString(),
-  },
-];
 
 async function loadPetSitters() {
   if (!sitterList) return;
@@ -56,10 +40,17 @@ async function loadPetSitters() {
     const petSitters: PetSitters[] = await response.json();
     allPetSitters = petSitters;
     renderPetSitters(allPetSitters);
+
+    if (petSitters.length === 0) {
+      sitterList.innerHTML = "<p>Ingen hundepassere funnet.</p>";
+    }
+
+    if (filterButton) filterButton.disabled = false;
   } catch (error) {
     console.error("Feil:", error);
-    allPetSitters = fallbackPetSitters;
-    renderPetSitters(allPetSitters);
+    sitterList.innerHTML = "<p>Kunne ikke laste hundepassere.</p>";
+
+    if (filterButton) filterButton.disabled = false;
   }
 }
 
@@ -69,7 +60,6 @@ function renderPetSitters(petSitters: PetSitters[]) {
   sitterList.innerHTML = "";
 
   if (petSitters.length === 0) {
-    sitterList.innerHTML = "<p>Ingen hundepassere funnet.</p>";
     return;
   }
 
@@ -138,6 +128,7 @@ function renderPetSitters(petSitters: PetSitters[]) {
     sitterList.appendChild(card);
   });
 }
+
 function applyFilters(): void {
   const place = (document.getElementById("place") as HTMLInputElement).value
     .toLowerCase()
@@ -150,10 +141,6 @@ function applyFilters(): void {
   const maxPrice = Number(
     (document.getElementById("price") as HTMLInputElement).value,
   );
-  console.log("place:", place);
-  console.log("availability:", availability);
-  console.log("maxPrice:", maxPrice);
-  console.log("allPetSitters:", allPetSitters);
 
   const filteredSitters = allPetSitters.filter((sitter) => {
     const matchesPlace = sitter.location.toLowerCase().includes(place);
@@ -161,13 +148,20 @@ function applyFilters(): void {
 
     const matchesAvailability =
       availability === "all" ||
-      (availability === "available" && sitter.available) ||
-      (availability === "unavailable" && !sitter.available);
+      (availability === "available" && sitter.available === true) ||
+      (availability === "unavailable" && sitter.available === false);
 
     return matchesPlace && matchesPrice && matchesAvailability;
   });
 
   renderPetSitters(filteredSitters);
+
+  sitterList?.insertAdjacentHTML(
+    "afterbegin",
+    filteredSitters.length === 0
+      ? `<p class="empty-state">Ingen resultater matcher filteret ditt.</p>`
+      : `<p>Viser ${filteredSitters.length} resultater</p>`,
+  );
 }
 
 // Modal
@@ -215,6 +209,7 @@ function fillForm(ps: PetSitters): void {
 
 // DELETE
 async function deletePetSitter(id: number): Promise<void> {
+  if (!confirm("Er du sikker på at du vil slette hundepasseren?")) return;
   try {
     const response = await fetch(`${BASE_URL}/${id}`, {
       method: "DELETE",
