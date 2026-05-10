@@ -143,12 +143,18 @@
             <div class="results-head">
               <h2>Resultater</h2>
 
-            <div class="results-actions">
-              <button id="add-sitter-btn" class="btn btn-primary" type="button">
-                Legg til passer
-              </button>
+              <div class="results-actions">
+                <button
+                  id="add-sitter-btn"
+                  class="btn btn-primary"
+                  type="button"
+                >
+                  Legg til passer
+                </button>
+              </div>
             </div>
 
+            <p id="page-message" class="form-message" aria-live="polite"></p>
             <div id="sitter-list" class="sitter-list">
               <p>Laster hundepassere...</p>
             </div>
@@ -167,7 +173,12 @@
     >
       <div class="modal-content">
         <div class="modal-top">
-          <button type="button" id="close-modal-btn" class="btn btn-ghost">
+          <button
+            type="button"
+            id="close-modal-btn"
+            class="btn btn-ghost"
+            aria-label="Lukk modal"
+          >
             Lukk
           </button>
           <h2 id="modal-title">Legg til / rediger hundepasser</h2>
@@ -189,7 +200,14 @@
 
             <div class="field">
               <label for="postalCode">Postnummer</label>
-              <input id="postalCode" name="postalCode" type="text" required />
+              <input
+                id="postalCode"
+                name="postalCode"
+                type="text"
+                required
+                pattern="[0-9]{4}"
+                title="Postnummer må bestå av 4 tall"
+              />
             </div>
 
             <div class="field">
@@ -250,6 +268,7 @@
             </div>
           </div>
 
+          <p id="form-message" class="form-message" aria-live="polite"></p>
           <div class="filter-actions">
             <button type="button" id="cancel-btn" class="btn btn-ghost">
               Avbryt
