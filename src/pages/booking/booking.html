@@ -11,8 +11,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Open+Sans:wght@400;500;600&family=Cherry+Bomb+One&display=swap"
       rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Open+Sans:wght@400;500;600&family=Cherry+Bomb+One&display=swap"
+      media="print"
+      onload="this.media = 'all'"
     />
 
     <link rel="stylesheet" href="/src/css/style.css" />
@@ -31,6 +33,8 @@
           <img
             src="/src/assets/logo.png"
             alt="Potepass – trygg hundepass"
+            width="40"
+            height="40"
             class="logo-image"
           />
           <span class="logo-text">Potepass</span>
@@ -86,7 +90,7 @@
         <button id="openLogin" class="btn btn-primary">Logg inn</button>
       </div>
 
-      <p id="login-status" class="hidden"></p>
+      <p id="login-status" class="hidden" aria-live="polite"></p>
 
       <button id="logout-button" class="btn btn-secondary hidden">
         Logg ut
@@ -97,36 +101,40 @@
           <img
             src="/src/assets/hero.webp"
             alt="Kvinne leker med hunder i parken"
+            width="600"
+            height="400"
+            fetchpriority="high"
+            decoding="async"
           />
 
           <div class="calendar-box" id="calendar-box">
             <div class="field">
               <label for="start-date">Fra:</label>
-              <input type="date" id="start-date" name="start-date" />
+              <input type="date" id="start-date" name="start-date" required />
             </div>
 
             <div class="field">
               <label for="end-date">Til:</label>
-              <input type="date" id="end-date" name="end-date" />
+              <input type="date" id="end-date" name="end-date" required />
             </div>
           </div>
         </div>
 
         <div class="booking-layout">
-          <form class="booking-form">
-            <h2>Ny booking</h2>
+          <form class="booking-form" aria-labelledby="booking-title">
+            <h2 id="booking-title">Ny booking</h2>
 
             <div class="field">
               <label for="dog">Velg hund</label>
-              <select name="dog" id="dog">
+              <select name="dog" id="dog" required>
                 <option value="">Velg hund</option>
               </select>
             </div>
 
             <div class="field">
               <label for="sitter">Velg hundepasser</label>
-              <select id="sitter" name="sitter">
-                <option>Velg hundepasser</option>
+              <select id="sitter" name="sitter" required>
+                <option value="">Velg hundepasser</option>
               </select>
             </div>
 
@@ -143,7 +151,11 @@
             <div class="button-wrapper">
               <button class="btn btn-primary" type="submit">Book</button>
             </div>
-            <p id="booking-confirmation" class="confirmation">
+            <p
+              id="booking-confirmation"
+              class="confirmation"
+              aria-live="polite"
+            >
               Bookingen din er sendt! 🐾
             </p>
           </form>
@@ -180,14 +192,17 @@
           <label for="loginEmail">E-post</label>
           <input
             id="loginEmail"
+            name="email"
             type="email"
             placeholder="din@email.no"
             required
+            autofocus
           />
 
           <label for="loginPassword">Passord</label>
           <input
             id="loginPassword"
+            name="password"
             type="password"
             placeholder="Passord"
             required

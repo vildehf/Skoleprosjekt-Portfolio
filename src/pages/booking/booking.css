@@ -293,7 +293,7 @@ h1 {
   display: none;
 }
 
-.button:disabled {
+.btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }

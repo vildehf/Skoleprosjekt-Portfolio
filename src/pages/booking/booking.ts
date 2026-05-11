@@ -120,7 +120,7 @@ function startEdit(booking: Booking) {
 }
 
 async function updateBooking(id: number, data: CreateBooking) {
-  await fetch(`${BASE_URL}/bookings/${id}`, {
+  const response = await fetch(`${BASE_URL}/bookings/${id}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -128,6 +128,10 @@ async function updateBooking(id: number, data: CreateBooking) {
     },
     body: JSON.stringify(data),
   });
+
+  if (!response.ok) {
+    throw new Error("Noe gikk galt ved oppdatering av booking");
+  }
 }
 
 // LOAD DOGS
@@ -257,7 +261,7 @@ async function loadPreviousSitters() {
 // CREATE BOOKINGS
 
 async function createBooking(data: CreateBooking) {
-  await fetch(`${BASE_URL}/bookings`, {
+  const response = await fetch(`${BASE_URL}/bookings`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -265,15 +269,23 @@ async function createBooking(data: CreateBooking) {
     },
     body: JSON.stringify(data),
   });
+
+  if (!response.ok) {
+    throw new Error("Noe gikk galt ved oppretting av booking");
+  }
 }
 
 async function deleteBooking(id: number) {
-  await fetch(`${BASE_URL}/bookings/${id}`, {
+  const response = await fetch(`${BASE_URL}/bookings/${id}`, {
     method: "DELETE",
     headers: {
       Authorization: `Bearer ${API_KEY}`,
     },
   });
+
+  if (!response.ok) {
+    throw new Error("Noe gikk galt ved sletting av booking");
+  }
 
   await loadBookings();
   await loadPreviousSitters();
@@ -338,20 +350,27 @@ form.addEventListener("submit", async function (event) {
 
   const isEditing = editingBookingId !== null;
 
-  if (editingBookingId !== null) {
-    await updateBooking(editingBookingId, bookingData);
-    editingBookingId = null;
-  } else {
-    await createBooking(bookingData);
+  try {
+    if (editingBookingId !== null) {
+      await updateBooking(editingBookingId, bookingData);
+      editingBookingId = null;
+    } else {
+      await createBooking(bookingData);
+    }
+
+    await loadBookings();
+    await loadPreviousSitters();
+
+    showMessage(
+      isEditing ? "Bookingen din er oppdatert" : "Bookingen din er sendt! 🐾",
+    );
+
+    resetForm();
+  } catch (error) {
+    console.error("feil ved booking:", error);
+    alert("Noe gikk galt, prøv igjen senere");
   }
 
-  await loadBookings();
-  await loadPreviousSitters();
-
-  showMessage(
-    isEditing ? "Bookingen din er oppdatert" : "Bookingen din er sendt! 🐾",
-  );
-  resetForm();
   submitBtn.textContent = "Book";
   submitBtn.disabled = false;
 });
@@ -379,6 +398,13 @@ if (openLogin && closeLogin && loginDialog) {
     loginDialog.close();
   });
 }
+
+loginPassword.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") {
+    event.preventDefault();
+    loginForm.requestSubmit();
+  }
+});
 
 loginForm.addEventListener("submit", async (event) => {
   event.preventDefault();
@@ -420,6 +446,12 @@ logoutBtn.addEventListener("click", () => {
   loadCurrentUser();
   loginStatus.textContent = "Du er nå logget ut.";
   loginStatus.classList.remove("hidden");
+
+  const openLoginBtn = document.getElementById(
+    "openLogin",
+  ) as HTMLButtonElement;
+  openLoginBtn.focus();
+
   setTimeout(() => {
     loginStatus.classList.add("hidden");
   }, 4000);
