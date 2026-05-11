@@ -9,6 +9,13 @@ const addSitterBtn = document.getElementById("add-sitter-btn");
 const closeModalBtn = document.getElementById("close-modal-btn");
 const cancelBtn = document.getElementById("cancel-btn");
 const modal = document.getElementById("sitter-modal");
+// Enkel validering før data sendes til API
+const formMessage = document.getElementById(
+  "form-message",
+) as HTMLParagraphElement | null;
+const pageMessage = document.getElementById(
+  "page-message",
+) as HTMLParagraphElement | null;
 const sitterList = document.getElementById("sitter-list");
 const sitterForm = document.getElementById(
   "sitter-form",
@@ -169,6 +176,11 @@ function openModal() {
   if (!modal) return;
   modal.classList.add("active");
   modal.setAttribute("aria-hidden", "false");
+
+  if (formMessage) {
+    formMessage.textContent = "";
+    formMessage.className = "form-message";
+  }
 }
 
 function closeModal() {
@@ -223,8 +235,18 @@ async function deletePetSitter(id: number): Promise<void> {
     }
 
     loadPetSitters();
+
+    if (pageMessage) {
+      pageMessage.textContent = "Hundepasser ble slettet.";
+      pageMessage.className = "form-message error";
+    }
   } catch (error) {
     console.error("Feil ved sletting:", error);
+
+    if (pageMessage) {
+      pageMessage.textContent = "Kunne ikke slette hundepasser.";
+      pageMessage.className = "form-message error";
+    }
   }
 }
 
@@ -249,9 +271,20 @@ async function updatePetSitter(
 
     loadPetSitters();
     closeModal();
+
+    if (pageMessage) {
+      pageMessage.textContent = "Hundepasser ble oppdatert.";
+      pageMessage.className = "form-message success";
+    }
+
     editingId = null;
   } catch (error) {
     console.error("Feil ved oppdatering:", error);
+
+    if (formMessage) {
+      formMessage.textContent = "Kunne ikke oppdatere hundepasser.";
+      formMessage.className = "form-message error";
+    }
   }
 }
 
@@ -275,8 +308,18 @@ async function createPetSitter(
 
     loadPetSitters();
     closeModal();
+
+    if (pageMessage) {
+      pageMessage.textContent = "Hundepasser ble opprettet.";
+      pageMessage.className = "form-message success";
+    }
   } catch (error) {
     console.error("Feil ved oppretting:", error);
+
+    if (formMessage) {
+      formMessage.textContent = "Kunne ikke opprette hundepasser.";
+      formMessage.className = "form-message error";
+    }
   }
 }
 
@@ -318,6 +361,7 @@ const filterForm = document.querySelector(
 if (filterForm) {
   filterForm.addEventListener("submit", (event) => {
     event.preventDefault();
+
     applyFilters();
   });
 
@@ -333,10 +377,28 @@ if (sitterForm) {
   sitterForm.addEventListener("submit", async (event) => {
     event.preventDefault();
 
+    const postalCodeInput = document.getElementById(
+      "postalCode",
+    ) as HTMLInputElement;
+
+    const postalCode = postalCodeInput.value.trim();
+
+    if (!/^\d{4}$/.test(postalCode)) {
+      if (formMessage) {
+        formMessage.textContent = "Postnummer må bestå av 4 tall.";
+        formMessage.className = "form-message error";
+      }
+
+      postalCodeInput.focus();
+      return;
+    }
+
+    if (!sitterForm.checkValidity()) {
+      sitterForm.reportValidity();
+      return;
+    }
+
     const city = (document.getElementById("city") as HTMLInputElement).value;
-    const postalCode = (
-      document.getElementById("postalCode") as HTMLInputElement
-    ).value;
 
     const location = postalCode ? `${city}, ${postalCode}` : city;
 
