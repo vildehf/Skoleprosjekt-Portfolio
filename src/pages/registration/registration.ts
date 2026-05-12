@@ -14,6 +14,7 @@ import type { Dog, Users, Allergy } from "../../ts/types.ts";
 let dogs: Dog[] = [];
 let editingId: number | null = null;
 let currentUser: Users | null = null;
+let dogToDelete: number | null = null;
 
 
 /* Variabler */
@@ -42,6 +43,11 @@ const submitButton = document.getElementById("submit-button") as HTMLButtonEleme
 const deleteButton = document.getElementById("delete-button") as HTMLButtonElement;
 
 const petsLoading = document.getElementById("pets-loading") as HTMLDivElement;
+
+const deleteModal = document.getElementById("delete-modal") as HTMLDivElement;
+const deleteModalText = document.getElementById("delete-modal-text") as HTMLParagraphElement;
+const cancelDeleteButton = document.getElementById("cancel-delete") as HTMLButtonElement;
+const confirmDeleteButton = document.getElementById("confirm-delete") as HTMLButtonElement;
 
 /* Logg inn funksjon*/
 
@@ -241,7 +247,7 @@ card.innerHTML = `
     </div>
 
     <div class="pet-card-actions">
-      <button class="btn  edit-btn" data-id="${dog.id}">Rediger</button>
+      <button class="btn edit-btn" data-id="${dog.id}">Rediger</button>
       <button class="btn btn-ghost delete-btn" data-id="${dog.id}">Slett</button>
     </div>
   </div>
@@ -271,17 +277,15 @@ card.innerHTML = `
     
       formTitle.textContent = "Endre informasjon om hunden";
       submitButton.textContent = "Oppdater opplysninger";
-})  ;
+    });
 
-deleteCardButton.addEventListener("click", async () => {
-  dogs = dogs.filter((item) => item.id !== dog.id);
+    deleteCardButton.addEventListener("click", () => {
+      dogToDelete = dog.id;
 
-   if (!currentUser) return;
+      deleteModalText.textContent =
+        `Er du sikker på at du ønsker å slette ${dog.name}?`;
 
-  currentUser.dogs = dogs;
-  await updateUser(currentUser);
-
-  renderDogs(dogs);
+      deleteModal.classList.remove("hidden");
 })})}; 
 
 /* Hent hunder */ 
@@ -312,12 +316,39 @@ async function loadUserDogs(): Promise<void> {
   }
 }
 
+cancelDeleteButton.addEventListener("click", () => {
+  deleteModal.classList.add("hidden");
+  dogToDelete = null;
+});
+
+confirmDeleteButton.addEventListener("click", async () => {
+  if (dogToDelete === null) return;
+
+  const deletedDog = dogs.find((dog) => dog.id === dogToDelete);
+
+  dogs = dogs.filter((dog) => dog.id !== dogToDelete);
+
+  if (!currentUser) return;
+
+  currentUser.dogs = dogs;
+  await updateUser(currentUser);
+
+  renderDogs(dogs);
+  resetForm();
+
+  deleteModal.classList.add("hidden");
+
+  showStatus(`${deletedDog?.name ?? "Hunden"} ble slettet.`);
+
+  dogToDelete = null;
+});
+
 /* Slett knapp */ 
 
 deleteButton.addEventListener("click", resetForm);
 
 if (localStorage.getItem("LoggedinUser")) {
-  loginForm.classList.add("hidden");
+  loginSection.classList.add("hidden");
   logoutButton.classList.remove("hidden");
 
   await loadUserDogs();
