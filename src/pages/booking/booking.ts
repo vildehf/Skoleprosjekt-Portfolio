@@ -167,13 +167,19 @@ async function loadSitters() {
 }
 
 // LOAD BOOKINGS
+const statusMap: Record<string, string> = {
+  pending: "Venter",
+  confirmed: "Godkjent",
+  completed: "Fullført",
+  cancelled: "Avlyst",
+};
 function renderBooking(booking: Booking): string {
   return `<article class="booking-card">
       <div class="booking-info">
         <p><strong>Periode:</strong> ${formatDate(booking.fromDate ?? "")} - ${formatDate(booking.toDate ?? "")}</p>
         <p><strong>Hund:</strong> ${dogsMap[booking.userDogId] ?? "Ukjent hund"}</p>
         <p><strong>Hundepasser:</strong> ${sittersMap[booking.petSitterId]?.name ?? "Ukjent passer"}</p>
-      <p><strong>Status:</strong> ${booking.status === "pending" ? "Venter" : booking.status}</p>
+      <p><strong>Status:</strong> ${statusMap[booking.status] ?? booking.status}</p>
       </div>
       
 
