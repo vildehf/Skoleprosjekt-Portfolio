@@ -1,3 +1,5 @@
+/* Siden er laget av Silje Elvik */ 
+
 h1,
 h2,
 h3,
@@ -8,6 +10,8 @@ h4 {
 .hidden {
   display: none !important;
 }
+
+/* Statusmeldinger */
 
 #status-message {
   padding: 0.75rem 1rem;
@@ -24,6 +28,9 @@ h4 {
   background: #fee2e2;
   color: #dc2626;
 }
+
+
+/* Login */
 
 .login-section {
   max-width: none;
@@ -71,12 +78,8 @@ h4 {
   box-shadow: var(--shadow-sm);
 }
 
-#pets-container {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-  width: 100%;
-}
+
+/* Layout */
 
 .pets-layout {
   display: grid;
@@ -84,6 +87,16 @@ h4 {
   gap: 2rem;
   align-items: start;
 }
+
+#pets-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  width: 100%;
+}
+
+
+/* Skjema / infokort */
 
 .info-card {
   display: flex;
@@ -111,6 +124,9 @@ h4 {
   border-radius: 8px;
 }
 
+
+/* Knapper */
+
 .btn-group {
   display: flex;
   gap: 0.8rem;
@@ -133,8 +149,6 @@ h4 {
   transition: 0.2s ease;
 }
 
-
-
 .form-btn:hover {
   background: var(--primary-bg-color);
   color: var(--bg-label-color);
@@ -149,6 +163,9 @@ h4 {
   color: var(--primary-bg-color);
 }
 
+
+/* Feilmeldinger */
+
 .error-message {
   display: none;
   color: var(--btn-delete);
@@ -157,6 +174,9 @@ h4 {
 .error-message.show {
   display: block;
 }
+
+
+/* Hundekort */
 
 .pet-card {
   background: var(--bg-label-color);
@@ -182,17 +202,17 @@ h4 {
   align-items: center;
 }
 
+.pet-card-info {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+}
+
 .pet-card-actions {
   display: flex;
   flex-direction: column;
   gap: 8px;
   align-items: end;
-}
-
-.pet-card-info {
-  display: grid;
-  gap: 10px;
-  min-width: 0;
 }
 
 .pet-name {
@@ -207,6 +227,9 @@ h4 {
   color: var(--primary-bg-color);
 }
 
+
+/* Loading og tom visning */
+
 .pets-loading {
   display: flex;
   flex-direction: column;
@@ -219,7 +242,6 @@ h4 {
   font-size: 1rem;
 }
 
-
 .empty-state {
   display: flex;
   padding: 24px;
@@ -229,7 +251,10 @@ h4 {
   color: #2c3e50;
 }
 
-.modal {
+
+/* Popup sletting */
+
+.popup {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.45);
@@ -241,7 +266,7 @@ h4 {
   z-index: 1000;
 }
 
-.modal-content {
+.popup-content {
   background: var(--card-bg-color);
   border-radius: 1rem;
   padding: 2rem;
@@ -259,11 +284,14 @@ h4 {
   margin: 0;
 }
 
-.modal-actions {
+.popup-actions {
   display: flex;
   justify-content: flex-end;
   gap: 1rem;
 }
+
+
+/* Spinner */
 
 @keyframes spin {
   to {
@@ -271,11 +299,15 @@ h4 {
   }
 }
 
+
+/* Responsivt design*/
+
 @media (max-width: 1200px) {
   h1,
   h2 {
     text-align: center;
   }
+
   .login-section {
     width: 100%;
     padding: 1.2rem;
@@ -297,11 +329,13 @@ h4 {
     width: 100%;
     max-width: none;
   }
+
   .pets-layout {
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
   }
+
   .pet-card-content {
     display: flex;
     flex-direction: column;

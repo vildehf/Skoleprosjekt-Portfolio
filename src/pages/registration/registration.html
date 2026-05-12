@@ -1,3 +1,4 @@
+<!-- Siden er laget av Silje Elvik -->
 <!DOCTYPE html>
 <html lang="no">
 <head>
@@ -13,7 +14,7 @@
   <link rel="stylesheet" href="/src/css/style.css">
   <link rel="stylesheet" href="/src/pages/registration/registration.css">
   <link rel="shortcut icon" href="/src/assets/logo.png">
-  <title>Mine hunder – Potepass</title>
+  <title>Potepass - Mine hunder</title>
 </head>
 <body>
   <header>
@@ -51,7 +52,7 @@
 <main>
         <section class="container">
                 <!-- Logg inn seksjon-->
-      <section id="login-section" class="login-section">
+      <div id="login-section" class="login-section">
         <span class="login-title">Logg inn</span>
         <form id="login-form">
           <input
@@ -70,12 +71,14 @@
           >
          <button type="submit" class="btn">Logg inn</button>
         </form>
-        
-        <p id="status-message" class="hidden"></p>
-      </section>
-        <button type="button" id="logout-button" class="btn-delete hidden" >
-  Logg ut
-</button>
+        <p id="status-message" class="hidden" aria-live="polite"></p>
+      </div>
+        <button type="button" id="logout-button" class="btn-delete hidden" aria-label="Logg ut av brukerprofil">
+         Logg ut
+        </button>
+
+        <!-- Registreringsskjema for hunder -->
+
          <h1 id="form-title">Fortell oss om hunden din</h1>
             <div class="pets-layout">
             <div class="pets-form">
@@ -127,40 +130,39 @@
             </div>
         </div>
             </div>
-        
               <div>
                 <div>
                   <br>
                   <button id="submit-button" class="btn" type="submit">Lagre opplysninger</button>
                   <button id="delete-button" class="btn btn-ghost delete-btn" type="button">Tøm skjema</button>
-                  </div>
-                  </div>
+                  
+                      </div>
+                    </div>
+                  </form> 
                 </div>
-                </form>
-                <div id="pets-loading" class="pets-loading hidden">
+            <!-- Spinner/loading-->
+                <div id="pets-loading" class="pets-loading hidden" aria-live="polite" aria-busy="true">
         <div class="spinner"></div>
         <p>Laster hunder...</p>
           </div>
                 <div id="pets-container"></div>
-                </div>
-              </div>
-              <div id="delete-modal" class="modal hidden">
-  <div class="modal-content">
-    <h3>Bekreft sletting</h3>
+         </div>
 
-    <p id="delete-modal-text">
+         <!-- Popup ved sletting av hund -->
+      <div id="delete-popup" class="popup hidden" role="dialog" aria-popup="true" aria-labelledby="delete-popup-title">
+  <div class="popup-content">
+    <h2>Bekreft sletting</h2>
+    <p id="delete-popup-text">
       Er du sikker på at du ønsker å slette hunden?
     </p>
 
-    <div class="modal-actions">
+    <div class="popup-actions">
         <button id="confirm-delete" class="btn-delete btn-ghost">
         Bekreft sletting
       </button>
       <button id="cancel-delete" class="btn ">
         Avbryt
       </button>
-
-    
     </div>
   </div>
 </div>   

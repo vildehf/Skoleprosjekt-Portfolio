@@ -44,8 +44,8 @@ const deleteButton = document.getElementById("delete-button") as HTMLButtonEleme
 
 const petsLoading = document.getElementById("pets-loading") as HTMLDivElement;
 
-const deleteModal = document.getElementById("delete-modal") as HTMLDivElement;
-const deleteModalText = document.getElementById("delete-modal-text") as HTMLParagraphElement;
+const deletePopup = document.getElementById("delete-popup") as HTMLDivElement;
+const deletePopupText = document.getElementById("delete-popup-text") as HTMLParagraphElement;
 const cancelDeleteButton = document.getElementById("cancel-delete") as HTMLButtonElement;
 const confirmDeleteButton = document.getElementById("confirm-delete") as HTMLButtonElement;
 
@@ -279,10 +279,10 @@ card.innerHTML = `
     deleteCardButton.addEventListener("click", () => {
       dogToDelete = dog.id;
 
-      deleteModalText.textContent =
+      deletePopupText.textContent =
         `Er du sikker på at du ønsker å slette ${dog.name}?`;
 
-      deleteModal.classList.remove("hidden");
+      deletePopup.classList.remove("hidden");
 })})}; 
 
 /* Hent hunder */ 
@@ -314,7 +314,7 @@ async function loadUserDogs(): Promise<void> {
 }
 
 cancelDeleteButton.addEventListener("click", () => {
-  deleteModal.classList.add("hidden");
+  deletePopup.classList.add("hidden");
   dogToDelete = null;
 });
 
@@ -333,7 +333,7 @@ confirmDeleteButton.addEventListener("click", async () => {
   renderDogs(dogs);
   resetForm();
 
-  deleteModal.classList.add("hidden");
+  deletePopup.classList.add("hidden");
 
   showStatus(`${deletedDog?.name ?? "Hunden"} ble slettet.`);
 
