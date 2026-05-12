@@ -221,13 +221,10 @@ form.addEventListener("submit", async function (event) {
 /* Vis hunder */ 
 
 function renderDogs(dogsList: Dog[]): void {
-  const container = document.getElementById("pets-container");
-
-  if (!container) return;
-  container.innerHTML = "";
+  petsContainer.innerHTML = "";
 
   if (dogsList.length === 0) {
-    container.innerHTML = `<p class="empty-state">Ingen hunder registrert ennå.</p>`;
+    petsContainer.innerHTML = `<p class="empty-state">Ingen hunder registrert ennå.</p>`;
     return;
   }
 
@@ -253,7 +250,7 @@ card.innerHTML = `
   </div>
 `;
 
-    container.appendChild(card);
+    petsContainer.appendChild(card);
 
     const editButton = card.querySelector(".edit-btn") as HTMLButtonElement;
     const deleteCardButton = card.querySelector(".delete-btn") as HTMLButtonElement;
