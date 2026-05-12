@@ -66,7 +66,6 @@ export async function getLoggedInUser(): Promise<Users | null> {
 
   const users = await getUsers();
   return users.find((user) => user.email === email) ?? null;
-  console.log("API response:");
 }
 
   

@@ -30,17 +30,6 @@ export type Allergy =
   | "Melk"
   | "Mais";
 
-/*export interface Dog {
-  id: number;
-  name: string;
-  weight: number;
-  age: number;
-  breed: string;
-  allergy: string[];
-  gender: "Him" | "Her";
-  image?: string;
-}*/
-
 
 export interface PetSitters {
   id: number;
