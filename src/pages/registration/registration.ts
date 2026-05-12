@@ -23,6 +23,7 @@ const logoutButton = document.getElementById("logout-button") as HTMLButtonEleme
 const loginForm = document.getElementById("login-form") as HTMLFormElement;
 const statusMessage = document.getElementById("status-message") as HTMLParagraphElement;
 const form = document.getElementById("pet-form") as HTMLFormElement;
+const petsContainer = document.getElementById("pets-container") as HTMLDivElement;
 
 const nameInput = document.getElementById("pet-name") as HTMLInputElement;
 const weightInput = document.getElementById("pet-weight") as HTMLInputElement;
@@ -39,6 +40,8 @@ const allergyError = document.getElementById("allergy-error") as HTMLSpanElement
 const formTitle = document.getElementById("form-title") as HTMLHeadingElement;
 const submitButton = document.getElementById("submit-button") as HTMLButtonElement;
 const deleteButton = document.getElementById("delete-button") as HTMLButtonElement;
+
+const petsLoading = document.getElementById("pets-loading") as HTMLDivElement;
 
 /* Logg inn funksjon*/
 
@@ -238,7 +241,7 @@ card.innerHTML = `
     </div>
 
     <div class="pet-card-actions">
-      <button class="btn btn-ghost edit-btn" data-id="${dog.id}">Rediger</button>
+      <button class="btn  edit-btn" data-id="${dog.id}">Rediger</button>
       <button class="btn btn-ghost delete-btn" data-id="${dog.id}">Slett</button>
     </div>
   </div>
@@ -283,41 +286,51 @@ deleteCardButton.addEventListener("click", async () => {
 
 /* Hent hunder */ 
 
+
 async function loadUserDogs(): Promise<void> {
+  setLoading(true);
 
   try {
-  
+    await delay(2000);
+
+    const users = await getUsers();
     const loggedInEmail = localStorage.getItem("LoggedinUser");
 
-    if (!loggedInEmail) 
-    return;
-  
-    const users = await getUsers();
     currentUser = users.find((user) => user.email === loggedInEmail) ?? null;
 
-    if (!currentUser) return;
-  
-  dogs = currentUser.dogs || [];
-  renderDogs(dogs);
+    if (!currentUser) {
+      throw new Error("Fant ikke innlogget bruker");
+    }
 
-  } 
-    catch (error) {
-    console.error("Feil ved henting av hunder:", error);
+    dogs = currentUser.dogs ?? [];
+    renderDogs(dogs);
+  } catch (error) {
+    console.error(error);
+    statusMessage.textContent = "Kunne ikke laste hundene dine.";
+  } finally {
+    setLoading(false);
   }
 }
 
+/* Slett knapp */ 
+
 deleteButton.addEventListener("click", resetForm);
-
-
-
-await loadUserDogs();
- if (localStorage.getItem("LoggedinUser")) {
-  loginSection.classList.add("hidden");
-  loadUserDogs();
-}
 
 if (localStorage.getItem("LoggedinUser")) {
   loginForm.classList.add("hidden");
   logoutButton.classList.remove("hidden");
-  loadUserDogs();
+
+  await loadUserDogs();
+}
+
+/* Loading state */ 
+
+function setLoading(isLoading: boolean): void {
+  if (isLoading) {
+    petsLoading.classList.remove("hidden");
+    petsContainer.classList.add("hidden");
+  } else {
+    petsLoading.classList.add("hidden");
+    petsContainer.classList.remove("hidden");
+  }
 }
