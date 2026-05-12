@@ -4,7 +4,7 @@ Ansvar og sidefordeling:
 Vilde - Hundepassere - petSitters med petSitters CRUD
 Line - Booking - bookings med booking CRUD
 Jakob - Kontaktside - Contact med form CRUD
-Silje - Registrering - registration med petSitter - dogs CRUD
+Silje - Registrering - registration med dogs nested i user CRUD
 Mats - Forside og profil - landingPage og profile med profile CRUD
 
 Regler for push og pull requests
