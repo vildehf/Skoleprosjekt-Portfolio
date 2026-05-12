@@ -86,8 +86,8 @@ export async function updateUser(user: Users): Promise<Users> {
     throw new Error("Kunne ikke oppdatere bruker");
   }
 
-  const users: Users[] = await response.json();
-  return await response.json();
+    const updatedUser: Users = await response.json();
+  return updatedUser;
 }
 
 /* Logget inn bruker */ 
