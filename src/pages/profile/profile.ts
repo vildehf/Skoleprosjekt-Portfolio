@@ -1,3 +1,4 @@
+/* Siden er laget av Mats Sudbø */
 type ContactType = "phone" | "email" | "address" | "emergency";
 
 type Contact = {
