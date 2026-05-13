@@ -31,6 +31,7 @@ const API_KEY = "123";
 
 let editingId: number | null = null;
 let allPetSitters: PetSitters[] = [];
+let expandedId: number | null = null;
 
 async function loadPetSitters() {
   if (!sitterList) return;
@@ -109,18 +110,37 @@ function renderPetSitters(petSitters: PetSitters[]) {
         </p>
 
         <div class="sitter-card-actions">
-          <a class="btn btn-primary" href="/src/pages/profile/profile.html?id=${ps.id}">
-            Se profil
-          </a>
+          <button class="btn btn-primary details-btn" type="button" data-id="${ps.id}">
+          ${expandedId === ps.id ? "Skjul detaljer" : "Se detaljer"}
+          </button>
           <button class="btn btn-ghost edit-btn" type="button" data-id="${ps.id}">
             Rediger
           </button>
-          <button class="btn btn-ghost delete-btn" type="button" data-id="${ps.id}">
+          <button class="btn-delete delete-btn" type="button" data-id="${ps.id}">
             Slett
           </button>
         </div>
       </div>
-    `;
+    ${
+      expandedId === ps.id
+        ? `
+      <div class="sitter-details">
+        <h4>Detaljer</h4>
+        <p><strong>Erfaring:</strong> ${ps.yearsOfExperience} år</p>
+        <p><strong>Beskrivelse:</strong> ${ps.experienceDescription}</p>
+        <p><strong>Maks antall hunder:</strong> ${ps.maxDogs}</p>
+        <p><strong>Tar valper:</strong> ${ps.acceptsPuppies ? "Ja" : "Nei"}</p>
+        <p><strong>Tar store hunder:</strong> ${ps.acceptsLargeDogs ? "Ja" : "Nei"}</p>
+      </div>
+    `
+        : ""
+    }
+`;
+
+    card.querySelector(".details-btn")?.addEventListener("click", () => {
+      expandedId = expandedId === ps.id ? null : ps.id;
+      renderPetSitters(petSitters);
+    });
 
     card.querySelector(".delete-btn")?.addEventListener("click", () => {
       deletePetSitter(ps.id);
