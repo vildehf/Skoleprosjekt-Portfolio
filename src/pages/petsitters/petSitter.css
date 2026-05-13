@@ -201,11 +201,6 @@
   justify-content: flex-end;
 }
 
-.delete-btn:hover {
-  background: rgba(180, 35, 24, 0.1);
-  color: #b42318;
-}
-
 .muted {
   opacity: 0.85;
   color: #2c3e50;
