@@ -6,7 +6,6 @@ const loginForm = document.getElementById("loginForm") as HTMLFormElement | null
 const loginEmail = document.getElementById("loginEmail") as HTMLInputElement | null;
 
 if (loginDialog && openLogin && closeLogin && loginForm && loginEmail) {
-
   openLogin.addEventListener("click", () => {
     loginDialog.showModal();
   });
@@ -15,16 +14,33 @@ if (loginDialog && openLogin && closeLogin && loginForm && loginEmail) {
     loginDialog.close();
   });
 
-  loginForm.addEventListener("submit", (event) => {
+  loginForm.addEventListener("submit", async (event) => {
     event.preventDefault();
 
-   const user = {
-      email: loginEmail.value.trim(),
-      isLoggedIn: true,
-    };
+    const email = loginEmail.value.trim();
 
-    localStorage.setItem("potepassUser", JSON.stringify(user));
+    try {
+      const response = await fetch(`http://localhost:3000/api/users?email=${email}`);
 
-    window.location.href = "/src/pages/profile/profile.html";
+      if (!response.ok) {
+        throw new Error("Kunne ikke hente bruker fra API");
+      }
+
+      const users = await response.json();
+
+      const user = users[0];
+
+      if (!user) {
+        alert("Fant ingen bruker med denne e-posten");
+        return;
+      }
+
+      localStorage.setItem("potepassUser", JSON.stringify(user));
+
+      window.location.href = "/src/pages/profile/profile.html";
+    } catch (error) {
+      console.error(error);
+      alert("Noe gikk galt ved innlogging");
+    }
   });
 }
