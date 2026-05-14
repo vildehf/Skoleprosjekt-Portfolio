@@ -65,7 +65,7 @@ async function fetchData<T>(endpoint: string): Promise<T> {
 }
 
 /* Hent innlogget bruker */
-async function loadCurrentUser() {
+async function loadCurrentUser(): Promise<void> {
   currentUser = await getLoggedInUser();
 
   if (!currentUser) {
@@ -104,7 +104,7 @@ function resetForm(): void {
 }
 
 /* Vis bekreftelsesmelding */
-function showMessage(message: string) {
+function showMessage(message: string): void {
   confirmation.textContent = message;
   confirmation.style.display = "block";
 
@@ -147,7 +147,7 @@ async function updateBooking(id: number, data: CreateBooking) {
 }
 
 /* Hent hunder - READ */
-async function loadDogs() {
+async function loadDogs(): Promise<void> {
   if (!currentUser) return;
 
   dogSelect.innerHTML = `<option value="">Velg hund</option>`;
@@ -164,7 +164,7 @@ async function loadDogs() {
 }
 
 /* Hent hundepassere - READ */
-async function loadSitters() {
+async function loadSitters(): Promise<void> {
   const sitters = await fetchData<PetSitters[]>("petsitters");
 
   sitters.forEach((sitter) => {
@@ -205,7 +205,7 @@ function renderBooking(booking: Booking): string {
 }
 
 /* Hent bookinger - READ */
-async function loadBookings() {
+async function loadBookings(): Promise<void> {
   const user = currentUser;
   if (!user) return;
   const bookings = await fetchData<Booking[]>("bookings");
@@ -242,7 +242,7 @@ async function loadBookings() {
 }
 
 /* Hent tidligere hundepassere - READ */
-async function loadPreviousSitters() {
+async function loadPreviousSitters(): Promise<void> {
   if (!currentUser) return;
 
   const bookings = await fetchData<Booking[]>("bookings");
@@ -296,7 +296,7 @@ async function createBooking(data: CreateBooking) {
 }
 
 /* Slett booking - DELETE */
-async function deleteBooking(id: number) {
+async function deleteBooking(id: number): Promise<void> {
   const response = await fetch(`${BASE_URL}/bookings/${id}`, {
     method: "DELETE",
     headers: {
@@ -397,7 +397,7 @@ form.addEventListener("submit", async function (event) {
 });
 
 /* Init */
-async function init() {
+async function init(): Promise<void> {
   try {
     await loadCurrentUser();
     await loadDogs();
