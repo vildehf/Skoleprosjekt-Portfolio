@@ -1,5 +1,12 @@
 /* Siden laget av Line Nerli Tveite */
 
+/* 
+Create - Opprett ny booking
+Read - Hent og vis eksisterende bookinger
+Update - Rediger eksisterende booking
+Delete - Slett eksisterende booking
+ */
+
 import type { Booking, Users, PetSitters } from "../../ts/types.ts";
 import { BASE_URL, API_KEY, getLoggedInUser, login } from "../../ts/api.ts";
 
@@ -8,7 +15,7 @@ type CreateBooking = Omit<Booking, "id" | "created" | "updated">;
 let editingBookingId: number | null = null;
 let currentUser: Users | null = null;
 
-// ELEMENTER
+/* Variabler */
 const form = document.querySelector(".booking-form") as HTMLFormElement;
 const dogSelect = document.getElementById("dog") as HTMLSelectElement;
 const sitterSelect = document.getElementById("sitter") as HTMLSelectElement;
@@ -40,12 +47,11 @@ const previousSitters = document.getElementById(
 ) as HTMLDivElement;
 const bookingsSection = document.getElementById("bookings") as HTMLDivElement;
 
-// DATA MAPS
+/* Oppslagstabeller */
 let dogsMap: Record<number, string> = {};
 let sittersMap: Record<number, PetSitters> = {};
 
-// FETCH HELPERS
-/* denne bør i api.ts? */
+/* API-kall */
 async function fetchData<T>(endpoint: string): Promise<T> {
   const response = await fetch(`${BASE_URL}/${endpoint}`, {
     headers: { Authorization: `Bearer ${API_KEY}` },
@@ -58,7 +64,8 @@ async function fetchData<T>(endpoint: string): Promise<T> {
   return response.json();
 }
 
-async function loadCurrentUser() {
+/* Hent innlogget bruker */
+async function loadCurrentUser(): Promise<void> {
   currentUser = await getLoggedInUser();
 
   if (!currentUser) {
@@ -82,11 +89,13 @@ async function loadCurrentUser() {
   }
 }
 
+/* Formatere datoer */
 function formatDate(dateString: string) {
   const date = new Date(dateString);
   return date.toLocaleDateString("no-NO");
 }
 
+/* Reset skjema */
 function resetForm(): void {
   form.reset();
   editingBookingId = null;
@@ -94,7 +103,8 @@ function resetForm(): void {
   button.textContent = "Book";
 }
 
-function showMessage(message: string) {
+/* Vis bekreftelsesmelding */
+function showMessage(message: string): void {
   confirmation.textContent = message;
   confirmation.style.display = "block";
 
@@ -103,6 +113,7 @@ function showMessage(message: string) {
   }, 3000);
 }
 
+/* Rediger booking */
 function startEdit(booking: Booking) {
   editingBookingId = booking.id;
 
@@ -119,6 +130,7 @@ function startEdit(booking: Booking) {
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
+/* Oppdater booking - PUT */
 async function updateBooking(id: number, data: CreateBooking) {
   const response = await fetch(`${BASE_URL}/bookings/${id}`, {
     method: "PUT",
@@ -134,8 +146,8 @@ async function updateBooking(id: number, data: CreateBooking) {
   }
 }
 
-// LOAD DOGS
-async function loadDogs() {
+/* Hent hunder - READ */
+async function loadDogs(): Promise<void> {
   if (!currentUser) return;
 
   dogSelect.innerHTML = `<option value="">Velg hund</option>`;
@@ -151,8 +163,8 @@ async function loadDogs() {
   });
 }
 
-// LOAD SITTERS
-async function loadSitters() {
+/* Hent hundepassere - READ */
+async function loadSitters(): Promise<void> {
   const sitters = await fetchData<PetSitters[]>("petsitters");
 
   sitters.forEach((sitter) => {
@@ -166,13 +178,14 @@ async function loadSitters() {
   });
 }
 
-// LOAD BOOKINGS
 const statusMap: Record<string, string> = {
   pending: "Venter",
   confirmed: "Godkjent",
   completed: "Fullført",
   cancelled: "Avlyst",
 };
+
+/* Vis booking-kort */
 function renderBooking(booking: Booking): string {
   return `<article class="booking-card">
       <div class="booking-info">
@@ -191,7 +204,8 @@ function renderBooking(booking: Booking): string {
     `;
 }
 
-async function loadBookings() {
+/* Hent bookinger - READ */
+async function loadBookings(): Promise<void> {
   const user = currentUser;
   if (!user) return;
   const bookings = await fetchData<Booking[]>("bookings");
@@ -227,7 +241,8 @@ async function loadBookings() {
     });
 }
 
-async function loadPreviousSitters() {
+/* Hent tidligere hundepassere - READ */
+async function loadPreviousSitters(): Promise<void> {
   if (!currentUser) return;
 
   const bookings = await fetchData<Booking[]>("bookings");
@@ -264,8 +279,7 @@ async function loadPreviousSitters() {
   });
 }
 
-// CREATE BOOKINGS
-
+/* Opprett booking - POST */
 async function createBooking(data: CreateBooking) {
   const response = await fetch(`${BASE_URL}/bookings`, {
     method: "POST",
@@ -281,7 +295,8 @@ async function createBooking(data: CreateBooking) {
   }
 }
 
-async function deleteBooking(id: number) {
+/* Slett booking - DELETE */
+async function deleteBooking(id: number): Promise<void> {
   const response = await fetch(`${BASE_URL}/bookings/${id}`, {
     method: "DELETE",
     headers: {
@@ -301,7 +316,7 @@ async function deleteBooking(id: number) {
   resetForm();
 }
 
-// FORM SUBMIT
+/* Skjemainnsending */
 form.addEventListener("submit", async function (event) {
   event.preventDefault();
 
@@ -381,9 +396,8 @@ form.addEventListener("submit", async function (event) {
   submitBtn.disabled = false;
 });
 
-// INIT
-
-async function init() {
+/* Init */
+async function init(): Promise<void> {
   try {
     await loadCurrentUser();
     await loadDogs();
@@ -405,13 +419,7 @@ if (openLogin && closeLogin && loginDialog) {
   });
 }
 
-loginPassword.addEventListener("keydown", (event) => {
-  if (event.key === "Enter") {
-    event.preventDefault();
-    loginForm.requestSubmit();
-  }
-});
-
+/* Logg inn */
 loginForm.addEventListener("submit", async (event) => {
   event.preventDefault();
 
@@ -446,6 +454,7 @@ loginForm.addEventListener("submit", async (event) => {
   }
 });
 
+/* Logg ut */
 logoutBtn.addEventListener("click", () => {
   localStorage.removeItem("LoggedinUser");
   localStorage.removeItem("API_KEY");
