@@ -2,7 +2,10 @@
 // Denne filen håndterer CRUD-funksjonalitet (Create, Read, Update, Delete) for hundepassere.
 // Data hentes fra et API og vises som kort i en liste. Brukeren kan legge til, redigere og slette
 
-import type { PetSitters } from "../../ts/types";
+import type { PetSitters } from "../../ts/types.ts";
+import { BASE_URL, API_KEY } from "../../ts/api.ts";
+
+const PET_SITTERS_URL = `${BASE_URL}/petsitters`;
 
 // hundepassere via et modal-skjema. Alt oppdateres dynamisk uten side reload.
 const addSitterBtn = document.getElementById("add-sitter-btn");
@@ -25,9 +28,6 @@ const filterButton = document.querySelector(
 ) as HTMLButtonElement | null;
 
 if (filterButton) filterButton.disabled = true;
-
-const BASE_URL = "http://localhost:3000/api/petSitters";
-const API_KEY = "123";
 
 // Globale variabler
 let editingId: number | null = null;
@@ -53,7 +53,7 @@ async function loadPetSitters() {
   sitterList.innerHTML = "<p>Laster hundepassere...</p>";
 
   try {
-    const response = await fetch(BASE_URL);
+    const response = await fetch(PET_SITTERS_URL);
 
     if (!response.ok) {
       throw new Error("Kunne ikke hente hundepassere");
@@ -257,7 +257,7 @@ function fillForm(ps: PetSitters): void {
 async function deletePetSitter(id: number): Promise<void> {
   if (!confirm("Er du sikker på at du vil slette hundepasseren?")) return;
   try {
-    const response = await fetch(`${BASE_URL}/${id}`, {
+    const response = await fetch(`${PET_SITTERS_URL}/${id}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${API_KEY}`,
@@ -284,7 +284,7 @@ async function updatePetSitter(
   updatedPetSitter: Partial<PetSitters>,
 ): Promise<void> {
   try {
-    const response = await fetch(`${BASE_URL}/${id}`, {
+    const response = await fetch(`${PET_SITTERS_URL}/${id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -315,7 +315,7 @@ async function createPetSitter(
   newPetSitter: Omit<PetSitters, "id">,
 ): Promise<void> {
   try {
-    const response = await fetch(BASE_URL, {
+    const response = await fetch(PET_SITTERS_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
