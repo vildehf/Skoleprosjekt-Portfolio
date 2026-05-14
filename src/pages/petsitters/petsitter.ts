@@ -2,9 +2,10 @@
 // Denne filen håndterer CRUD-funksjonalitet (Create, Read, Update, Delete) for hundepassere.
 // Data hentes fra et API og vises som kort i en liste. Brukeren kan legge til, redigere og slette
 
-import type { PetSitters } from "../../ts/types";
-const BASE_URL = "http://localhost:3000/api/petSitters";
-const API_KEY = "123";
+import type { PetSitters } from "../../ts/types.ts";
+import { BASE_URL, API_KEY } from "../../ts/api.ts";
+
+const PET_SITTERS_URL = `${BASE_URL}/petsitters`;
 
 // DOM-elementer
 const addSitterBtn = document.getElementById("add-sitter-btn");
@@ -33,14 +34,26 @@ let editingId: number | null = null;
 let allPetSitters: PetSitters[] = [];
 let expandedId: number | null = null;
 
-// READ - Hent hundepassere fra API
+// Vis midlertidig melding på siden
+function showPageMessage(message: string, type: "success" | "error"): void {
+  if (!pageMessage) return;
+
+  pageMessage.textContent = message;
+  pageMessage.className = `form-message ${type}`;
+
+  setTimeout(() => {
+    pageMessage.textContent = "";
+    pageMessage.className = "form-message";
+  }, 3000);
+}
+
 async function loadPetSitters() {
   if (!sitterList) return;
 
   sitterList.innerHTML = "<p>Laster hundepassere...</p>";
 
   try {
-    const response = await fetch(BASE_URL);
+    const response = await fetch(PET_SITTERS_URL);
 
     if (!response.ok) {
       throw new Error("Kunne ikke hente hundepassere");
@@ -246,7 +259,7 @@ function fillForm(ps: PetSitters): void {
 async function deletePetSitter(id: number): Promise<void> {
   if (!confirm("Er du sikker på at du vil slette hundepasseren?")) return;
   try {
-    const response = await fetch(`${BASE_URL}/${id}`, {
+    const response = await fetch(`${PET_SITTERS_URL}/${id}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${API_KEY}`,
@@ -259,17 +272,11 @@ async function deletePetSitter(id: number): Promise<void> {
 
     loadPetSitters();
 
-    if (pageMessage) {
-      pageMessage.textContent = "Hundepasser ble slettet.";
-      pageMessage.className = "form-message error";
-    }
+    showPageMessage("Hundepasser ble slettet.", "success");
   } catch (error) {
     console.error("Feil ved sletting:", error);
 
-    if (pageMessage) {
-      pageMessage.textContent = "Kunne ikke slette hundepasser.";
-      pageMessage.className = "form-message error";
-    }
+    showPageMessage("Kunne ikke slette hundepasser.", "error");
   }
 }
 
@@ -279,7 +286,7 @@ async function updatePetSitter(
   updatedPetSitter: Partial<PetSitters>,
 ): Promise<void> {
   try {
-    const response = await fetch(`${BASE_URL}/${id}`, {
+    const response = await fetch(`${PET_SITTERS_URL}/${id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -295,19 +302,13 @@ async function updatePetSitter(
     loadPetSitters();
     closeModal();
 
-    if (pageMessage) {
-      pageMessage.textContent = "Hundepasser ble oppdatert.";
-      pageMessage.className = "form-message success";
-    }
+    showPageMessage("Hundepasser ble oppdatert.", "success");
 
     editingId = null;
   } catch (error) {
     console.error("Feil ved oppdatering:", error);
 
-    if (formMessage) {
-      formMessage.textContent = "Kunne ikke oppdatere hundepasser.";
-      formMessage.className = "form-message error";
-    }
+    showPageMessage("Kunne ikke oppdatere hundepasser.", "error");
   }
 }
 
@@ -316,7 +317,7 @@ async function createPetSitter(
   newPetSitter: Omit<PetSitters, "id">,
 ): Promise<void> {
   try {
-    const response = await fetch(BASE_URL, {
+    const response = await fetch(PET_SITTERS_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -332,17 +333,11 @@ async function createPetSitter(
     loadPetSitters();
     closeModal();
 
-    if (pageMessage) {
-      pageMessage.textContent = "Hundepasser ble opprettet.";
-      pageMessage.className = "form-message success";
-    }
+    showPageMessage("Hundepasser ble opprettet.", "success");
   } catch (error) {
     console.error("Feil ved oppretting:", error);
 
-    if (formMessage) {
-      formMessage.textContent = "Kunne ikke opprette hundepasser.";
-      formMessage.className = "form-message error";
-    }
+    showPageMessage("Kunne ikke opprette hundepasser.", "error");
   }
 }
 
