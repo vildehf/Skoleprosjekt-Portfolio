@@ -1,3 +1,4 @@
+// Laget av Vilde Hvitstein Fristad
 const hamburger = document.querySelector(
   ".hamburger",
 ) as HTMLButtonElement | null;

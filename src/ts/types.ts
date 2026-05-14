@@ -16,15 +16,22 @@ export interface Users {
 export interface Dog {
   id: number;
   name: string;
-  weight: number;
-  age: number;
   breed: string;
-  allergies: string[];
   gender: "Him" | "Her";
-  image?: string;
+  age: number;
+  weight: number;
+  allergies: Allergy[];
 }
 
-export interface petSitters {
+export type Allergy =
+  | "Ingen allergier"
+  | "Egg"
+  | "Hvete"
+  | "Melk"
+  | "Mais";
+
+
+export interface PetSitters {
   id: number;
   name: string;
   image?: string;
@@ -32,24 +39,12 @@ export interface petSitters {
   pricePerDay: number;
   rating: number;
   reviewCount: number;
+  maxDogs: number;
   acceptsPuppies: boolean;
   acceptsLargeDogs: boolean;
   yearsOfExperience: number;
   experienceDescription: string | null;
   available: boolean;
-  created: string;
-  updated: string;
-}
-
-export interface Bookings {
-  id: number;
-  userId: number;
-  userDogId: number;
-  petSitterId: number;
-  fromDate: string | null;
-  toDate: number;
-  status: string;
-  message: string;
   created: string;
   updated: string;
 }
@@ -61,4 +56,16 @@ export interface Message {
   topic: string;
   user_id: number;
   message: string;
+}
+export interface Booking {
+  id: number;
+  userId: number;
+  userDogId: number;
+  petSitterId: number;
+  fromDate: string;
+  toDate: string;
+  status: string;
+  message: string;
+  created: string;
+  updated: string;
 }

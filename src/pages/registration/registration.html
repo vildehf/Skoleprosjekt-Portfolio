@@ -1,3 +1,4 @@
+<!-- Siden er laget av Silje Elvik -->
 <!DOCTYPE html>
 <html lang="no">
 <head>
@@ -13,7 +14,7 @@
   <link rel="stylesheet" href="/src/css/style.css">
   <link rel="stylesheet" href="/src/pages/registration/registration.css">
   <link rel="shortcut icon" href="/src/assets/logo.png">
-  <title>Finn hundepasser – Potepass</title>
+  <title>Potepass - Mine hunder</title>
 </head>
 <body>
   <header>
@@ -29,12 +30,12 @@
         <ul class="nav-menu">
           <li><a href="/index.html">Hjem</a></li>
           <li>
-            <a href="/src/html/petSitters.html">Finn hundepasser</a>
+            <a href="/src/pages/petsitters/petSitters.html">Finn hundepasser</a>
           </li>
-          <li><a href="/src/html/booking.html">Mine bookinger</a></li>
-          <li><a href="/src/html/profile.html">Min profil</a></li>
+          <li><a href="/src/pages/booking/booking.html">Mine bookinger</a></li>
+          <li><a href="/src/pages/profile/profile.html">Min profil</a></li>
           <li><a href="/src/pages/registration/registration.html">Mine hunder</a></li>
-          <li><a href="/src/html/contact.html">Kontakt oss</a></li>
+          <li><a href="/src/pages/contact/contact.html">Kontakt oss</a></li>
         </ul>
         
       </nav>
@@ -51,8 +52,8 @@
 <main>
         <section class="container">
                 <!-- Logg inn seksjon-->
-      <section id="login-section" class="login-section">
-        <p>Logg inn</p>
+      <div id="login-section" class="login-section">
+        <span class="login-title">Logg inn</span>
         <form id="login-form">
           <input
             type="email"
@@ -60,23 +61,28 @@
             id="email"
             placeholder="E-post"
             required
-          />
+          >
           <input
             type="password"
             name="password"
             id="password"
             placeholder="Passord"
             required
-          />
-          <button type="submit" class="btn">Logg inn</button>
+          >
+         <button type="submit" class="btn">Logg inn</button>
         </form>
-        <p id="status-message" class="hidden"></p>
-      </section>
+        <p id="status-message" class="hidden" aria-live="polite"></p>
+      </div>
+        <button type="button" id="logout-button" class="btn-delete hidden" aria-label="Logg ut av brukerprofil">
+         Logg ut
+        </button>
+
+        <!-- Registreringsskjema for hunder -->
+
          <h1 id="form-title">Fortell oss om hunden din</h1>
-            <h2>Informasjon om Hunden din</h2>
             <div class="pets-layout">
             <div class="pets-form">
-            <form id="pet-form" action="/" method="get">
+            <form id="pet-form">
             <div class="info-card">
 
           <div class="form-row info-col">
@@ -94,7 +100,7 @@
           
             <div>
             <label for="pet-age-years">Alder (år)</label>
-            <input id="pet-age-years" type="number" required min="1">
+            <input id="pet-age-years" name="age" type="number" required min="1">
             <span id="age-error" class="error-message"></span>
           </div>
 
@@ -109,36 +115,59 @@
             <select id="allergy" name="allergy">
               <option value="Ingen allergier">Ingen allergier</option>
               <option value="Egg">Egg</option>
-              <option value="Wheat">Hvete</option>
-              <option value="Milk">Melk</option>
-              <option value="Corn">Mais</option>
+              <option value="Hvete">Hvete</option>
+              <option value="Melk">Melk</option>
+              <option value="Mais">Mais</option>
             </select>
              <span id="allergy-error" class="error-message"></span>
           </div>
              <label>Kjønn</label>
             <div class="btn-group">
-               <input type="radio" id="gender-him" name="gender" value="Him">
+               <input type="radio" id="gender-him" name="gender" value="Him" required>
                <label for="gender-him" class="form-btn">Han</label>        
                <input type="radio" id="gender-her" name="gender" value="Her">
                <label for="gender-her" class="form-btn">Hun</label>
             </div>
         </div>
             </div>
-        
               <div>
                 <div>
                   <br>
                   <button id="submit-button" class="btn" type="submit">Lagre opplysninger</button>
-                  <button id="delete-button" class="btn-delete" type="button">Slett opplysninger</button>
-                  </div>
-                  </div>
+                  <button id="delete-button" class="btn btn-ghost delete-btn" type="button">Tøm skjema</button>
+                  
+                      </div>
+                    </div>
+                  </form> 
                 </div>
+            <!-- Spinner/loading-->
+                <div id="pets-loading" class="pets-loading hidden" aria-live="polite" aria-busy="true">
+        <div class="spinner"></div>
+        <p>Laster hunder...</p>
+          </div>
                 <div id="pets-container"></div>
-                </div>
-                </form>
-                
+         </div>
 
-</div>
+         <!-- Popup ved sletting av hund-->
+      <div id="delete-popup" class="popup hidden" role="dialog" aria-popup="true" aria-labelledby="delete-popup-title">
+  <div class="popup-content">
+    <h2>Bekreft sletting</h2>
+    <p id="delete-popup-text">
+      Er du sikker på at du ønsker å slette hunden?
+    </p>
+
+    <div class="popup-actions">
+        <button id="confirm-delete" class="btn-delete btn-ghost">
+        Bekreft sletting
+      </button>
+      <button id="cancel-delete" class="btn ">
+        Avbryt
+      </button>
+
+    
+    </div>
+  </div>
+</div>   
     </section>
   </main>
   <footer class="site-footer">
@@ -200,8 +229,8 @@
       </div>
     </div>
   </footer>
-<script type="module" src="/src/pages/registration/registration.js"></script>
-<script src="/src/js/burger.js"> </script>
+<script type="module" src="/src/pages/registration/registration.ts"></script>
+<script src="/src/js/burger.ts"> </script>
 
   </body>
 </html>

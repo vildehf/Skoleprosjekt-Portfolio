@@ -1,8 +1,13 @@
+/* Laget av Vilde Hvitstein Fristad */
 .search-layout {
   display: grid;
   grid-template-columns: 320px minmax(0, 1fr);
   gap: 24px;
   align-items: start;
+}
+
+.filters {
+  min-width: 0;
 }
 
 .filters .card-body {
@@ -23,8 +28,7 @@
   gap: 6px;
 }
 
-.field label,
-.field-title {
+.field label {
   display: block;
   font-weight: 700;
   color: #2c3e50;
@@ -49,34 +53,11 @@
   min-height: 120px;
 }
 
-.field input[type="date"] {
-  min-height: 48px;
-  padding: 0 12px;
-  font: inherit;
-  color: #1f2937;
-}
-
 .field input:focus-visible,
 .field select:focus-visible,
 .field textarea:focus-visible {
   outline: 3px solid rgba(204, 213, 174, 0.7);
   outline-offset: 2px;
-}
-
-.date-row {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
-}
-
-.date-row > div {
-  min-width: 0;
-}
-
-.date-row input[type="date"] {
-  width: 100%;
-  min-width: 0;
-  max-width: 100%;
 }
 
 .range-meta {
@@ -86,26 +67,6 @@
   font-size: 12px;
   opacity: 0.85;
   color: #2c3e50;
-}
-
-.checks {
-  display: grid;
-  gap: 10px;
-  margin-top: 4px;
-}
-
-.check {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  padding: 10px 12px;
-  border-radius: 12px;
-  background-color: rgba(44, 62, 80, 0.04);
-}
-
-.check input {
-  width: 18px;
-  height: 18px;
 }
 
 .results {
@@ -120,44 +81,13 @@
   margin-bottom: 12px;
 }
 
-.results-head h3 {
+.results-head h2 {
   margin: 0;
   line-height: 1.2;
 }
 
-.results-head-actions {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
 .results-actions {
   margin-bottom: 16px;
-}
-
-.sort select {
-  height: 40px;
-  padding: 0 38px 0 14px;
-  border: 1px solid rgba(44, 62, 80, 0.14);
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-
-  border-radius: 14px;
-  background: #fff;
-  font: inherit;
-  color: #1f2937;
-  cursor: pointer;
-
-  background-image: url("data:image/svg+xml;utf8,<svg fill='%232c3e50' height='16' viewBox='0 0 20 20' width='16' xmlns='http://www.w3.org/2000/svg'><path d='M5 7l5 5 5-5z'/></svg>");
-  background-repeat: no-repeat;
-  background-position: right 12px center;
-}
-
-.sort select:focus {
-  outline: none;
-  border-color: #ccd5ae;
-  box-shadow: 0 0 0 3px rgba(44, 80, 70, 0.15);
 }
 
 .sitter-list {
@@ -279,66 +209,26 @@
   font-size: 12px;
 }
 
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: var(--btn-height);
-  padding: 0 var(--btn-padding-x);
-  border: 1px solid transparent;
-  border-radius: var(--btn-radius);
-  font: inherit;
-  font-size: var(--btn-font-size);
-  font-weight: 700;
-  line-height: 1;
-  text-decoration: none;
-  white-space: nowrap;
-  cursor: pointer;
-  transition:
-    background-color 0.2s ease,
-    color 0.2s ease,
-    border-color 0.2s ease,
-    box-shadow 0.2s ease,
-    transform 0.2s ease;
-}
-
-.btn:hover {
-  transform: translateY(-1px);
-}
-
-.btn:focus-visible {
-  outline: 3px solid rgba(204, 213, 174, 0.7);
-  outline-offset: 2px;
-}
-
-.btn-primary {
-  background: #2c3e50;
-  color: #ccd5ae;
-  border-color: #2c3e50;
-}
-
-.btn-primary:hover {
-  background-color: #1f2e3a;
-  border-color: #1f2e3a;
-  box-shadow: var(--shadow-sm);
-}
-
-.btn-ghost {
-  background: rgba(44, 62, 80, 0.08);
-  color: #2c3e50;
-  border-color: rgba(44, 62, 80, 0.12);
-}
-
-.btn-ghost:hover {
-  background: rgba(44, 62, 80, 0.12);
-  box-shadow: var(--shadow-sm);
-}
-
 .filter-actions {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
   margin-top: 8px;
+}
+
+.form-message {
+  margin-top: 10px;
+  font-weight: 600;
+  font-size: 14px;
+  color: #b42318;
+}
+
+.form-message.success {
+  color: #027a48;
+}
+
+.form-message.error {
+  color: #b42318;
 }
 
 .sr-only {
@@ -406,10 +296,6 @@
   grid-column: 1 / -1;
 }
 
-.modal-checks {
-  margin-top: 0;
-}
-
 .empty-state {
   padding: 24px;
   border-radius: 16px;
@@ -418,7 +304,7 @@
   color: #2c3e50;
 }
 
-@media (max-width: 920px) {
+@media (max-width: 1100px) {
   .search-layout {
     grid-template-columns: 1fr;
   }
@@ -426,10 +312,6 @@
   .results-head {
     flex-direction: column;
     align-items: stretch;
-  }
-
-  .results-head-actions {
-    justify-content: flex-start;
   }
 
   .sitter-row {
@@ -475,10 +357,6 @@
 }
 
 @media (max-width: 640px) {
-  .date-row {
-    grid-template-columns: 1fr;
-  }
-
   .modal {
     padding: 16px;
   }

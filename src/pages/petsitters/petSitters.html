@@ -1,3 +1,4 @@
+<!-- Laget av Vilde Hvitstein Fristad -->
 <!doctype html>
 <html lang="no">
   <head>
@@ -8,7 +9,7 @@
       name="description"
       content="Finn trygge hundepassere i ditt nærområde med Potepass."
     />
-    <title>Finn hundepasser - Potepass</title>
+    <title>Potepass - Finn hundepasser</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -52,7 +53,7 @@
             <li><a href="/src/pages/profile/profile.html">Min profil</a></li>
             <li>
               <a href="/src/pages/registration/registration.html"
-                >Mine kjæledyr</a
+                >Mine hunder</a
               >
             </li>
             <li><a href="/src/pages/contact/contact.html">Kontakt oss</a></li>
@@ -79,7 +80,7 @@
         <section class="section center">
           <h1>Finn hundepasser</h1>
           <p>
-            Filtrer etter sted, dato og tilgjengelighet - og finn en passer du
+            Filtrer etter sted, pris og tilgjengelighet - og finn en passer du
             liker.
           </p>
         </section>
@@ -90,7 +91,7 @@
               <div class="card-body">
                 <h2 id="filter-heading">Filter</h2>
 
-                <form class="filter-form" action="#" method="get">
+                <form class="filter-form">
                   <div class="field">
                     <label for="place">Sted</label>
                     <input
@@ -102,37 +103,11 @@
                   </div>
 
                   <div class="field">
-                    <p class="field-title">Dato</p>
-
-                    <div class="date-row">
-                      <div>
-                        <label for="from">Dato fra</label>
-                        <input id="from" type="date" />
-                      </div>
-
-                      <div>
-                        <label for="to">Dato til</label>
-                        <input id="to" type="date" />
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="field">
                     <label for="availability">Tilgjengelighet</label>
-                    <select id="availability">
-                      <option>Alle</option>
-                      <option>Kun ledige</option>
-                      <option>Helg</option>
-                      <option>Hverdager</option>
-                    </select>
-                  </div>
-
-                  <div class="field">
-                    <label for="service">Type pass</label>
-                    <select id="service">
-                      <option>Overnatting</option>
-                      <option>Dagpass</option>
-                      <option>Tur</option>
+                    <select id="availability" name="availability">
+                      <option value="all">Alle</option>
+                      <option value="available">Kun ledige</option>
+                      <option value="unavailable">Ikke ledige</option>
                     </select>
                   </div>
 
@@ -144,7 +119,7 @@
                       type="range"
                       min="100"
                       max="1400"
-                      value="900"
+                      value="1400"
                     />
                     <div class="range-meta">
                       <span>100</span>
@@ -152,25 +127,10 @@
                     </div>
                   </div>
 
-                  <div class="checks">
-                    <label class="check">
-                      <input type="checkbox" />
-                      <span>Passer kan ha egen hund</span>
-                    </label>
-
-                    <label class="check">
-                      <input type="checkbox" />
-                      <span>Passer kan ha barn</span>
-                    </label>
-
-                    <label class="check">
-                      <input type="checkbox" />
-                      <span>Ønsker oppdateringer/bilder</span>
-                    </label>
-                  </div>
-
                   <div class="filter-actions">
-                    <button class="btn btn-primary">Bruk filtre</button>
+                    <button class="btn btn-primary" type="submit">
+                      Bruk filtre
+                    </button>
                     <button class="btn btn-ghost" type="reset">
                       Nullstill
                     </button>
@@ -184,24 +144,18 @@
             <div class="results-head">
               <h2>Resultater</h2>
 
-              <div class="sort">
-                <label class="sr-only" for="sort">Sorter</label>
-
-                <select id="sort" name="sort">
-                  <option>Anbefalt</option>
-                  <option>Pris: lav → høy</option>
-                  <option>Pris: høy → lav</option>
-                  <option>Vurdering</option>
-                </select>
+              <div class="results-actions">
+                <button
+                  id="add-sitter-btn"
+                  class="btn btn-primary"
+                  type="button"
+                >
+                  Legg til passer
+                </button>
               </div>
             </div>
 
-            <div class="results-actions">
-              <button id="add-sitter-btn" class="btn btn-primary" type="button">
-                Legg til passer
-              </button>
-            </div>
-
+            <p id="page-message" class="form-message" aria-live="polite"></p>
             <div id="sitter-list" class="sitter-list">
               <p>Laster hundepassere...</p>
             </div>
@@ -220,15 +174,18 @@
     >
       <div class="modal-content">
         <div class="modal-top">
-          <button type="button" id="close-modal-btn" class="btn btn-ghost">
+          <button
+            type="button"
+            id="close-modal-btn"
+            class="btn btn-ghost"
+            aria-label="Lukk modal"
+          >
             Lukk
           </button>
           <h2 id="modal-title">Legg til / rediger hundepasser</h2>
         </div>
 
         <form id="sitter-form" class="modal-form">
-          <input type="hidden" id="sitter-id" name="sitterId" />
-
           <div class="modal-grid">
             <div class="field">
               <label for="name">Navn</label>
@@ -242,7 +199,14 @@
 
             <div class="field">
               <label for="postalCode">Postnummer</label>
-              <input id="postalCode" name="postalCode" type="text" required />
+              <input
+                id="postalCode"
+                name="postalCode"
+                type="text"
+                required
+                pattern="[0-9]{4}"
+                title="Postnummer må bestå av 4 tall"
+              />
             </div>
 
             <div class="field">
@@ -251,7 +215,7 @@
                 id="pricePerDay"
                 name="pricePerDay"
                 type="number"
-                min="0"
+                min="100"
                 required
               />
             </div>
@@ -292,15 +256,6 @@
               </select>
             </div>
 
-            <div class="field">
-              <label for="serviceType">Type pass</label>
-              <select id="serviceType" name="serviceType">
-                <option value="Overnatting">Overnatting</option>
-                <option value="Dagpass">Dagpass</option>
-                <option value="Tur">Tur</option>
-              </select>
-            </div>
-
             <div class="field field-full">
               <label for="description">Beskrivelse</label>
               <textarea
@@ -312,6 +267,7 @@
             </div>
           </div>
 
+          <p id="form-message" class="form-message" aria-live="polite"></p>
           <div class="filter-actions">
             <button type="button" id="cancel-btn" class="btn btn-ghost">
               Avbryt

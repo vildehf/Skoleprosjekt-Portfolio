@@ -1,78 +1,101 @@
-const API_URL = "http://localhost:3000/api";
-import type {} from "../../ts/types.ts";
+/* Siden laget av Line Nerli Tveite */
 
-/* dette bør i types.ts */
-interface Booking {
-  id: number;
-  userId: number;
-  userDogId: number;
-  petSitterId: number;
-  fromDate: string;
-  toDate: string;
-  message: string;
-  status: string;
-}
+/* 
+Create - Opprett ny booking
+Read - Hent og vis eksisterende bookinger
+Update - Rediger eksisterende booking
+Delete - Slett eksisterende booking
+ */
 
-interface User {
-  id: number;
-  dogs: Dog[];
-}
+import type { Booking, Users, PetSitters } from "../../ts/types.ts";
+import { BASE_URL, API_KEY, getLoggedInUser, login } from "../../ts/api.ts";
 
-interface Dog {
-  id: number;
-  name: string;
-}
-
-interface PetSitter {
-  id: number;
-  name: string;
-  location: string;
-  pricePerDay: number;
-}
-
-/* denne bør i api.ts? */
-function getApiKey(): string {
-  return localStorage.getItem("API_KEY") ?? "";
-}
+type CreateBooking = Omit<Booking, "id" | "created" | "updated">;
 
 let editingBookingId: number | null = null;
-let currentUser: User | null = null;
+let currentUser: Users | null = null;
 
-// ELEMENTER
-const form = document.querySelector(".booking-form");
-const dogSelect = document.getElementById("dog");
-const sitterSelect = document.getElementById("sitter");
+/* Variabler */
+const form = document.querySelector(".booking-form") as HTMLFormElement;
+const dogSelect = document.getElementById("dog") as HTMLSelectElement;
+const sitterSelect = document.getElementById("sitter") as HTMLSelectElement;
 const previousSittersContainer = document.getElementById(
   "previous-sitters-list",
-);
-const bookingsContainer = document.getElementById("bookings-list");
-const confirmation = document.getElementById("booking-confirmation");
+) as HTMLDivElement;
+const bookingsContainer = document.getElementById(
+  "bookings-list",
+) as HTMLDivElement;
+const confirmation = document.getElementById(
+  "booking-confirmation",
+) as HTMLDivElement;
+const loginMessage = document.getElementById("login-message") as HTMLDivElement;
+const loginDialog = document.getElementById("loginDialog") as HTMLDialogElement;
+const openLogin = document.getElementById("openLogin") as HTMLButtonElement;
+const closeLogin = document.getElementById("closeLogin") as HTMLButtonElement;
+const loginForm = document.getElementById("loginForm") as HTMLFormElement;
+const loginEmail = document.getElementById("loginEmail") as HTMLInputElement;
+const loginPassword = document.getElementById(
+  "loginPassword",
+) as HTMLInputElement;
+const loginStatus = document.getElementById(
+  "login-status",
+) as HTMLParagraphElement;
+const logoutBtn = document.getElementById("logout-button") as HTMLButtonElement;
+const calendarBox = document.getElementById("calendar-box") as HTMLDivElement;
+const previousSitters = document.getElementById(
+  "previous-sitters",
+) as HTMLDivElement;
+const bookingsSection = document.getElementById("bookings") as HTMLDivElement;
 
-// DATA MAPS
+/* Oppslagstabeller */
 let dogsMap: Record<number, string> = {};
-let sittersMap: Record<number, PetSitter> = {};
+let sittersMap: Record<number, PetSitters> = {};
 
-// FETCH HELPERS
-/* denne bør i api.ts? */
-async function fetchData(endpoint: string) {
-  const response = await fetch(`${API_URL}/${endpoint}`, {
-    headers: { Authorization: `Bearer ${getApiKey()}` },
+/* API-kall */
+async function fetchData<T>(endpoint: string): Promise<T> {
+  const response = await fetch(`${BASE_URL}/${endpoint}`, {
+    headers: { Authorization: `Bearer ${API_KEY}` },
   });
+
+  if (!response.ok) {
+    throw new Error("Noe gikk galt");
+  }
+
   return response.json();
 }
 
-async function loadCurrentUser() {
-  const users = await fetchData("users");
-  console.log("users:", users);
-  currentUser = users[0];
-  console.log("currentUser:", currentUser);
+/* Hent innlogget bruker */
+async function loadCurrentUser(): Promise<void> {
+  currentUser = await getLoggedInUser();
+
+  if (!currentUser) {
+    loginMessage.classList.remove("hidden");
+
+    form.style.display = "none";
+    calendarBox.style.display = "none";
+    previousSitters.style.display = "none";
+    bookingsSection.style.display = "none";
+
+    logoutBtn.classList.add("hidden");
+  } else {
+    loginMessage.classList.add("hidden");
+
+    form.style.display = "";
+    calendarBox.style.display = "";
+    previousSitters.style.display = "";
+    bookingsSection.style.display = "";
+
+    logoutBtn.classList.remove("hidden");
+  }
 }
 
+/* Formatere datoer */
 function formatDate(dateString: string) {
   const date = new Date(dateString);
   return date.toLocaleDateString("no-NO");
 }
 
+/* Reset skjema */
 function resetForm(): void {
   form.reset();
   editingBookingId = null;
@@ -80,7 +103,8 @@ function resetForm(): void {
   button.textContent = "Book";
 }
 
-function showMessage(message) {
+/* Vis bekreftelsesmelding */
+function showMessage(message: string): void {
   confirmation.textContent = message;
   confirmation.style.display = "block";
 
@@ -89,31 +113,41 @@ function showMessage(message) {
   }, 3000);
 }
 
+/* Rediger booking */
 function startEdit(booking: Booking) {
   editingBookingId = booking.id;
 
-  document.getElementById("start-date").value = booking.fromDate;
-  document.getElementById("end-date").value = booking.toDate;
-  dogSelect.value = booking.userDogId;
-  sitterSelect.value = booking.petSitterId;
-  document.getElementById("message").value = booking.message;
-  form.querySelector("button").textContent = "Oppdater booking";
+  (document.getElementById("start-date") as HTMLInputElement).value =
+    booking.fromDate ?? "";
+  (document.getElementById("end-date") as HTMLInputElement).value =
+    booking.toDate ?? "";
+  dogSelect.value = String(booking.userDogId);
+  sitterSelect.value = String(booking.petSitterId);
+  (document.getElementById("message") as HTMLTextAreaElement).value =
+    booking.message;
+  const button = form.querySelector("button") as HTMLButtonElement;
+  button.textContent = "Oppdater booking";
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
-async function updateBooking(id, data) {
-  await fetch(`${API_URL}/bookings/${id}`, {
+/* Oppdater booking - PUT */
+async function updateBooking(id: number, data: CreateBooking) {
+  const response = await fetch(`${BASE_URL}/bookings/${id}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${getApiKey()}`,
+      Authorization: `Bearer ${API_KEY}`,
     },
     body: JSON.stringify(data),
   });
+
+  if (!response.ok) {
+    throw new Error("Noe gikk galt ved oppdatering av booking");
+  }
 }
 
-// LOAD DOGS
-async function loadDogs() {
+/* Hent hunder - READ */
+async function loadDogs(): Promise<void> {
   if (!currentUser) return;
 
   dogSelect.innerHTML = `<option value="">Velg hund</option>`;
@@ -122,37 +156,45 @@ async function loadDogs() {
     dogsMap[dog.id] = dog.name;
 
     const option = document.createElement("option");
-    option.value = dog.id;
+    option.value = String(dog.id);
     option.textContent = dog.name;
 
     dogSelect.appendChild(option);
   });
 }
 
-// LOAD SITTERS
-async function loadSitters() {
-  const sitters = await fetchData("petsitters");
+/* Hent hundepassere - READ */
+async function loadSitters(): Promise<void> {
+  const sitters = await fetchData<PetSitters[]>("petsitters");
 
   sitters.forEach((sitter) => {
     sittersMap[sitter.id] = sitter;
 
     const option = document.createElement("option");
-    option.value = sitter.id;
+    option.value = String(sitter.id);
     option.textContent = sitter.name;
 
     sitterSelect.appendChild(option);
   });
 }
 
-// LOAD BOOKINGS
-function renderBooking(booking: Booking) {
+const statusMap: Record<string, string> = {
+  pending: "Venter",
+  confirmed: "Godkjent",
+  completed: "Fullført",
+  cancelled: "Avlyst",
+};
+
+/* Vis booking-kort */
+function renderBooking(booking: Booking): string {
   return `<article class="booking-card">
       <div class="booking-info">
-        <p><strong>Periode:</strong> ${formatDate(booking.fromDate)} - ${formatDate(booking.toDate)}</p>
-        <p><strong>Hund:</strong> ${dogsMap[booking.userDogId] || "Ukjent hund"}</p>
-        <p><strong>Hundepasser:</strong> ${sittersMap[booking.petSitterId]?.name || "Ukjent passer"}</p>
+        <p><strong>Periode:</strong> ${formatDate(booking.fromDate ?? "")} - ${formatDate(booking.toDate ?? "")}</p>
+        <p><strong>Hund:</strong> ${dogsMap[booking.userDogId] ?? "Ukjent hund"}</p>
+        <p><strong>Hundepasser:</strong> ${sittersMap[booking.petSitterId]?.name ?? "Ukjent passer"}</p>
+      <p><strong>Status:</strong> ${statusMap[booking.status] ?? booking.status}</p>
       </div>
-      <p><strong>Status:</strong> ${booking.status === "pending" ? "Venter" : booking.status}</p>
+      
 
       <div class="actions">
     <button class="btn btn-ghost edit-btn" data-id="${booking.id}">Rediger</button>
@@ -162,45 +204,54 @@ function renderBooking(booking: Booking) {
     `;
 }
 
-async function loadBookings() {
-  if (!currentUser) return;
-  const bookings = await fetchData("bookings");
+/* Hent bookinger - READ */
+async function loadBookings(): Promise<void> {
+  const user = currentUser;
+  if (!user) return;
+  const bookings = await fetchData<Booking[]>("bookings");
 
   const userBookings = bookings.filter(
-    (b) => Number(b.userId) === Number(currentUser.id),
+    (b) => Number(b.userId) === Number(user.id),
   );
 
   bookingsContainer.innerHTML = userBookings.map(renderBooking).join("");
 
-  bookingsContainer.querySelectorAll(".edit-btn").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const id = btn.dataset.id;
-      const booking = userBookings.find((b) => b.id == id);
-      startEdit(booking);
+  bookingsContainer
+    .querySelectorAll<HTMLButtonElement>(".edit-btn")
+    .forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const id = btn.dataset.id;
+        if (!id) return;
+        const booking = userBookings.find((b) => String(b.id) === id);
+        if (!booking) return;
+        startEdit(booking);
+      });
     });
-  });
 
-  bookingsContainer.querySelectorAll(".delete-btn").forEach((btn) => {
-    btn.addEventListener("click", async () => {
-      const id = btn.dataset.id;
-      if (confirm("Er du sikker på at du vil slette denne bookingen?")) {
-        await deleteBooking(id);
-      }
+  bookingsContainer
+    .querySelectorAll<HTMLButtonElement>(".delete-btn")
+    .forEach((btn) => {
+      btn.addEventListener("click", async () => {
+        const id = btn.dataset.id;
+        if (!id) return;
+        if (confirm("Er du sikker på at du vil slette denne bookingen?")) {
+          await deleteBooking(Number(id));
+        }
+      });
     });
-  });
 }
 
-async function loadPreviousSitters() {
+/* Hent tidligere hundepassere - READ */
+async function loadPreviousSitters(): Promise<void> {
   if (!currentUser) return;
 
-  const bookings = await fetchData("bookings");
-  previousSittersContainer.innerHTML = "";
+  const bookings = await fetchData<Booking[]>("bookings");
 
-  const userBookings = bookings.filter(
-    (b) => Number(b.userId) === Number(currentUser.id),
-  );
+  const userBookings = bookings.filter((b) => b.userId === currentUser!.id);
 
   const sitterIds = [...new Set(userBookings.map((b) => b.petSitterId))];
+
+  previousSittersContainer.innerHTML = "";
 
   if (sitterIds.length === 0) {
     previousSittersContainer.innerHTML =
@@ -210,42 +261,52 @@ async function loadPreviousSitters() {
 
   sitterIds.forEach((id) => {
     const card = document.createElement("div");
-    card.classList.add("booking-card");
+    card.classList.add("previous-sitter-card");
 
-    card.innerHTML = `<div class="booking-info">
-    <p><strong>Hundepasser:</strong>${sittersMap[id]?.name || "Ukjent"}</p></div>
+    card.innerHTML = `
+         <p><strong>${sittersMap[id]?.name || "Ukjent"}</strong></p>
+         <button class="btn btn-ghost book-again">Book igjen</button>
+`;
 
-    <button class="btn btn-primary book-again">Book igjen</button>`;
+    card
+      .querySelector<HTMLButtonElement>(".book-again")
+      ?.addEventListener("click", () => {
+        sitterSelect.value = String(id);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
 
-    const button = card.querySelector(".book-again");
-    button.addEventListener("click", () => {
-      sitterSelect.value = id;
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    });
     previousSittersContainer.appendChild(card);
   });
 }
 
-// CREATE BOOKINGS
-
-async function createBooking(data) {
-  await fetch(`${API_URL}/bookings`, {
+/* Opprett booking - POST */
+async function createBooking(data: CreateBooking) {
+  const response = await fetch(`${BASE_URL}/bookings`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${getApiKey()}`,
+      Authorization: `Bearer ${API_KEY}`,
     },
     body: JSON.stringify(data),
   });
+
+  if (!response.ok) {
+    throw new Error("Noe gikk galt ved oppretting av booking");
+  }
 }
 
-async function deleteBooking(id) {
-  await fetch(`${API_URL}/bookings/${id}`, {
+/* Slett booking - DELETE */
+async function deleteBooking(id: number): Promise<void> {
+  const response = await fetch(`${BASE_URL}/bookings/${id}`, {
     method: "DELETE",
     headers: {
-      Authorization: `Bearer ${getApiKey()}`,
+      Authorization: `Bearer ${API_KEY}`,
     },
   });
+
+  if (!response.ok) {
+    throw new Error("Noe gikk galt ved sletting av booking");
+  }
 
   await loadBookings();
   await loadPreviousSitters();
@@ -255,7 +316,7 @@ async function deleteBooking(id) {
   resetForm();
 }
 
-// FORM SUBMIT
+/* Skjemainnsending */
 form.addEventListener("submit", async function (event) {
   event.preventDefault();
 
@@ -266,27 +327,34 @@ form.addEventListener("submit", async function (event) {
 
   const submitBtn = form.querySelector("button") as HTMLButtonElement;
   submitBtn.disabled = true;
+  submitBtn.textContent = editingBookingId ? "Oppdaterer..." : "Sender...";
 
-  const startDate = document.getElementById("start-date").value;
-  const endDate = document.getElementById("end-date").value;
+  const startDate = (document.getElementById("start-date") as HTMLInputElement)
+    .value;
+  const endDate = (document.getElementById("end-date") as HTMLInputElement)
+    .value;
   const dog = dogSelect.value;
   const sitter = sitterSelect.value;
-  const message = document.getElementById("message").value;
+  const message = (document.getElementById("message") as HTMLTextAreaElement)
+    .value;
 
   if (!startDate || !endDate) {
     alert("Velg både fra- og til-dato");
+    submitBtn.textContent = editingBookingId ? "Oppdater booking" : "Book";
     submitBtn.disabled = false;
     return;
   }
 
   if (endDate < startDate) {
     alert("Til-dato kan ikke være før fra-dato");
+    submitBtn.textContent = editingBookingId ? "Oppdater booking" : "Book";
     submitBtn.disabled = false;
     return;
   }
 
   if (!dog || !sitter) {
     alert("Velg hund og hundepasser");
+    submitBtn.textContent = editingBookingId ? "Oppdater booking" : "Book";
     submitBtn.disabled = false;
     return;
   }
@@ -303,28 +371,35 @@ form.addEventListener("submit", async function (event) {
 
   const isEditing = editingBookingId !== null;
 
-  if (isEditing) {
-    await updateBooking(editingBookingId, bookingData);
-    editingBookingId = null;
-  } else {
-    await createBooking(bookingData);
+  try {
+    if (editingBookingId !== null) {
+      await updateBooking(editingBookingId, bookingData);
+      editingBookingId = null;
+    } else {
+      await createBooking(bookingData);
+    }
+
+    await loadBookings();
+    await loadPreviousSitters();
+
+    showMessage(
+      isEditing ? "Bookingen din er oppdatert" : "Bookingen din er sendt! 🐾",
+    );
+
+    resetForm();
+  } catch (error) {
+    console.error("feil ved booking:", error);
+    alert("Noe gikk galt, prøv igjen senere");
   }
 
-  await loadBookings();
-  await loadPreviousSitters();
-  showMessage(
-    isEditing ? "Bookingen din er oppdatert" : "Bookingen din er sendt! 🐾",
-  );
-  resetForm();
+  submitBtn.textContent = "Book";
   submitBtn.disabled = false;
 });
 
-// INIT
-
-async function init() {
+/* Init */
+async function init(): Promise<void> {
   try {
     await loadCurrentUser();
-    console.log("etter loadCurrentUser:", currentUser);
     await loadDogs();
     await loadSitters();
     await loadBookings();
@@ -333,5 +408,68 @@ async function init() {
     console.error("feil ved init:", error);
   }
 }
+
+if (openLogin && closeLogin && loginDialog) {
+  openLogin.addEventListener("click", () => {
+    loginDialog.showModal();
+  });
+
+  closeLogin.addEventListener("click", () => {
+    loginDialog.close();
+  });
+}
+
+/* Logg inn */
+loginForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  const loginBtn = loginForm.querySelector(".auth-submit") as HTMLButtonElement;
+  loginBtn.disabled = true;
+  loginBtn.textContent = "Logger inn...";
+
+  try {
+    await login(loginEmail.value, loginPassword.value);
+
+    loginDialog.close();
+
+    await loadCurrentUser();
+    await loadDogs();
+    await loadBookings();
+    await loadPreviousSitters();
+
+    loginBtn.disabled = false;
+    loginBtn.textContent = "Logg inn";
+
+    loginStatus.textContent = "Du er nå logget inn! 🐶";
+    loginStatus.classList.remove("hidden");
+
+    setTimeout(() => {
+      loginStatus.classList.add("hidden");
+    }, 6000);
+  } catch (error) {
+    console.error("feil ved login:", error);
+    alert("Feil e-post eller passord");
+    loginBtn.disabled = false;
+    loginBtn.textContent = "Logg inn";
+  }
+});
+
+/* Logg ut */
+logoutBtn.addEventListener("click", () => {
+  localStorage.removeItem("LoggedinUser");
+  localStorage.removeItem("API_KEY");
+  loadCurrentUser();
+  loginStatus.textContent = "Du er nå logget ut.";
+  loginStatus.classList.remove("hidden");
+
+  const openLoginBtn = document.getElementById(
+    "openLogin",
+  ) as HTMLButtonElement;
+  openLoginBtn.focus();
+
+  setTimeout(() => {
+    loginStatus.classList.add("hidden");
+  }, 4000);
+});
 
 document.addEventListener("DOMContentLoaded", init);

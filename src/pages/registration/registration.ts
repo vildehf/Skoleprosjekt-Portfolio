@@ -1,22 +1,36 @@
-import { BASE_URL, API_KEY } from "../../ts/api.ts";
-import { login } from "../../ts/api.ts";
-import type { Dog, Users } from "../../ts/types.ts";
+/* Siden av laget av Silje Elvik */
+
+/* 
+Opprett hund - Create
+Endre hund - Update
+Hent hund/hunder fra Users - Read
+Slett hund - Delete 
+*/
+  
+
+import { login , getUsers, updateUser } from "../../ts/api.ts";
+import type { Dog, Users, Allergy } from "../../ts/types.ts";
 
 let dogs: Dog[] = [];
 let editingId: number | null = null;
+let currentUser: Users | null = null;
+let dogToDelete: number | null = null;
+
 
 /* Variabler */
 
 const loginSection = document.getElementById("login-section") as HTMLElement;
+const logoutButton = document.getElementById("logout-button") as HTMLButtonElement;
 const loginForm = document.getElementById("login-form") as HTMLFormElement;
 const statusMessage = document.getElementById("status-message") as HTMLParagraphElement;
 const form = document.getElementById("pet-form") as HTMLFormElement;
+const petsContainer = document.getElementById("pets-container") as HTMLDivElement;
 
 const nameInput = document.getElementById("pet-name") as HTMLInputElement;
 const weightInput = document.getElementById("pet-weight") as HTMLInputElement;
 const ageInput = document.getElementById("pet-age-years") as HTMLInputElement;
 const breedInput = document.getElementById("pet-breed") as HTMLInputElement;
-const allergyInput = document.getElementById("allergy") as HTMLInputElement;
+const allergyInput = document.getElementById("allergy") as HTMLSelectElement;
 
 const nameError = document.getElementById("name-error") as HTMLSpanElement;
 const weightError = document.getElementById("weight-error") as HTMLSpanElement;
@@ -25,10 +39,21 @@ const breedError = document.getElementById("breed-error") as HTMLSpanElement;
 const allergyError = document.getElementById("allergy-error") as HTMLSpanElement;
 
 const formTitle = document.getElementById("form-title") as HTMLHeadingElement;
-const submitButton = document.querySelector('button[type="submit"]') as HTMLButtonElement;
+const submitButton = document.getElementById("submit-button") as HTMLButtonElement;
 const deleteButton = document.getElementById("delete-button") as HTMLButtonElement;
 
+const petsLoading = document.getElementById("pets-loading") as HTMLDivElement;
+
+const deletePopup = document.getElementById("delete-popup") as HTMLDivElement;
+const deletePopupText = document.getElementById("delete-popup-text") as HTMLParagraphElement;
+const cancelDeleteButton = document.getElementById("cancel-delete") as HTMLButtonElement;
+const confirmDeleteButton = document.getElementById("confirm-delete") as HTMLButtonElement;
+
 /* Logg inn funksjon*/
+
+function delay(ms: number): Promise<void> {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 function showStatus(message: string, isError = false): void {
   statusMessage.textContent = message;
@@ -45,17 +70,50 @@ loginForm.addEventListener("submit", async (e) => {
   try {
     const data = await login(email, password);
    localStorage.setItem("API_KEY", data.API_KEY);
+   showStatus("Logger inn...");
+
+   await delay(1000);
+
+    
+    await loadUserDogs();
     showStatus("Du er nå logget inn");
 
-    setTimeout(() => {
-      loginSection.classList.add("hidden");
-    }, 2000);
+   setTimeout(() => {
+  loginSection.classList.add("hidden");
+  logoutButton.classList.remove("hidden");
+}, 2000);
   } catch (error) {
     showStatus((error as Error).message, true);
   }
 });
 
-function resetErrors() {
+/* Logg ut funksjon */
+
+logoutButton.addEventListener("click", () => {
+  localStorage.removeItem("LoggedinUser");
+  localStorage.removeItem("API_KEY");
+
+  dogs = [];
+  currentUser = null;
+
+  renderDogs([]);
+  resetForm();
+  loginForm.reset(); 
+
+  statusMessage.textContent = "";
+  statusMessage.classList.add("hidden");
+  statusMessage.classList.remove("success", "error");
+
+  loginSection.classList.remove("hidden");
+  logoutButton.classList.add("hidden");
+
+ 
+  
+});
+
+/* Reset form */
+
+function resetErrors(): void {
   nameError.textContent = "";
   weightError.textContent = "";
   ageError.textContent = "";
@@ -69,7 +127,7 @@ function resetErrors() {
   allergyError.classList.remove("show");
 }
 
-function resetForm() {
+function resetForm(): void {
   form.reset();
   editingId = null;
   formTitle.textContent = "Fortell oss om hunden din";
@@ -77,23 +135,38 @@ function resetForm() {
   resetErrors();
 }
 
-function validateForm() {
+/* Validerings funksjon */
+
+function validateForm(): boolean {
  
   let valid = true;
   resetErrors();
 
   if (!nameInput.reportValidity() || nameInput.value.trim().length < 2) 
-  if (!weightInput.reportValidity() || parseFloat(weightInput.value) < 1) 
-  if (!ageInput.reportValidity() || parseInt(ageInput.value) < 1)
-  if (!breedInput.reportValidity() || breedInput.value.trim().length < 2) 
-  if (!nameInput.reportValidity() || nameInput.value.trim().length < 2) 
-  if (!allergyInput.reportValidity() || allergyInput.value.trim().length < 2) 
+    {
+    valid = false;
+  }
+  if (!weightInput.reportValidity() || parseFloat(weightInput.value) < 1) {
+    valid = false;
+  }
+    
+  if (!ageInput.reportValidity() || parseInt(ageInput.value) < 1) {
+    valid = false;
+  }
+  if (!breedInput.reportValidity() || breedInput.value.trim().length < 2) {
+    valid = false;
+  }
+
+  if (!allergyInput.reportValidity() || allergyInput.value.trim().length < 2) {
+    valid = false;
+  }
 
   return valid;
 }
 
+/* Lagre hund */ 
 
-form.addEventListener("submit", function (event) {
+form.addEventListener("submit", async function (event) {
   event.preventDefault();
 
   if (!validateForm()) return;
@@ -102,24 +175,56 @@ form.addEventListener("submit", function (event) {
   const weight = parseFloat(weightInput.value);
   const age = parseInt(ageInput.value);
   const breed = breedInput.value.trim();
-  const allergy = allergyInput.value.trim();
-  const selectedGender = document.querySelector('input[name="gender"]:checked') as HTMLInputElement | null;
+  const allergy = allergyInput.value as Allergy;
+
+  const selectedGender = document.querySelector(
+    'input[name="gender"]:checked') as HTMLInputElement | null;
   const gender = selectedGender ? (selectedGender.value as "Him" | "Her") : "Him";
 
+  if (editingId !== null) {
+  const dogToEdit = dogs.find((dog) => dog.id === editingId);
 
-  dogs.push(Dog);
+  if (dogToEdit) {
+    dogToEdit.name = name;
+    dogToEdit.weight = weight;
+    dogToEdit.age = age;
+    dogToEdit.breed = breed;
+    dogToEdit.gender = gender;
+    dogToEdit.allergies = [allergy];
+  }
+} else {
+
+  const newId = dogs.length > 0 ? Math.max(...dogs.map((dog) => dog.id)) + 1 : 1;
+
+  const newDog: Dog = {
+    id: newId,
+    name: name,
+    weight: weight,
+    age: age,
+    breed: breed,
+    gender: gender,
+    allergies: [allergy],
+  };
+
+  dogs.push(newDog);
+}
+    if (!currentUser) return;
+
+  currentUser.dogs = dogs;
+  await updateUser(currentUser);
+
   renderDogs(dogs);
   console.log("Hund lagret:", dogs);
   resetForm();
 });
 
-function renderDogs(dogsList: Dog[]) {
-  const container = document.getElementById("pets-container");
+/* Vis hunder */ 
 
-  if (!container) return; "";
+function renderDogs(dogsList: Dog[]): void {
+  petsContainer.innerHTML = "";
 
   if (dogsList.length === 0) {
-    container.innerHTML = `<p class="empty-state">Ingen hunder registrert ennå.</p>`;
+    petsContainer.innerHTML = `<p class="empty-state">Ingen hunder registrert ennå.</p>`;
     return;
   }
 
@@ -138,49 +243,122 @@ card.innerHTML = `
       <p class="pet-meta">Allergi: ${dog.allergies[0]}</p>
     </div>
 
-    ${
-      dog.image
-        ? `
-      <div class="pet-card-image">
-        <img src="${dog.image}" alt="Bilde av ${dog.name}">
-      </div>
-    `
-        : ""
-    }
-
     <div class="pet-card-actions">
-      <button class="btn btn-ghost edit-btn" data-id="${dog.id}">Rediger</button>
+      <button class="btn edit-btn" data-id="${dog.id}">Rediger</button>
       <button class="btn btn-ghost delete-btn" data-id="${dog.id}">Slett</button>
     </div>
   </div>
 `;
 
-    container.appendChild(card);
-  });
-} 
-async function loadUserDogs() {
-  const loggedInEmail = localStorage.getItem("LoggedinUser");
+    petsContainer.appendChild(card);
 
-  if (!loggedInEmail) {
-    return;
+    const editButton = card.querySelector(".edit-btn") as HTMLButtonElement;
+    const deleteCardButton = card.querySelector(".delete-btn") as HTMLButtonElement;
+
+    editButton.addEventListener("click", () => {
+      editingId = dog.id;
+      
+      nameInput.value = dog.name;
+      weightInput.value = dog.weight.toString();
+      ageInput.value = dog.age.toString();
+      breedInput.value = dog.breed;
+      allergyInput.value = dog.allergies[0];
+      
+      const genderInput = document.querySelector(
+        `input[name="gender"][value="${dog.gender}"]`
+      ) as HTMLInputElement | null;
+    
+      if (genderInput) {
+        genderInput.checked = true;
+      }
+    
+      formTitle.textContent = "Endre informasjon om hunden";
+      submitButton.textContent = "Oppdater opplysninger";
+    });
+
+    deleteCardButton.addEventListener("click", () => {
+      dogToDelete = dog.id;
+
+      deletePopupText.textContent =
+        `Er du sikker på at du ønsker å slette ${dog.name}?`;
+
+      deletePopup.classList.remove("hidden");
+})})}; 
+
+/* Hent hunder */ 
+
+
+async function loadUserDogs(): Promise<void> {
+  setLoading(true);
+
+  try {
+    await delay(2000);
+
+    const users = await getUsers();
+    const loggedInEmail = localStorage.getItem("LoggedinUser");
+
+    currentUser = users.find((user) => user.email === loggedInEmail) ?? null;
+
+    if (!currentUser) {
+      throw new Error("Fant ikke innlogget bruker");
+    }
+
+    dogs = currentUser.dogs ?? [];
+    renderDogs(dogs);
+  } catch (error) {
+    console.error(error);
+    statusMessage.textContent = "Kunne ikke laste hundene dine.";
+  } finally {
+    setLoading(false);
   }
-
-  const response = await fetch(`${BASE_URL}/users`, {
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${API_KEY}`,
-    },
-  });
-  const data = await response.json();
-
-  const currentUser = data.users.find((user: Users) => user.email === loggedInEmail);
-
-  if (!currentUser) {
-    return;
-  }
-
-  dogs = currentUser.dogs;
-  renderDogs(dogs);
 }
 
-loadUserDogs();
+cancelDeleteButton.addEventListener("click", () => {
+  deletePopup.classList.add("hidden");
+  dogToDelete = null;
+});
+
+confirmDeleteButton.addEventListener("click", async () => {
+  if (dogToDelete === null) return;
+
+  const deletedDog = dogs.find((dog) => dog.id === dogToDelete);
+
+  dogs = dogs.filter((dog) => dog.id !== dogToDelete);
+
+  if (!currentUser) return;
+
+  currentUser.dogs = dogs;
+  await updateUser(currentUser);
+
+  renderDogs(dogs);
+  resetForm();
+
+  deletePopup.classList.add("hidden");
+
+  showStatus(`${deletedDog?.name ?? "Hunden"} ble slettet.`);
+
+  dogToDelete = null;
+});
+
+/* Slett knapp */ 
+
+deleteButton.addEventListener("click", resetForm);
+
+if (localStorage.getItem("LoggedinUser")) {
+  loginSection.classList.add("hidden");
+  logoutButton.classList.remove("hidden");
+
+  await loadUserDogs();
+}
+
+/* Loading state */ 
+
+function setLoading(isLoading: boolean): void {
+  if (isLoading) {
+    petsLoading.classList.remove("hidden");
+    petsContainer.classList.add("hidden");
+  } else {
+    petsLoading.classList.add("hidden");
+    petsContainer.classList.remove("hidden");
+  }
+}
