@@ -1,4 +1,4 @@
-// Siden er laget av Vilde Hvitstein
+// Siden er laget av Vilde Hvitstein Fristad
 // Denne filen håndterer CRUD-funksjonalitet (Create, Read, Update, Delete) for hundepassere.
 // Data hentes fra et API og vises som kort i en liste. Brukeren kan legge til, redigere og slette
 
@@ -7,7 +7,7 @@ import { BASE_URL, API_KEY } from "../../ts/api.ts";
 
 const PET_SITTERS_URL = `${BASE_URL}/petsitters`;
 
-// hundepassere via et modal-skjema. Alt oppdateres dynamisk uten side reload.
+// DOM-elementer
 const addSitterBtn = document.getElementById("add-sitter-btn");
 const closeModalBtn = document.getElementById("close-modal-btn");
 const cancelBtn = document.getElementById("cancel-btn");
@@ -76,6 +76,7 @@ async function loadPetSitters() {
   }
 }
 
+// Render hundepasser-kort
 function renderPetSitters(petSitters: PetSitters[]) {
   if (!sitterList) return;
 
@@ -170,6 +171,7 @@ function renderPetSitters(petSitters: PetSitters[]) {
   });
 }
 
+// Filtrering
 function applyFilters(): void {
   const place = (document.getElementById("place") as HTMLInputElement).value
     .toLowerCase()
