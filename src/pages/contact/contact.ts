@@ -1,5 +1,71 @@
-import { BASE_URL, API_KEY } from "../../ts/api.ts";
+/*JAKOB TORGAU*/
+
+import {
+  createMessage,
+  getMessages,
+  editMessage,
+  deleteMessage,
+} from "../../ts/api.ts";
 import { login } from "../../ts/api.ts";
+import type { Message } from "../../ts/types.ts";
+
+const loginSection = document.getElementById("login-section") as HTMLElement;
+const loginForm = document.getElementById("login-form") as HTMLFormElement;
+const statusMessage = document.getElementById(
+  "status-message",
+) as HTMLParagraphElement;
+const formStatusMessage = document.getElementById(
+  "form-status-message",
+) as HTMLParagraphElement;
+const contactStatusMessage = document.getElementById(
+  "contact-status-message",
+) as HTMLParagraphElement;
+
+function showStatus(message: string, isError = false): void {
+  statusMessage.textContent = message;
+  statusMessage.classList.remove("hidden", "error", "success");
+  statusMessage.classList.add(isError ? "error" : "success");
+}
+
+function showFormStatus(message: string, isError = false): void {
+  formStatusMessage.textContent = message;
+  formStatusMessage.classList.remove("hidden", "error", "success");
+  formStatusMessage.classList.add(isError ? "error" : "success");
+}
+
+function showContactStatus(message: string, isError = false): void {
+  contactStatusMessage.textContent = message;
+  contactStatusMessage.classList.remove("hidden", "error", "success");
+  contactStatusMessage.classList.add(isError ? "error" : "success");
+}
+
+const topicLabels: Record<string, string> = {
+  general: "Generelt Spørsmål",
+  booking: "Om bestilling",
+  payment: "Om betaling",
+  account: "Om bruker",
+  other: "Annet",
+};
+
+loginForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const email = (document.getElementById("email") as HTMLInputElement).value;
+  const password = (document.getElementById("password") as HTMLInputElement)
+    .value;
+
+  try {
+    const data = await login(email, password);
+    localStorage.setItem("API_KEY", data.API_KEY);
+    showStatus("Du er nå logget inn");
+
+    setTimeout(() => {
+      loginSection.classList.add("hidden");
+    }, 2000);
+  } catch (error) {
+    showStatus((error as Error).message, true);
+  }
+});
 
 const style = document.createElement("style");
 style.textContent = `
@@ -33,3 +99,155 @@ document.querySelectorAll("details").forEach((details) => {
     }
   });
 });
+
+/*Full CRUD funksjonalitet*/
+
+const contactList = document.getElementById("contact-list") as HTMLUListElement;
+
+/*CREATE*/
+
+const contactForm = document.getElementById("contact-form") as HTMLFormElement;
+const topicSelect = document.getElementById("subject") as HTMLSelectElement;
+
+contactForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const topic = topicSelect.value;
+  const messageText = (
+    document.getElementById("message") as HTMLTextAreaElement
+  ).value.trim();
+
+  if (!topic || !messageText) {
+    showFormStatus("Vennligst fyll ut alle feltene", true);
+    return;
+  }
+
+  const storedUser = localStorage.getItem("LoggedinUser");
+  if (!storedUser) {
+    showFormStatus("Du må være logget inn for å sende en melding", true);
+    return;
+  }
+
+  const userId = Number(localStorage.getItem("LoggedinUserID"));
+  if (!userId) {
+    showStatus("Kunne ikke finne denne brukeren", true);
+    return;
+  }
+
+  try {
+    await createMessage(topic, userId, messageText);
+    showFormStatus("Melding sendt!");
+    contactForm.reset();
+    await loadMessages();
+  } catch (error) {
+    showFormStatus((error as Error).message, true);
+  }
+});
+
+/*READ*/
+
+function renderMessages(messages: Message[]): void {
+  if (messages.length === 0) {
+    contactList.innerHTML =
+      '<li class="empty"> Ingen kontaktformer enda, legg til en ved å benyte skjemaet over...</li>';
+    return;
+  }
+
+  contactList.innerHTML = messages
+    .map(
+      (m) => `
+    <li class="contact-item">
+      <h2>${topicLabels[m.topic] ?? m.topic}</h2>
+      <h3>Bruker ID: ${m.user_id}</h3>
+      <p>${m.message}</p>
+      <button class="edit-btn" data-id="${m.id}">Rediger</button>
+      <button class="delete-btn" data-id="${m.id}">Slett</button>
+    </li>
+  `,
+    )
+    .join("");
+
+  /*UPDATE og DELETE*/
+  document.querySelectorAll(".edit-btn").forEach((btn) => {
+    btn.addEventListener("click", async (e) => {
+      const id = Number((e.target as HTMLButtonElement).dataset.id);
+
+      const message = messages.find((localMessage) => localMessage.id === id);
+      if (!message) return;
+
+      const li = (e.target as HTMLButtonElement).closest("li") as HTMLElement;
+
+      li.innerHTML = `
+      <div class="edit-form">
+        <label>Emne:</label>
+        <input type="text" class="edit-topic" value="${message.topic}" />
+        <label>Melding:</label>
+        <textarea class="edit-message">${message.message}</textarea>
+        <div class="edit-actions">
+          <button class="save-btn" data-id="${message.id}">Lagre</button>
+          <button class="cancel-btn">Avbryt</button>
+        </div>
+      </div>
+      `;
+
+      li.querySelector(".save-btn")?.addEventListener("click", async () => {
+        const updatedTopic = (
+          li.querySelector(".edit-topic") as HTMLInputElement
+        ).value.trim();
+        const updatedMessage = (
+          li.querySelector(".edit-message") as HTMLTextAreaElement
+        ).value.trim();
+
+        if (!updatedTopic || !updatedMessage) {
+          showContactStatus("Feltene kan ikke være tomme", true);
+          return;
+        }
+
+        const editedMessage = {
+          ...message,
+          topic: updatedTopic,
+          message: updatedMessage,
+        };
+
+        try {
+          await editMessage(editedMessage);
+          showContactStatus("Kontakt oppdatert");
+          await loadMessages();
+        } catch (error) {
+          showContactStatus((error as Error).message, true);
+        }
+      });
+
+      li.querySelector(".cancel-btn")?.addEventListener("click", async () => {
+        await loadMessages();
+      });
+    });
+  });
+
+  document.querySelectorAll(".delete-btn").forEach((btn) => {
+    btn.addEventListener("click", async (e) => {
+      const id = Number((e.target as HTMLButtonElement).dataset.id);
+      const confirmed = confirm("Vil du slette denne kontakten?");
+      if (!confirmed) return;
+
+      try {
+        await deleteMessage(id);
+        showContactStatus("Kontakt slettet");
+        await loadMessages();
+      } catch (error) {
+        showContactStatus("Feil ved sletting av kontakt", true);
+      }
+    });
+  });
+}
+
+async function loadMessages(): Promise<void> {
+  try {
+    getMessages().then((messages) => {
+      renderMessages(messages);
+    });
+  } catch (error) {
+    console.error("Feil ved innlastning av kontakter:", error);
+  }
+}
+
+loadMessages();

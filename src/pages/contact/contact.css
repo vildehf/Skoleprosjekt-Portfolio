@@ -1,3 +1,5 @@
+/*JAKOB TORGAU*/
+
 .grid-container {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
@@ -7,6 +9,52 @@
   grid-column-start: 2;
   grid-column-end: 4;
   font-size: medium;
+}
+
+.hidden {
+  display: none !important;
+}
+
+#status-message {
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+
+#status-message.success {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+#status-message.error {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.login-section {
+  font: inherit;
+  font-size: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  max-width: 20rem;
+  color: var(--primary-bg-color);
+  padding: 10px;
+  background: #eee;
+  border-radius: 10px;
+}
+
+#login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.login-section input {
+  font: inherit;
+  width: 100%;
+  padding: 0.2rem;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
 }
 
 #faq-heading {
@@ -96,44 +144,107 @@ details p {
 }
 
 .contact-container {
-  background-color: rgb(221, 221, 221);
+  background-color: #eee;
   padding: 2.5rem;
 }
 
 .contact-form {
-  display: flex;
+  display: grid;
   flex-direction: column;
-  gap: 8px;
+  gap: 12px;
 }
 
 .contact-form select {
   padding: 14px;
   border-radius: 5px;
-  border: 2px solid #a2a2a2;
+  border: 2px solid var(--border-color);
 }
 
 .contact-form input {
   padding: 14px;
   border-radius: 5px;
-  border: 2px solid #a2a2a2;
+  border: 2px solid var(--border-color);
 }
 
 .contact-form textarea {
   padding: 12px;
   border-radius: 5px;
-  border: 2px solid #a2a2a2;
+  border: 2px solid var(--border-color);
   width: 100%;
   resize: vertical;
 }
 
 .contact-form button {
   padding: 12px;
-  border-radius: 5px;
+  border-radius: var(--btn-radius);
   border: none;
-  background-color: #2c3e50;
+  background-color: var(--primary-bg-color);
   color: #ccd5ae;
   font-size: 16px;
   cursor: pointer;
+}
+
+#grid-box-5 {
+  grid-column-start: 2;
+  grid-column-end: 6;
+  font-size: medium;
+}
+
+#contact-list {
+  list-style: none;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 14px;
+  padding: 0;
+}
+
+.contact-item {
+  background: #fff;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  width: 250px;
+  min-height: 210px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-sizing: border-box;
+}
+
+.contact-item .edit-btn,
+.contact-item .delete-btn,
+.contact-item .save-btn,
+.contact-item .cancel-btn {
+  flex: 1;
+  font-size: 12px;
+  padding: 6px 0;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.contact-item .edit-btn {
+  background: transparent;
+  border: 1px solid #2c3e50;
+  color: var(--primary-bg-color);
+}
+
+.contact-item .delete-btn {
+  background: #fef2f2;
+  border: 1px solid #e26969;
+  color: #b91c1c;
+}
+
+.contact-item .save-btn {
+  background: #dcfce7;
+  border: 1px solid #16a34a;
+  color: #16a34a;
+}
+
+.contact-item .cancel-btn {
+  background: #fef2f2;
+  border: 1px solid #827979;
+  color: #363636;
 }
 
 @media screen and (max-width: 768px) {
@@ -164,11 +275,15 @@ details p {
   .grid-box-img {
     order: 5;
   }
+  #grid-box-5 {
+    order: 6;
+  }
 
   .grid-box-1,
   .grid-box-2,
   .grid-box-3,
-  .grid-box-4 {
+  .grid-box-4,
+  #grid-box-5 {
     width: 100%;
     grid-column: unset;
     grid-row: unset;

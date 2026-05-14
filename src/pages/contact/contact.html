@@ -1,3 +1,5 @@
+<!--JAKOB TORGAU-->
+
 <!doctype html>
 <html lang="nb">
   <head>
@@ -45,9 +47,7 @@
             </li>
             <li><a href="/src/pages/profile/profile.html">Min profil</a></li>
             <li>
-              <a
-                href="/src/pages/registration/registration.html"
-                aria-current="page"
+              <a href="/src/pages/registration/registration.html"
                 >Mine hunder</a
               >
             </li>
@@ -76,6 +76,27 @@
     <main>
       <div class="grid-container">
         <div class="grid-box-1">
+          <section id="login-section" class="login-section">
+            <h2>Logg inn</h2>
+            <form id="login-form">
+              <input
+                type="email"
+                name="email"
+                id="email"
+                placeholder="E-post"
+                required
+              />
+              <input
+                type="password"
+                name="password"
+                id="password"
+                placeholder="Passord"
+                required
+              />
+              <button type="submit" class="btn">Logg inn</button>
+            </form>
+            <p id="status-message" class="hidden"></p>
+          </section>
           <h1 id="faq-heading">Er det noe du lurer på?</h1>
           <p>Her er noen ofte stilte spørsmål</p>
         </div>
@@ -177,9 +198,9 @@
 
         <div class="grid-box-4">
           <div class="contact-container">
-            <form action="" class="contact-form">
+            <form class="contact-form" id="contact-form">
               <label for="subject">Emne:</label>
-              <select id="subject" name="subject" required>
+              <select id="subject" name="subject">
                 <option value="" disabled selected>Velg emne</option>
                 <option value="general">Generelt spørsmål</option>
                 <option value="booking">Om bestiling</option>
@@ -188,19 +209,10 @@
                 <option value="other">Annet</option>
               </select>
 
-              <label for="name">Navn:</label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                placeholder="Navn"
-                required
-              />
-
               <label for="email">E-post:</label>
               <input
                 type="email"
-                id="email"
+                id="contact-email"
                 name="email"
                 placeholder="E-post"
                 required
@@ -215,8 +227,15 @@
               ></textarea>
 
               <button type="submit">Send in</button>
+              <p id="form-status-message" class="hidden"></p>
             </form>
           </div>
+        </div>
+
+        <div id="grid-box-5">
+          <h2>Innsendte Spørsmål</h2>
+          <p id="contact-status-message" class="hidden"></p>
+          <ul id="contact-list"></ul>
         </div>
       </div>
     </main>
@@ -287,6 +306,6 @@
       </div>
     </footer>
     <script src="/src/js/burger.js"></script>
-    <script src="./contact.js"></script>
+    <script src="./contact.js" type="module"></script>
   </body>
 </html>
