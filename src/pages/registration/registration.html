@@ -34,7 +34,7 @@
           </li>
           <li><a href="/src/pages/booking/booking.html">Mine bookinger</a></li>
           <li><a href="/src/pages/profile/profile.html">Min profil</a></li>
-          <li><a href="/src/pages/registration/registration.html">Mine hunder</a></li>
+          <li><a href="/src/pages/registration/registration.html" aria-current="page">Mine hunder</a></li>
           <li><a href="/src/pages/contact/contact.html">Kontakt oss</a></li>
         </ul>
         
@@ -140,7 +140,9 @@
                     </div>
                   </form> 
                 </div>
+
             <!-- Spinner/loading-->
+
                 <div id="pets-loading" class="pets-loading hidden" aria-live="polite" aria-busy="true">
         <div class="spinner"></div>
         <p>Laster hunder...</p>
@@ -148,7 +150,8 @@
                 <div id="pets-container"></div>
          </div>
 
-         <!-- Popup ved sletting av hund-->
+         <!-- Popup ved sletting av hund -->
+          
       <div id="delete-popup" class="popup hidden" role="dialog" aria-popup="true" aria-labelledby="delete-popup-title">
   <div class="popup-content">
     <h2>Bekreft sletting</h2>
@@ -163,8 +166,6 @@
       <button id="cancel-delete" class="btn ">
         Avbryt
       </button>
-
-    
     </div>
   </div>
 </div>   
