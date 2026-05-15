@@ -1,4 +1,24 @@
 /* Siden er laget av Mats Sudbø */
+import { getCurrentUser, updateUser } from "../../ts/api";
+
+const nameInput = document.getElementById("name") as HTMLInputElement | null;
+const emailInput = document.getElementById("email") as HTMLInputElement | null;
+
+async function loadProfile(): Promise<void> {
+  const user = await getCurrentUser();
+
+  if (!user) {
+    window.location.href = "/index.html";
+    return;
+  }
+
+  if (nameInput) nameInput.value = user.userName;
+  if (emailInput) emailInput.value = user.email;
+}
+
+loadProfile();
+
+
 type ContactType = "phone" | "email" | "address" | "emergency";
 
 type Contact = {
@@ -183,11 +203,34 @@ contactListEl.addEventListener("click", (e: MouseEvent) => {
   }
 });
 
-const profileForm = document.getElementById("profileForm") as HTMLFormElement;
+const profileForm = document.getElementById("profileForm") as HTMLFormElement | null;
 
-profileForm.addEventListener("submit", (e: SubmitEvent) => {
+profileForm?.addEventListener("submit", async (e: SubmitEvent) => {
   e.preventDefault();
-  alert("Profil lagret (demo).");
+
+  const user = await getCurrentUser();
+
+  if (!user || !nameInput || !emailInput) return;
+
+  if (!nameInput.value.trim() || !emailInput.value.trim()) {
+    alert("Navn og e-post må fylles ut");
+    return;
+  }
+
+const updatedUser = {
+  ...user,
+  userName: nameInput.value.trim(),
+  email: emailInput.value.trim(),
+  updated: new Date().toISOString(),
+};
+
+  try {
+  await updateUser(updatedUser);
+  alert("Profilen ble lagret");
+} catch (error) {
+  console.error(error);
+  alert("Kunne ikke lagre profilen");
+}
 });
 
 renderContacts();
