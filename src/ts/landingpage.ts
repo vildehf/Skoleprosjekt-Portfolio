@@ -28,6 +28,11 @@ if (
   loginForm.addEventListener("submit", async (event) => {
     event.preventDefault();
 
+    if (!loginEmail.value.trim() || !loginPassword.value.trim()) {
+  alert("Fyll inn e-post og passord");
+  return;
+}
+
     try {
       await login(
         loginEmail.value.trim(),

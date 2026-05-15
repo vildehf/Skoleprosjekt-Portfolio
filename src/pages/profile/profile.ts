@@ -227,8 +227,7 @@ const updatedUser = {
   email: emailInput.value.trim(),
   updated: new Date().toISOString(),
 };
-
-  try {
+try {
   await updateUser(updatedUser);
   alert("Profilen ble lagret");
 } catch (error) {
