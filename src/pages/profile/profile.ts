@@ -15,6 +15,9 @@ async function loadProfile(): Promise<void> {
 
     if (nameInput) nameInput.value = user.userName;
     if (emailInput) emailInput.value = user.email;
+
+    contacts = user.contacts ?? [];
+    renderContacts();
   } catch (error) {
     console.error("Kunne ikke laste profil:", error);
   }
@@ -47,9 +50,7 @@ const typeEl = document.getElementById("type") as HTMLSelectElement;
 const valueEl = document.getElementById("value") as HTMLInputElement;
 const labelEl = document.getElementById("label") as HTMLInputElement;
 
-const savedContacts = localStorage.getItem("potepassContacts");
-
-let contacts: Contact[] = savedContacts ? JSON.parse(savedContacts) : [];
+let contacts: Contact[] = [];
 
 function typeName(type: ContactType): string {
   const map: Record<ContactType, string> = {
@@ -71,8 +72,18 @@ function escapeHtml(str: string): string {
     .replaceAll("'", "&#039;");
 }
 
-function saveContacts(): void {
-  localStorage.setItem("potepassContacts", JSON.stringify(contacts));
+async function saveContactsToApi(): Promise<void> {
+  const user = await getCurrentUser();
+
+  if (!user) return;
+
+  const updatedUser = {
+    ...user,
+    contacts,
+    updated: new Date().toISOString(),
+  };
+
+  await updateUser(updatedUser);
 }
 
 function renderContacts(): void {
@@ -136,7 +147,7 @@ cancelBtn.addEventListener("click", () => {
   dialog.close();
 });
 
-contactForm.addEventListener("submit", (e: SubmitEvent) => {
+contactForm.addEventListener("submit", async (e: SubmitEvent) => {
   e.preventDefault();
 
   const id = editIdEl.value.trim();
@@ -159,11 +170,17 @@ contactForm.addEventListener("submit", (e: SubmitEvent) => {
   }
 
   dialog.close();
-  saveContacts();
-  renderContacts();
+
+  try {
+    await saveContactsToApi();
+    renderContacts();
+  } catch (error) {
+    console.error(error);
+    alert("Kunne ikke lagre kontaktpunkt");
+  }
 });
 
-contactListEl.addEventListener("click", (e: MouseEvent) => {
+contactListEl.addEventListener("click", async (e: MouseEvent) => {
   const target = e.target as HTMLElement;
   const btn = target.closest("button[data-action]") as HTMLButtonElement | null;
 
@@ -198,8 +215,14 @@ contactListEl.addEventListener("click", (e: MouseEvent) => {
     if (!ok) return;
 
     contacts = contacts.filter((c) => c.id !== id);
-    saveContacts();
-    renderContacts();
+
+    try {
+      await saveContactsToApi();
+      renderContacts();
+    } catch (error) {
+      console.error(error);
+      alert("Kunne ikke slette kontaktpunkt");
+    }
   }
 });
 
