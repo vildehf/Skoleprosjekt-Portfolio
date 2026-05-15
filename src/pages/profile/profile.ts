@@ -5,15 +5,19 @@ const nameInput = document.getElementById("name") as HTMLInputElement | null;
 const emailInput = document.getElementById("email") as HTMLInputElement | null;
 
 async function loadProfile(): Promise<void> {
-  const user = await getCurrentUser();
+  try {
+    const user = await getCurrentUser();
 
-  if (!user) {
-    window.location.href = "/index.html";
-    return;
+    if (!user) {
+      window.location.href = "/index.html";
+      return;
+    }
+
+    if (nameInput) nameInput.value = user.userName;
+    if (emailInput) emailInput.value = user.email;
+  } catch (error) {
+    console.error("Kunne ikke laste profil:", error);
   }
-
-  if (nameInput) nameInput.value = user.userName;
-  if (emailInput) emailInput.value = user.email;
 }
 
 loadProfile();
@@ -232,5 +236,13 @@ const updatedUser = {
   alert("Kunne ikke lagre profilen");
 }
 });
+const logoutBtn = document.getElementById("logoutBtn") as HTMLButtonElement | null;
 
+logoutBtn?.addEventListener("click", () => {
+  localStorage.removeItem("LoggedinUser");
+  localStorage.removeItem("API_KEY");
+  localStorage.removeItem("potepassUser");
+
+  window.location.href = "/index.html";
+});
 renderContacts();
