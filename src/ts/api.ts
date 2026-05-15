@@ -7,7 +7,7 @@ export function getApiKey(): string {
   return API_KEY;
 }
 
-/* Logg inn funksjon */ 
+/* Logg inn funksjon */
 
 export async function login(
   email: string,
@@ -19,7 +19,7 @@ export async function login(
     throw new Error("Innlogging feilet");
   }
 
- const users: Users[] = await response.json();
+  const users: Users[] = await response.json();
 
   const user = users.find(
     (user) => user.email === email && user.password === password,
@@ -35,7 +35,7 @@ export async function login(
   return { API_KEY };
 }
 
-/* Hent bruker */ 
+/* Hent bruker */
 export async function getUsers(): Promise<Users[]> {
   const response = await fetch(`${BASE_URL}/users`, {
     headers: {
@@ -50,7 +50,6 @@ export async function getUsers(): Promise<Users[]> {
 
   const data = await response.json();
   return data.users ?? data;
-
 }
 
 export function getLoggedInEmail(): string | null {
@@ -68,7 +67,6 @@ export async function getLoggedInUser(): Promise<Users | null> {
   return users.find((user) => user.email === email) ?? null;
 }
 
-  
 /* Oppdater bruker */
 
 export async function updateUser(user: Users): Promise<Users> {
@@ -76,7 +74,7 @@ export async function updateUser(user: Users): Promise<Users> {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
-      "Authorization": `Bearer ${getApiKey()}`,
+      Authorization: `Bearer ${getApiKey()}`,
     },
     body: JSON.stringify(user),
   });
@@ -85,11 +83,11 @@ export async function updateUser(user: Users): Promise<Users> {
     throw new Error("Kunne ikke oppdatere bruker");
   }
 
-    const updatedUser: Users = await response.json();
+  const updatedUser: Users = await response.json();
   return updatedUser;
 }
 
-/* Logget inn bruker */ 
+/* Logget inn bruker */
 
 export async function getCurrentUser(): Promise<Users | null> {
   const email = localStorage.getItem("LoggedinUser");

@@ -49,6 +49,14 @@ export interface PetSitters {
   updated: string;
 }
 
+/*JAKOB TORGAU*/
+
+export interface Message {
+  id: number;
+  topic: string;
+  user_id: number;
+  message: string;
+}
 export interface Booking {
   id: number;
   userId: number;
