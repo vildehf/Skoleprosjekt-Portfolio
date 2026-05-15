@@ -1,5 +1,5 @@
 /* Siden er laget av Mats Sudbø */
-import { getCurrentUser, updateUser } from "../../api";
+import { getCurrentUser, updateUser } from "../../ts/api";
 
 const nameInput = document.getElementById("name") as HTMLInputElement | null;
 const emailInput = document.getElementById("email") as HTMLInputElement | null;
@@ -12,7 +12,7 @@ async function loadProfile(): Promise<void> {
     return;
   }
 
-  if (nameInput) nameInput.value = user.name;
+  if (nameInput) nameInput.value = user.userName;
   if (emailInput) emailInput.value = user.email;
 }
 
@@ -217,11 +217,12 @@ profileForm?.addEventListener("submit", async (e: SubmitEvent) => {
     return;
   }
 
-  const updatedUser = {
-    ...user,
-    name: nameInput.value.trim(),
-    email: emailInput.value.trim(),
-  };
+const updatedUser = {
+  ...user,
+  userName: nameInput.value.trim(),
+  email: emailInput.value.trim(),
+  updated: new Date().toISOString(),
+};
 
   try {
   await updateUser(updatedUser);
