@@ -1,6 +1,6 @@
 /*JAKOB TORGAU*/
 
-import { BASE_URL, getApiKey } from "../../ts/api.ts";
+import { BASE_URL, getApiKey, getLoggedInUser } from "../../ts/api.ts";
 import { login } from "../../ts/api.ts";
 import type { Message } from "../../ts/types.ts";
 
@@ -108,6 +108,7 @@ export async function createMessage(
   topic: string,
   user_id: number,
   message: string,
+  email: string,
 ): Promise<Message> {
   const response = await fetch(`${BASE_URL}/messages`, {
     method: "POST",
@@ -115,7 +116,7 @@ export async function createMessage(
       "content-type": "application/json",
       Authorization: `Bearer ${getApiKey()}`,
     },
-    body: JSON.stringify({ topic, user_id, message }),
+    body: JSON.stringify({ topic, user_id, message, email }),
   });
 
   if (!response.ok) {
@@ -179,6 +180,9 @@ export async function editMessage(messages: Message): Promise<void> {
 contactForm.addEventListener("submit", async (e) => {
   e.preventDefault();
   const topic = topicSelect.value;
+  const email = (
+    document.getElementById("contact-email") as HTMLInputElement
+  ).value.trim();
   const messageText = (
     document.getElementById("message") as HTMLTextAreaElement
   ).value.trim();
@@ -194,14 +198,14 @@ contactForm.addEventListener("submit", async (e) => {
     return;
   }
 
-  const userId = Number(localStorage.getItem("LoggedinUserID"));
-  if (!userId) {
-    showStatus("Kunne ikke finne denne brukeren", true);
-    return;
-  }
-
   try {
-    await createMessage(topic, userId, messageText);
+    const currentUser = await getLoggedInUser();
+    if (!currentUser) {
+      showStatus("Kunne ikke finne denne brukeren", true);
+      return;
+    }
+
+    await createMessage(topic, currentUser.id, messageText, email);
     showFormStatus("Melding sendt!");
     contactForm.reset();
     await loadMessages();
@@ -225,6 +229,7 @@ function renderMessages(messages: Message[]): void {
     <li class="contact-item">
       <h2>${topicLabels[m.topic] ?? m.topic}</h2>
       <h3>Bruker ID: ${m.user_id}</h3>
+      ${m.email ? `<p><strong>E-post: ${m.email}</strong></p>` : ""}
       <p>${m.message}</p>
       <button class="edit-btn" data-id="${m.id}">Rediger</button>
       <button class="delete-btn" data-id="${m.id}">Slett</button>
