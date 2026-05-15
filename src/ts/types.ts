@@ -23,13 +23,7 @@ export interface Dog {
   allergies: Allergy[];
 }
 
-export type Allergy =
-  | "Ingen allergier"
-  | "Egg"
-  | "Hvete"
-  | "Melk"
-  | "Mais";
-
+export type Allergy = "Ingen allergier" | "Egg" | "Hvete" | "Melk" | "Mais";
 
 export interface PetSitters {
   id: number;
@@ -56,6 +50,7 @@ export interface Message {
   topic: string;
   user_id: number;
   message: string;
+  email?: string;
 }
 export interface Booking {
   id: number;
