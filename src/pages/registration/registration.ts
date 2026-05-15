@@ -25,6 +25,7 @@ const loginForm = document.getElementById("login-form") as HTMLFormElement;
 const statusMessage = document.getElementById("status-message") as HTMLParagraphElement;
 const form = document.getElementById("pet-form") as HTMLFormElement;
 const petsContainer = document.getElementById("pets-container") as HTMLDivElement;
+const petsContent = document.getElementById("pets-content") as HTMLDivElement;
 
 const nameInput = document.getElementById("pet-name") as HTMLInputElement;
 const weightInput = document.getElementById("pet-weight") as HTMLInputElement;
@@ -43,6 +44,7 @@ const submitButton = document.getElementById("submit-button") as HTMLButtonEleme
 const deleteButton = document.getElementById("delete-button") as HTMLButtonElement;
 
 const petsLoading = document.getElementById("pets-loading") as HTMLDivElement;
+const loginMessage = document.getElementById("login-message") as HTMLParagraphElement;
 
 const deletePopup = document.getElementById("delete-popup") as HTMLDivElement;
 const deletePopupText = document.getElementById("delete-popup-text") as HTMLParagraphElement;
@@ -71,10 +73,12 @@ loginForm.addEventListener("submit", async (e) => {
     const data = await login(email, password);
    localStorage.setItem("API_KEY", data.API_KEY);
    showStatus("Logger inn...");
+   
+   loginMessage.classList.add("hidden");
+   petsContent.classList.remove("hidden");
 
    await delay(1000);
 
-    
     await loadUserDogs();
     showStatus("Du er nå logget inn");
 
@@ -96,7 +100,9 @@ logoutButton.addEventListener("click", () => {
   dogs = [];
   currentUser = null;
 
-  renderDogs([]);
+  petsContainer.innerHTML = "";
+  loginMessage.classList.remove("hidden");
+  petsContent.classList.add("hidden");
   resetForm();
   loginForm.reset(); 
 
@@ -299,9 +305,13 @@ async function loadUserDogs(): Promise<void> {
 
     currentUser = users.find((user) => user.email === loggedInEmail) ?? null;
 
-    if (!currentUser) {
-      throw new Error("Fant ikke innlogget bruker");
-    }
+  if (!currentUser) {
+  loginMessage.classList.remove("hidden");
+  petsContainer.innerHTML = "";
+  return;
+}
+
+  loginMessage.classList.add("hidden");
 
     dogs = currentUser.dogs ?? [];
     renderDogs(dogs);
@@ -347,8 +357,13 @@ deleteButton.addEventListener("click", resetForm);
 if (localStorage.getItem("LoggedinUser")) {
   loginSection.classList.add("hidden");
   logoutButton.classList.remove("hidden");
+  loginMessage.classList.add("hidden");
+  petsContent.classList.remove("hidden");
 
   await loadUserDogs();
+} else {
+  loginMessage.classList.remove("hidden");
+  petsContent.classList.add("hidden");
 }
 
 /* Loading state */ 
