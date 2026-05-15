@@ -4,6 +4,17 @@ import { getCurrentUser, updateUser } from "../../ts/api";
 const nameInput = document.getElementById("name") as HTMLInputElement | null;
 const emailInput = document.getElementById("email") as HTMLInputElement | null;
 
+type ContactType = "phone" | "email" | "address" | "emergency";
+
+type Contact = {
+  id: string | number;
+  type: ContactType;
+  value: string;
+  label: string;
+};
+
+let contacts: Contact[] = [];
+
 async function loadProfile(): Promise<void> {
   try {
     const user = await getCurrentUser();
@@ -25,15 +36,6 @@ async function loadProfile(): Promise<void> {
 
 loadProfile();
 
-type ContactType = "phone" | "email" | "address" | "emergency";
-
-type Contact = {
-  id: string;
-  type: ContactType;
-  value: string;
-  label: string;
-};
-
 const contactListEl = document.getElementById(
   "contactList",
 ) as HTMLUListElement;
@@ -49,8 +51,6 @@ const editIdEl = document.getElementById("editId") as HTMLInputElement;
 const typeEl = document.getElementById("type") as HTMLSelectElement;
 const valueEl = document.getElementById("value") as HTMLInputElement;
 const labelEl = document.getElementById("label") as HTMLInputElement;
-
-let contacts: Contact[] = [];
 
 function typeName(type: ContactType): string {
   const map: Record<ContactType, string> = {
@@ -196,7 +196,7 @@ contactListEl.addEventListener("click", async (e: MouseEvent) => {
   if (!contact) return;
 
   if (action === "edit") {
-    editIdEl.value = contact.id;
+    editIdEl.value = String(contact.id);
     typeEl.value = contact.type;
     valueEl.value = contact.value;
     labelEl.value = contact.label;

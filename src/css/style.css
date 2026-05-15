@@ -158,7 +158,6 @@ header {
   text-decoration: none;
   padding: 6px 10px;
   border-radius: 8px;
-   white-space: normal;
 }
 
 .nav-menu a:hover,
@@ -349,8 +348,8 @@ header {
 
     opacity: 0;
     pointer-events: none;
-  flex-wrap: nowrap;
-    z-index: 1000;
+    flex-wrap: nowrap;
+     z-index: 1000;
     transition: opacity 0.18s ease;
   }
 
