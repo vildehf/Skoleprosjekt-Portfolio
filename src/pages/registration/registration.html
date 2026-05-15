@@ -77,8 +77,14 @@
          Logg ut
         </button>
 
-        <!-- Registreringsskjema for hunder -->
+        <!-- Innhold som kun vises for innloggede brukere -->
 
+        <p id="login-message" class="empty-state hidden">
+            Logg inn for å se hundene dine 🐾
+          </p>
+          
+        <!-- Registreringsskjema for hunder -->
+        <div id="pets-content" class="hidden">
          <h1 id="form-title">Fortell oss om hunden din</h1>
             <div class="pets-layout">
             <div class="pets-form">
@@ -148,6 +154,7 @@
         <p>Laster hunder...</p>
           </div>
                 <div id="pets-container"></div>
+                </div>
          </div>
 
          <!-- Popup ved sletting av hund -->

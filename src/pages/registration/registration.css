@@ -95,6 +95,11 @@ h4 {
   width: 100%;
 }
 
+#login-message {
+  padding: 1rem;
+  max-width: 500px;
+}
+
 
 /* Skjema / infokort */
 
@@ -326,10 +331,14 @@ h4 {
 
   .login-section input,
   #login-form .btn {
-    width: 100%;
+    width: 90%;
     max-width: none;
   }
 
+  #login-message {
+    padding: 1.2rem;
+    width: 100%;
+  }
   .pets-layout {
     display: flex;
     flex-direction: column;
