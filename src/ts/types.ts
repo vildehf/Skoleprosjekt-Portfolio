@@ -1,11 +1,18 @@
 export interface LoginResponse {
   API_KEY: string;
 }
+export interface Contact {
+  id: string | number;
+  type: "phone" | "email" | "address" | "emergency";
+  value: string;
+  label: string;
+}
 export interface Users {
   id: number;
   userName: string;
   password: string | number;
   email: string;
+  contacts?: Contact[];
   description: string | null;
   dogs: Dog[];
   created: string;

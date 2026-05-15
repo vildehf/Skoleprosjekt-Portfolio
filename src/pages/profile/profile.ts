@@ -15,13 +15,15 @@ async function loadProfile(): Promise<void> {
 
     if (nameInput) nameInput.value = user.userName;
     if (emailInput) emailInput.value = user.email;
+
+    contacts = user.contacts ?? [];
+    renderContacts();
   } catch (error) {
     console.error("Kunne ikke laste profil:", error);
   }
 }
 
 loadProfile();
-
 
 type ContactType = "phone" | "email" | "address" | "emergency";
 
@@ -32,10 +34,14 @@ type Contact = {
   label: string;
 };
 
-const contactListEl = document.getElementById("contactList") as HTMLUListElement;
+const contactListEl = document.getElementById(
+  "contactList",
+) as HTMLUListElement;
 const dialog = document.getElementById("contactDialog") as HTMLDialogElement;
 
-const addContactBtn = document.getElementById("addContactBtn") as HTMLButtonElement;
+const addContactBtn = document.getElementById(
+  "addContactBtn",
+) as HTMLButtonElement;
 const cancelBtn = document.getElementById("cancelBtn") as HTMLButtonElement;
 const contactForm = document.getElementById("contactForm") as HTMLFormElement;
 
@@ -44,20 +50,7 @@ const typeEl = document.getElementById("type") as HTMLSelectElement;
 const valueEl = document.getElementById("value") as HTMLInputElement;
 const labelEl = document.getElementById("label") as HTMLInputElement;
 
-let contacts: Contact[] = [
-  {
-    id: crypto.randomUUID(),
-    type: "phone",
-    value: "+47 900 00 000",
-    label: "Mobil",
-  },
-  {
-    id: crypto.randomUUID(),
-    type: "email",
-    value: "sekundar@example.com",
-    label: "Sekundær",
-  },
-];
+let contacts: Contact[] = [];
 
 function typeName(type: ContactType): string {
   const map: Record<ContactType, string> = {
@@ -77,6 +70,20 @@ function escapeHtml(str: string): string {
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#039;");
+}
+
+async function saveContactsToApi(): Promise<void> {
+  const user = await getCurrentUser();
+
+  if (!user) return;
+
+  const updatedUser = {
+    ...user,
+    contacts,
+    updated: new Date().toISOString(),
+  };
+
+  await updateUser(updatedUser);
 }
 
 function renderContacts(): void {
@@ -140,7 +147,7 @@ cancelBtn.addEventListener("click", () => {
   dialog.close();
 });
 
-contactForm.addEventListener("submit", (e: SubmitEvent) => {
+contactForm.addEventListener("submit", async (e: SubmitEvent) => {
   e.preventDefault();
 
   const id = editIdEl.value.trim();
@@ -154,9 +161,7 @@ contactForm.addEventListener("submit", (e: SubmitEvent) => {
   if (!payload.value) return;
 
   if (id) {
-    contacts = contacts.map((c) =>
-      c.id === id ? { ...c, ...payload } : c
-    );
+    contacts = contacts.map((c) => (c.id === id ? { ...c, ...payload } : c));
   } else {
     contacts.unshift({
       id: crypto.randomUUID(),
@@ -165,10 +170,17 @@ contactForm.addEventListener("submit", (e: SubmitEvent) => {
   }
 
   dialog.close();
-  renderContacts();
+
+  try {
+    await saveContactsToApi();
+    renderContacts();
+  } catch (error) {
+    console.error(error);
+    alert("Kunne ikke lagre kontaktpunkt");
+  }
 });
 
-contactListEl.addEventListener("click", (e: MouseEvent) => {
+contactListEl.addEventListener("click", async (e: MouseEvent) => {
   const target = e.target as HTMLElement;
   const btn = target.closest("button[data-action]") as HTMLButtonElement | null;
 
@@ -203,11 +215,20 @@ contactListEl.addEventListener("click", (e: MouseEvent) => {
     if (!ok) return;
 
     contacts = contacts.filter((c) => c.id !== id);
-    renderContacts();
+
+    try {
+      await saveContactsToApi();
+      renderContacts();
+    } catch (error) {
+      console.error(error);
+      alert("Kunne ikke slette kontaktpunkt");
+    }
   }
 });
 
-const profileForm = document.getElementById("profileForm") as HTMLFormElement | null;
+const profileForm = document.getElementById(
+  "profileForm",
+) as HTMLFormElement | null;
 
 profileForm?.addEventListener("submit", async (e: SubmitEvent) => {
   e.preventDefault();
@@ -221,22 +242,23 @@ profileForm?.addEventListener("submit", async (e: SubmitEvent) => {
     return;
   }
 
-const updatedUser = {
-  ...user,
-  userName: nameInput.value.trim(),
-  email: emailInput.value.trim(),
-  updated: new Date().toISOString(),
-};
-
+  const updatedUser = {
+    ...user,
+    userName: nameInput.value.trim(),
+    email: emailInput.value.trim(),
+    updated: new Date().toISOString(),
+  };
   try {
-  await updateUser(updatedUser);
-  alert("Profilen ble lagret");
-} catch (error) {
-  console.error(error);
-  alert("Kunne ikke lagre profilen");
-}
+    await updateUser(updatedUser);
+    alert("Profilen ble lagret");
+  } catch (error) {
+    console.error(error);
+    alert("Kunne ikke lagre profilen");
+  }
 });
-const logoutBtn = document.getElementById("logoutBtn") as HTMLButtonElement | null;
+const logoutBtn = document.getElementById(
+  "logoutBtn",
+) as HTMLButtonElement | null;
 
 logoutBtn?.addEventListener("click", () => {
   localStorage.removeItem("LoggedinUser");
