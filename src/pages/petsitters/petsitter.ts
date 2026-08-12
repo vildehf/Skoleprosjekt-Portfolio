@@ -389,28 +389,11 @@ if (sitterForm) {
   sitterForm.addEventListener("submit", async (event) => {
     event.preventDefault();
 
-    const postalCodeInput = document.getElementById(
-      "postalCode",
-    ) as HTMLInputElement;
-
-    const postalCode = postalCodeInput.value.trim();
-
-    if (!/^\d{4}$/.test(postalCode)) {
-      if (formMessage) {
-        formMessage.textContent = "Postnummer må bestå av 4 tall.";
-        formMessage.className = "form-message error";
-      }
-
-      postalCodeInput.focus();
-      return;
-    }
-
-    if (!sitterForm.checkValidity()) {
-      sitterForm.reportValidity();
-      return;
-    }
-
     const city = (document.getElementById("city") as HTMLInputElement).value;
+
+    const postalCode = (
+      document.getElementById("postalCode") as HTMLInputElement
+    ).value.trim();
 
     const location = postalCode ? `${city}, ${postalCode}` : city;
 
