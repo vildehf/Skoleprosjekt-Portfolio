@@ -267,15 +267,13 @@ async function deletePetSitter(id: number): Promise<void> {
     });
 
     if (!response.ok) {
-      throw new Error("Kunne ikke slette hundepasser");
+      throw new Error();
     }
 
     loadPetSitters();
 
     showPageMessage("Hundepasser ble slettet.", "success");
-  } catch (error) {
-    console.error("Feil ved sletting:", error);
-
+  } catch {
     showPageMessage("Kunne ikke slette hundepasser.", "error");
   }
 }
@@ -296,7 +294,7 @@ async function updatePetSitter(
     });
 
     if (!response.ok) {
-      throw new Error("Kunne ikke oppdatere hundepasser");
+      throw new Error();
     }
 
     loadPetSitters();
@@ -305,9 +303,7 @@ async function updatePetSitter(
     showPageMessage("Hundepasser ble oppdatert.", "success");
 
     editingId = null;
-  } catch (error) {
-    console.error("Feil ved oppdatering:", error);
-
+  } catch {
     showPageMessage("Kunne ikke oppdatere hundepasser.", "error");
   }
 }
@@ -327,16 +323,14 @@ async function createPetSitter(
     });
 
     if (!response.ok) {
-      throw new Error("Kunne ikke opprette hundepasser");
+      throw new Error();
     }
 
     loadPetSitters();
     closeModal();
 
     showPageMessage("Hundepasser ble opprettet.", "success");
-  } catch (error) {
-    console.error("Feil ved oppretting:", error);
-
+  } catch {
     showPageMessage("Kunne ikke opprette hundepasser.", "error");
   }
 }
