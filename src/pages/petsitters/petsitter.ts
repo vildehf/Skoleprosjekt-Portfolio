@@ -4,18 +4,13 @@
 
 import type { PetSitters } from "../../ts/types.ts";
 import { BASE_URL, API_KEY } from "../../ts/api.ts";
+import { openModal, closeModal } from "./petSitterModal.ts";
 
 const PET_SITTERS_URL = `${BASE_URL}/petsitters`;
 
 // DOM-elementer
 const addSitterBtn = document.getElementById("add-sitter-btn");
-const closeModalBtn = document.getElementById("close-modal-btn");
-const cancelBtn = document.getElementById("cancel-btn");
-const modal = document.getElementById("sitter-modal");
-// Enkel validering før data sendes til API
-const formMessage = document.getElementById(
-  "form-message",
-) as HTMLParagraphElement | null;
+
 const pageMessage = document.getElementById(
   "page-message",
 ) as HTMLParagraphElement | null;
@@ -56,7 +51,7 @@ async function loadPetSitters() {
     const response = await fetch(PET_SITTERS_URL);
 
     if (!response.ok) {
-      throw new Error("Kunne ikke hente hundepassere");
+      throw new Error();
     }
 
     const petSitters: PetSitters[] = await response.json();
@@ -68,8 +63,7 @@ async function loadPetSitters() {
     }
 
     if (filterButton) filterButton.disabled = false;
-  } catch (error) {
-    console.error("Feil:", error);
+  } catch {
     sitterList.innerHTML = "<p>Kunne ikke laste hundepassere.</p>";
 
     if (filterButton) filterButton.disabled = false;
@@ -207,24 +201,6 @@ function applyFilters(): void {
   );
 }
 
-// Modal
-function openModal() {
-  if (!modal) return;
-  modal.classList.add("active");
-  modal.setAttribute("aria-hidden", "false");
-
-  if (formMessage) {
-    formMessage.textContent = "";
-    formMessage.className = "form-message";
-  }
-}
-
-function closeModal() {
-  if (!modal) return;
-  modal.classList.remove("active");
-  modal.setAttribute("aria-hidden", "true");
-}
-
 // Fyll skjema ved redigering
 function fillForm(ps: PetSitters): void {
   const [city, postalCode] = (ps.location ?? "")
@@ -270,7 +246,7 @@ async function deletePetSitter(id: number): Promise<void> {
       throw new Error();
     }
 
-    loadPetSitters();
+    await loadPetSitters();
 
     showPageMessage("Hundepasser ble slettet.", "success");
   } catch {
@@ -297,7 +273,7 @@ async function updatePetSitter(
       throw new Error();
     }
 
-    loadPetSitters();
+    await loadPetSitters();
     closeModal();
 
     showPageMessage("Hundepasser ble oppdatert.", "success");
@@ -326,7 +302,7 @@ async function createPetSitter(
       throw new Error();
     }
 
-    loadPetSitters();
+    await loadPetSitters();
     closeModal();
 
     showPageMessage("Hundepasser ble opprettet.", "success");
@@ -343,28 +319,6 @@ if (addSitterBtn) {
     openModal();
   });
 }
-
-if (closeModalBtn) {
-  closeModalBtn.addEventListener("click", closeModal);
-}
-
-if (cancelBtn) {
-  cancelBtn.addEventListener("click", closeModal);
-}
-
-if (modal) {
-  modal.addEventListener("click", (event) => {
-    if (event.target === modal) {
-      closeModal();
-    }
-  });
-}
-
-document.addEventListener("keydown", (event) => {
-  if (event.key === "Escape" && modal?.classList.contains("active")) {
-    closeModal();
-  }
-});
 
 const filterForm = document.querySelector(
   ".filter-form",
