@@ -67,6 +67,21 @@ async function loadPetSitters(): Promise<void> {
   }
 }
 
+async function apiRequest(
+  url: string,
+  options: RequestInit = {},
+): Promise<void> {
+  const response = await fetch(url, {
+    ...options,
+    headers: {
+      Authorization: `Bearer ${API_KEY}`,
+      ...options.headers,
+    },
+  });
+
+  if (!response.ok) throw new Error();
+}
+
 // Render hundepasser-kort
 function renderPetSitters(petSitters: PetSitters[]) {
   if (!sitterList) return;
@@ -226,20 +241,13 @@ function fillForm(ps: PetSitters): void {
 // DELETE
 async function deletePetSitter(id: number): Promise<void> {
   if (!confirm("Er du sikker på at du vil slette hundepasseren?")) return;
+
   try {
-    const response = await fetch(`${PET_SITTERS_URL}/${id}`, {
+    await apiRequest(`${PET_SITTERS_URL}/${id}`, {
       method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${API_KEY}`,
-      },
     });
 
-    if (!response.ok) {
-      throw new Error();
-    }
-
     await loadPetSitters();
-
     showPageMessage("Hundepasser ble slettet.", "success");
   } catch {
     showPageMessage("Kunne ikke slette hundepasser.", "error");
@@ -252,22 +260,16 @@ async function updatePetSitter(
   updatedPetSitter: Partial<PetSitters>,
 ): Promise<void> {
   try {
-    const response = await fetch(`${PET_SITTERS_URL}/${id}`, {
+    await apiRequest(`${PET_SITTERS_URL}/${id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${API_KEY}`,
       },
       body: JSON.stringify(updatedPetSitter),
     });
 
-    if (!response.ok) {
-      throw new Error();
-    }
-
     await loadPetSitters();
     closeModal();
-
     showPageMessage("Hundepasser ble oppdatert.", "success");
 
     editingId = null;
@@ -281,22 +283,16 @@ async function createPetSitter(
   newPetSitter: Omit<PetSitters, "id">,
 ): Promise<void> {
   try {
-    const response = await fetch(PET_SITTERS_URL, {
+    await apiRequest(PET_SITTERS_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${API_KEY}`,
       },
       body: JSON.stringify(newPetSitter),
     });
 
-    if (!response.ok) {
-      throw new Error();
-    }
-
     await loadPetSitters();
     closeModal();
-
     showPageMessage("Hundepasser ble opprettet.", "success");
   } catch {
     showPageMessage("Kunne ikke opprette hundepasser.", "error");
