@@ -1,6 +1,5 @@
 // Siden er laget av Vilde Hvitstein Fristad
-// Denne filen håndterer CRUD-funksjonalitet (Create, Read, Update, Delete) for hundepassere.
-// Data hentes fra et API og vises som kort i en liste. Brukeren kan legge til, redigere og slette
+// Håndterer CRUD for hundepassere med API-et
 
 import type { PetSitters } from "../../ts/types.ts";
 import { BASE_URL, API_KEY } from "../../ts/api.ts";
@@ -42,7 +41,7 @@ function showPageMessage(message: string, type: "success" | "error"): void {
   }, 3000);
 }
 
-async function loadPetSitters() {
+async function loadPetSitters(): Promise<void> {
   if (!sitterList) return;
 
   sitterList.innerHTML = "<p>Laster hundepassere...</p>";
@@ -61,11 +60,9 @@ async function loadPetSitters() {
     if (petSitters.length === 0) {
       sitterList.innerHTML = "<p>Ingen hundepassere funnet.</p>";
     }
-
-    if (filterButton) filterButton.disabled = false;
   } catch {
     sitterList.innerHTML = "<p>Kunne ikke laste hundepassere.</p>";
-
+  } finally {
     if (filterButton) filterButton.disabled = false;
   }
 }
@@ -87,7 +84,6 @@ function renderPetSitters(petSitters: PetSitters[]) {
 
     const card = document.createElement("article");
     card.className = "card sitter-row";
-    card.dataset.id = String(ps.id);
 
     card.innerHTML = `
       <div class="sitter-portrait">
@@ -119,13 +115,13 @@ function renderPetSitters(petSitters: PetSitters[]) {
         </p>
 
         <div class="sitter-card-actions">
-          <button class="btn btn-primary details-btn" type="button" data-id="${ps.id}">
+          <button class="btn btn-primary details-btn" type="button">
           ${expandedId === ps.id ? "Skjul detaljer" : "Se detaljer"}
           </button>
-          <button class="btn btn-ghost edit-btn" type="button" data-id="${ps.id}">
+          <button class="btn btn-ghost edit-btn" type="button">
             Rediger
           </button>
-          <button class="btn-delete delete-btn" type="button" data-id="${ps.id}">
+          <button class="btn-delete delete-btn" type="button">
             Slett
           </button>
         </div>
@@ -205,15 +201,12 @@ function applyFilters(): void {
 function fillForm(ps: PetSitters): void {
   const [city, postalCode] = (ps.location ?? "")
     .split(",")
-    .map((part: string) => part.trim());
+    .map((part) => part.trim());
 
   (document.getElementById("name") as HTMLInputElement).value = ps.name ?? "";
-
   (document.getElementById("city") as HTMLInputElement).value = city ?? "";
-
   (document.getElementById("postalCode") as HTMLInputElement).value =
     postalCode ?? "";
-
   (document.getElementById("pricePerDay") as HTMLInputElement).value = String(
     ps.pricePerDay ?? "",
   );
@@ -225,7 +218,6 @@ function fillForm(ps: PetSitters): void {
   );
   (document.getElementById("description") as HTMLTextAreaElement).value =
     ps.experienceDescription ?? "";
-
   (document.getElementById("image") as HTMLInputElement).value = ps.image ?? "";
   (document.getElementById("availabilityStatus") as HTMLSelectElement).value =
     ps.available ? "Ledig" : "Ikke ledig";
@@ -339,60 +331,40 @@ if (filterForm) {
 }
 
 // Submit form
-if (sitterForm) {
-  sitterForm.addEventListener("submit", async (event) => {
-    event.preventDefault();
+sitterForm?.addEventListener("submit", async (event) => {
+  event.preventDefault();
 
-    const city = (document.getElementById("city") as HTMLInputElement).value;
+  const formData = new FormData(sitterForm);
+  const city = String(formData.get("city"));
+  const postalCode = String(formData.get("postalCode")).trim();
 
-    const postalCode = (
-      document.getElementById("postalCode") as HTMLInputElement
-    ).value.trim();
+  const petSitterData = {
+    name: String(formData.get("name")),
+    location: postalCode ? `${city}, ${postalCode}` : city,
+    pricePerDay: Number(formData.get("pricePerDay")),
+    rating: Number(formData.get("rating")),
+    reviewCount: Number(formData.get("reviewCount")),
+    experienceDescription: String(formData.get("description")),
+    image: String(formData.get("image")),
+    available: formData.get("availabilityStatus") !== "Ikke ledig",
+    updated: new Date().toISOString(),
+  };
 
-    const location = postalCode ? `${city}, ${postalCode}` : city;
+  if (editingId !== null) {
+    await updatePetSitter(editingId, petSitterData);
+  } else {
+    await createPetSitter({
+      ...petSitterData,
+      created: new Date().toISOString(),
+      maxDogs: 1,
+      acceptsPuppies: false,
+      acceptsLargeDogs: false,
+      yearsOfExperience: 1,
+    });
+  }
 
-    const availabilityStatus = (
-      document.getElementById("availabilityStatus") as HTMLSelectElement
-    ).value;
-
-    const available = availabilityStatus !== "Ikke ledig";
-
-    const petSitterData = {
-      name: (document.getElementById("name") as HTMLInputElement).value,
-      location,
-      pricePerDay: Number(
-        (document.getElementById("pricePerDay") as HTMLInputElement).value,
-      ),
-      rating: Number(
-        (document.getElementById("rating") as HTMLInputElement).value,
-      ),
-      reviewCount: Number(
-        (document.getElementById("reviewCount") as HTMLInputElement).value,
-      ),
-      experienceDescription: (
-        document.getElementById("description") as HTMLTextAreaElement
-      ).value,
-      image: (document.getElementById("image") as HTMLInputElement).value,
-      available,
-      updated: new Date().toISOString(),
-    };
-
-    if (editingId !== null) {
-      await updatePetSitter(editingId, petSitterData);
-    } else {
-      await createPetSitter({
-        ...petSitterData,
-        created: new Date().toISOString(),
-        maxDogs: 1,
-        acceptsPuppies: false,
-        acceptsLargeDogs: false,
-        yearsOfExperience: 1,
-      });
-    }
-
-    sitterForm.reset();
-  });
-}
+  sitterForm.reset();
+});
 
 // Init
 loadPetSitters();
